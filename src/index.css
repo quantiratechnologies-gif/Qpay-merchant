@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* alph pay — Brand Theme Tokens */
+  --color-primary: #7FE87F;
+  --color-primary-hover: #5FBF5F;
+  --color-primary-active: #3F963F;
+  --color-primary-light: rgba(127, 232, 127, 0.12);
+  --color-primary-border: #7FE87F;
+  --color-primary-dark: #1F6D1F;
+  --color-text-on-primary: #000000;
+
+  --color-background: #0B0B14;
+  --color-surface: #151524;
+  --color-surface-elevated: #1E1E32;
+  --color-sub-surface: #1E1E32;
+  --color-overlay: rgba(5, 5, 10, 0.85);
+
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A2A2BA;
+  --color-text-muted: #6E6E85;
+  --color-text-disabled: #6E6E85;
+
+  --color-border: #2C2C44;
+  --color-border-hairline: #2C2C44;
+  --color-border-strong: #4A4A68;
+  --color-border-focus: #7FE87F;
+
+  --color-success: #7FE87F;
+  --color-warning: #F59E0B;
+  --color-danger: #FF4757;
+
+  /* Aliases for backwards compatibility */
+  --primary: #7FE87F;
+  --primary-hover: #5FBF5F;
+  --accent: #7FE87F;
+  --blue-base: #7FE87F;
+  --blue-hover: #5FBF5F;
+  --blue-light: rgba(127, 232, 127, 0.12);
+  --blue-tint: #9FEE9F;
+
+  --bg-page: #0B0B14;
+  --bg-card: #151524;
+  --bg-secondary: #1E1E32;
+  --card-bg: #151524;
+  --card-border: #2C2C44;
+  --border-color: #2C2C44;
+  --border-strong: #4A4A68;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A2A2BA;
+  --text-muted: #6E6E85;
+  --text-white: #FFFFFF;
+  --text-dark: #FFFFFF;
+
+  --font-family: 'Inter', 'SF Pro Display', 'Google Sans Flex', system-ui, -apple-system, sans-serif;
+
+  /* Global Spacing Scale */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  --shadow-subtle: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  font-family: var(--font-family);
+  box-shadow: none !important;
+}
+
+/* WCAG 2.1 AA Keyboard Focus Rings */
+:focus-visible {
+  outline: 2.5px solid #7FE87F !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2.5px solid #7FE87F !important;
+  outline-offset: 2px !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* RTL Support */
+body.rtl {
+  direction: rtl;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--bg-page);
+  font-family: var(--font-family);
+}
+
+/* Responsive Browser Viewport (NO Mockup Frame, NO Borders, NO Phone Notches) */
+.app-viewport {
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--bg-page);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0 !important;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .app-viewport {
+    max-width: 100%;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Scrollable Screen Content Container */
+.screen-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 85px;
+  position: relative;
+  scrollbar-width: thin;
+  background-color: var(--bg-page);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Global Typescale Helpers */
+h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-family: var(--font-family);
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  font-family: var(--font-family);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  font-family: var(--font-family);
+}
+
+h4, h5, h6 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+}
+
+p, span, label, input, button {
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+/* Universal Advanced Input & Field Styling */
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2A2A3E;
+  border: 1px solid #4D4D6B;
+  border-radius: 10px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #808099;
+  font-weight: 500;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #7FE87F !important;
+  background-color: #2A2A3E !important;
+}
+
+/* Universal Interactive Button & Icon Touch Feedback */
+button,
+[role="button"],
+.interactive-tap {
+  cursor: pointer;
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  will-change: transform;
+}
+
+button:active:not(:disabled),
+[role="button"]:active,
+.interactive-tap:active {
+  transform: scale(0.975);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Financial Tabular Numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Transitions */
+.fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* Diamond Checkmark Icon (0 Shadows) */
+.diamond-check-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.diamond-shape {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background: #7FE87F;
+  transform: rotate(45deg);
+  border-radius: 8px;
+}
+
+.diamond-icon {
+  position: relative;
+  z-index: 2;
+  color: #000000;
+}
+
+/* Animated Masked Balance Glowing Dots */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.9);
+  }
+}
+
+.masked-dot {
+  width: 9px;
+  height: 9px;
+  background: linear-gradient(135deg, #ffffff, #a7f3d0);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
