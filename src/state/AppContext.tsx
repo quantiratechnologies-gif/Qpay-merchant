@@ -4,9 +4,6 @@ import type {
   BankAccount,
   Transaction,
   AppNotification,
-  Contact,
-  ElectricityBill,
-  MoneyRequest,
   DeviceSession,
   ScreenId,
   BottomTab,
@@ -20,7 +17,6 @@ import { authService } from '../services/authService';
 import { bankService } from '../services/bankService';
 import { transactionService } from '../services/transactionService';
 import { notificationService } from '../services/notificationService';
-import { billPaymentService } from '../services/billPaymentService';
 
 import { translateText, type SupportedLanguage } from '../utils/i18n';
 
@@ -44,12 +40,8 @@ interface AppContextType {
   bankAccounts: BankAccount[];
   transactions: Transaction[];
   notifications: AppNotification[];
-  contacts: Contact[];
-  merchants: Contact[];
-  moneyRequests: MoneyRequest[];
   deviceSessions: DeviceSession[];
   lastTransaction: Transaction | null;
-  electricityBill: ElectricityBill | null;
 
   // Actions
   updateUser: (updatedData: Partial<User>) => void;
@@ -57,7 +49,6 @@ interface AppContextType {
   addBankAccount: (bankName: string) => Promise<void>;
   removeBankAccount: (bankId: string) => void;
   setPrimaryBank: (bankId: string) => void;
-  fetchElectricityBill: (consumerNo: string) => Promise<ElectricityBill>;
   completePayment: (params: {
     title: string;
     subTitle: string;
@@ -65,13 +56,6 @@ interface AppContextType {
     avatarInitials?: string;
     category?: string;
     bankId?: string;
-  }) => Promise<Transaction>;
-  receiveMoney: (params: {
-    senderName: string;
-    senderUpi?: string;
-    amount: number;
-    note?: string;
-    avatarInitials?: string;
   }) => Promise<Transaction>;
 
   // Modals & Bottom Sheets
@@ -131,24 +115,10 @@ interface AppContextType {
   speakSoundBox: (amount: number, currency?: string) => void;
 
   terminateSession: (sessionId: string) => void;
-  addMoneyRequest: (req: { name: string; upiId: string; amount: number; note?: string }) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const FREQUENT_CONTACTS: Contact[] = [
-  { id: 'c-1', name: 'Tariq Al-Otaibi', upiId: 'tariq@sarie', mobile: '+966 50 234 5678', avatarInitials: 'TO' },
-  { id: 'c-2', name: 'Sara Al-Mansoor', upiId: 'sara@sarie', mobile: '+966 55 876 5432', avatarInitials: 'SM' },
-  { id: 'c-3', name: 'Mohammed Al-Ghamdi', upiId: 'mohammed@sarie', mobile: '+966 54 345 6789', avatarInitials: 'MG' },
-  { id: 'c-4', name: 'Abdullah Al-Shehri', upiId: 'abdullah@sarie', mobile: '+966 56 789 0123', avatarInitials: 'AS' },
-  { id: 'c-5', name: 'Reem Al-Dosari', upiId: 'reem@sarie', mobile: '+966 59 112 2334', avatarInitials: 'RD' },
-  { id: 'c-6', name: 'Omar Khalid', upiId: 'omar@sarie', mobile: '+966 53 445 5667', avatarInitials: 'OK' },
-];
-
-const MERCHANTS: Contact[] = [
-  { id: 'm-1', name: 'Panda Supermarket', upiId: 'panda@sarie', mobile: 'Merchant #8491', avatarInitials: 'PS', isMerchant: true },
-  { id: 'm-2', name: 'Half Million Coffee', upiId: 'halfmillion@sarie', mobile: 'Merchant #2041', avatarInitials: 'HM', isMerchant: true },
-];
 
 const INITIAL_SESSIONS: DeviceSession[] = [
   { id: 's-1', deviceName: 'QTPay Android App', deviceType: 'mobile', location: 'Riyadh - Android 14', lastActive: 'Active Now', isCurrent: true },
@@ -278,18 +248,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
-  const [electricityBill, setElectricityBill] = useState<ElectricityBill | null>(null);
-  const [moneyRequests, setMoneyRequests] = useState<MoneyRequest[]>([
-    {
-      id: 'req-1',
-      requesterName: 'Sara Al-Mansoor',
-      upiId: 'sara@sarie',
-      amount: 450.0,
-      note: 'Dinner split at Al Nakheel',
-      date: '1 day ago',
-      status: 'pending',
-    },
-  ]);
   const [deviceSessions, setDeviceSessions] = useState<DeviceSession[]>(INITIAL_SESSIONS);
 
   const [language, setLanguage] = useState<string>('English');
@@ -360,10 +318,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setScreenStack((prev) => [...prev, { screen, params }]);
 
     // Sync bottom navigation active tab
-    if (screen === 'MERCHANT_HOME' || screen === 'HOME') setActiveTabState('home');
+    if (screen === 'MERCHANT_HOME') setActiveTabState('home');
     else if (screen === 'SOFTPOS_TERMINAL' || screen === 'BANK_ACCOUNTS') setActiveTabState('account');
-    else if (screen === 'PAYMENT_LINK_GENERATOR' || screen === 'PAY_ANYONE') setActiveTabState('pay');
-    else if (screen === 'MERCHANT_QR_GENERATOR' || screen === 'SCAN') setActiveTabState('scan');
+    else if (screen === 'PAYMENT_LINK_GENERATOR') setActiveTabState('pay');
+    else if (screen === 'MERCHANT_QR_GENERATOR') setActiveTabState('scan');
     else if (screen === 'MERCHANT_COLLECTIONS' || screen === 'HISTORY') setActiveTabState('history');
     else if (screen === 'MERCHANT_BANK_LINK' || screen === 'PROFILE') setActiveTabState('profile');
   };
@@ -377,10 +335,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setCurrentScreen(prev.screen);
       setScreenParams(prev.params || {});
 
-      if (prev.screen === 'MERCHANT_HOME' || prev.screen === 'HOME') setActiveTabState('home');
+      if (prev.screen === 'MERCHANT_HOME') setActiveTabState('home');
       else if (prev.screen === 'SOFTPOS_TERMINAL' || prev.screen === 'BANK_ACCOUNTS') setActiveTabState('account');
-      else if (prev.screen === 'PAYMENT_LINK_GENERATOR' || prev.screen === 'PAY_ANYONE') setActiveTabState('pay');
-      else if (prev.screen === 'MERCHANT_QR_GENERATOR' || prev.screen === 'SCAN') setActiveTabState('scan');
+      else if (prev.screen === 'PAYMENT_LINK_GENERATOR') setActiveTabState('pay');
+      else if (prev.screen === 'MERCHANT_QR_GENERATOR') setActiveTabState('scan');
       else if (prev.screen === 'MERCHANT_COLLECTIONS' || prev.screen === 'HISTORY') setActiveTabState('history');
       else if (prev.screen === 'MERCHANT_BANK_LINK' || prev.screen === 'PROFILE') setActiveTabState('profile');
     } else {
@@ -452,11 +410,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const fetchElectricityBill = async (consumerNo: string) => {
-    const bill = await billPaymentService.fetchElectricityBill(consumerNo);
-    setElectricityBill(bill);
-    return bill;
-  };
 
   const completePayment = async (params: {
     title: string;
@@ -498,53 +451,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `notif-${Date.now()}`,
       title: 'Payment successful',
       description: `${formattedAmt} paid to ${params.title}`,
-      timestamp: 'Just now',
-      read: false,
-      type: 'success',
-    };
-    setNotifications((prev) => [newNotif, ...prev]);
-
-    return newTxn;
-  };
-
-  const receiveMoney = async (params: {
-    senderName: string;
-    senderUpi?: string;
-    amount: number;
-    note?: string;
-    avatarInitials?: string;
-  }) => {
-    const newTxn: Transaction = {
-      id: 'SAR' + Math.floor(10000000000 + Math.random() * 90000000000).toString(),
-      title: params.senderName,
-      subTitle: params.senderUpi ? `From ${params.senderUpi}` : 'Sarie Transfer Received',
-      amount: params.amount,
-      type: 'received',
-      date: 'TODAY',
-      timestamp: new Date(),
-      utr: 'SARIE' + Math.floor(100000000000 + Math.random() * 900000000000).toString(),
-      avatarInitials: params.avatarInitials || params.senderName.substring(0, 2).toUpperCase(),
-      category: 'Received',
-    };
-
-    // Credit to primary bank account
-    setBankAccounts((prev) =>
-      prev.map((acc) => {
-        if (acc.isPrimary) {
-          return { ...acc, balance: acc.balance + params.amount };
-        }
-        return acc;
-      })
-    );
-
-    setTransactions((prev) => [newTxn, ...prev]);
-    setLastTransaction(newTxn);
-
-    const formattedAmt = `SAR ${params.amount.toFixed(2)}`;
-    const newNotif: AppNotification = {
-      id: `notif-${Date.now()}`,
-      title: 'Payment Received',
-      description: `${formattedAmt} received from ${params.senderName}`,
       timestamp: 'Just now',
       read: false,
       type: 'success',
@@ -731,18 +637,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDeviceSessions((prev) => prev.filter((s) => s.id !== sessionId));
   };
 
-  const addMoneyRequest = (req: { name: string; upiId: string; amount: number; note?: string }) => {
-    const newReq: MoneyRequest = {
-      id: `req-${Date.now()}`,
-      requesterName: req.name,
-      upiId: req.upiId,
-      amount: req.amount,
-      note: req.note,
-      date: 'Just now',
-      status: 'pending',
-    };
-    setMoneyRequests((prev) => [newReq, ...prev]);
-  };
 
   return (
     <AppContext.Provider
@@ -761,20 +655,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bankAccounts,
         transactions,
         notifications,
-        contacts: FREQUENT_CONTACTS,
-        merchants: MERCHANTS,
-        moneyRequests,
         deviceSessions,
         lastTransaction,
-        electricityBill,
         updateUser,
         toggleShowBalance,
         addBankAccount,
         removeBankAccount,
         setPrimaryBank,
-        fetchElectricityBill,
         completePayment,
-        receiveMoney,
         isPinModalOpen,
         openPinModal,
         closePinModal,
@@ -794,7 +682,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isEditProfileModalOpen,
         setIsEditProfileModalOpen,
         terminateSession,
-        addMoneyRequest,
         // Merchant State & Handlers
         userRole,
         setUserRole,

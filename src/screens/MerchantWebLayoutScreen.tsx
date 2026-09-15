@@ -25,7 +25,6 @@ export const MerchantWebLayoutScreen: React.FC = () => {
     addCashier,
     toggleCashierStatus,
     navigateTo,
-    setUserRole,
     language,
     isRtl,
     t,
@@ -130,26 +129,6 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             }}
           >
             <Smartphone size={14} color="#7FE87F" /> {isAr ? 'عرض نقاط البيع بالجوال' : 'Mobile POS View'}
-          </button>
-
-          <button
-            onClick={() => {
-              setUserRole('customer');
-              navigateTo('HOME');
-            }}
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#7FE87F',
-              color: '#000000',
-              border: 'none',
-              borderRadius: '10px',
-              padding: '7px 14px',
-              fontSize: '12px',
-              fontWeight: 800,
-              cursor: 'pointer',
-            }}
-          >
-            {isAr ? 'التبديل إلى وضع العميل' : 'Switch to Customer Mode'}
           </button>
         </div>
       </header>

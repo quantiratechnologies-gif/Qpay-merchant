@@ -2,40 +2,14 @@ import React from 'react';
 import { AppProvider, useApp } from './state/AppContext';
 import { BottomNavigation } from './components/BottomNavigation';
 
-// Screens
+// Auth / Onboarding Screens
 import { SplashScreen } from './screens/SplashScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
 import { MobileNumberScreen } from './screens/MobileNumberScreen';
 import { SmsOtpScreen } from './screens/SmsOtpScreen';
 import { PermissionsScreen } from './screens/PermissionsScreen';
-import { HomeScreen } from './screens/HomeScreen';
-import { PayAnyoneScreen } from './screens/PayAnyoneScreen';
-import { SendAmountScreen } from './screens/SendAmountScreen';
-import { ElectricityScreen } from './screens/ElectricityScreen';
-import { PaymentSuccessScreen } from './screens/PaymentSuccessScreen';
-import { HistoryScreen } from './screens/HistoryScreen';
-import { ReceiveScreen } from './screens/ReceiveScreen';
-import { ScanScreen } from './screens/ScanScreen';
-import { RequestMoneyScreen } from './screens/RequestMoneyScreen';
-import { ProfileScreen } from './screens/ProfileScreen';
-import { BankAccountsScreen } from './screens/BankAccountsScreen';
-import { UPISettingsScreen } from './screens/UPISettingsScreen';
-import { PaymentMethodsScreen } from './screens/PaymentMethodsScreen';
-import { SecurityScreen } from './screens/SecurityScreen';
-import { NotificationsScreen } from './screens/NotificationsScreen';
-import { AllServicesScreen } from './screens/AllServicesScreen';
-import { MoneyRequestsScreen } from './screens/MoneyRequestsScreen';
-import { HelpSupportScreen } from './screens/HelpSupportScreen';
-import { PrivacyScreen } from './screens/PrivacyScreen';
 
-// Lifestyle Screens
-import { ShoppingScreen } from './screens/ShoppingScreen';
-import { MessagesScreen } from './screens/MessagesScreen';
-import { TravelScreen } from './screens/TravelScreen';
-import { RewardsScreen } from './screens/RewardsScreen';
-import { FoodScreen } from './screens/FoodScreen';
-
-// Merchant Screens
+// Merchant Core Screens
 import { MerchantHomeScreen } from './screens/MerchantHomeScreen';
 import { MerchantSetupScreen } from './screens/MerchantSetupScreen';
 import { MerchantSettlementBankScreen } from './screens/MerchantSettlementBankScreen';
@@ -49,8 +23,16 @@ import { SoundBoxNotifierScreen } from './screens/SoundBoxNotifierScreen';
 import { MerchantCollectionsScreen } from './screens/MerchantCollectionsScreen';
 import { MerchantWebLayoutScreen } from './screens/MerchantWebLayoutScreen';
 
+// Merchant Settings Screens
+import { HistoryScreen } from './screens/HistoryScreen';
+import { ProfileScreen } from './screens/ProfileScreen';
+import { BankAccountsScreen } from './screens/BankAccountsScreen';
+import { SecurityScreen } from './screens/SecurityScreen';
+import { NotificationsScreen } from './screens/NotificationsScreen';
+import { HelpSupportScreen } from './screens/HelpSupportScreen';
+import { PrivacyScreen } from './screens/PrivacyScreen';
+
 // Modals
-import { PayBillPinModal } from './screens/PayBillPinModal';
 import { LanguageModal } from './screens/LanguageModal';
 import { LogoutModal } from './screens/LogoutModal';
 import { AddBankModal } from './screens/AddBankModal';
@@ -63,6 +45,7 @@ const AppContent: React.FC = () => {
 
   const renderScreen = () => {
     switch (currentScreen) {
+      // Auth / Onboarding
       case 'SPLASH':
         return <SplashScreen />;
       case 'ONBOARDING':
@@ -73,53 +56,8 @@ const AppContent: React.FC = () => {
         return <SmsOtpScreen />;
       case 'PERMISSIONS':
         return <PermissionsScreen />;
-      case 'HOME':
-        return <HomeScreen />;
-      case 'PAY_ANYONE':
-        return <PayAnyoneScreen />;
-      case 'SEND_AMOUNT':
-        return <SendAmountScreen />;
-      case 'ELECTRICITY':
-        return <ElectricityScreen />;
-      case 'PAYMENT_SUCCESS':
-        return <PaymentSuccessScreen />;
-      case 'HISTORY':
-        return <HistoryScreen />;
-      case 'RECEIVE':
-        return <ReceiveScreen />;
-      case 'REQUEST_MONEY':
-        return <RequestMoneyScreen />;
-      case 'PROFILE':
-        return <ProfileScreen />;
-      case 'BANK_ACCOUNTS':
-        return <BankAccountsScreen />;
-      case 'UPI_SETTINGS':
-        return <UPISettingsScreen />;
-      case 'PAYMENT_METHODS':
-        return <PaymentMethodsScreen />;
-      case 'SECURITY':
-        return <SecurityScreen />;
-      case 'NOTIFICATIONS':
-        return <NotificationsScreen />;
-      case 'ALL_SERVICES':
-        return <AllServicesScreen />;
-      case 'MONEY_REQUESTS':
-        return <MoneyRequestsScreen />;
-      case 'HELP_SUPPORT':
-        return <HelpSupportScreen />;
-      case 'PRIVACY':
-        return <PrivacyScreen />;
-      case 'SHOPPING':
-        return <ShoppingScreen />;
-      case 'MESSAGES':
-        return <MessagesScreen />;
-      case 'TRAVEL':
-        return <TravelScreen />;
-      case 'REWARDS':
-        return <RewardsScreen />;
-      case 'FOOD':
-        return <FoodScreen />;
-      // Merchant Screens
+
+      // Merchant Core
       case 'MERCHANT_HOME':
         return <MerchantHomeScreen />;
       case 'MERCHANT_SETUP':
@@ -144,8 +82,25 @@ const AppContent: React.FC = () => {
         return <MerchantCollectionsScreen />;
       case 'MERCHANT_WEB':
         return <MerchantWebLayoutScreen />;
+
+      // Settings
+      case 'HISTORY':
+        return <HistoryScreen />;
+      case 'PROFILE':
+        return <ProfileScreen />;
+      case 'BANK_ACCOUNTS':
+        return <BankAccountsScreen />;
+      case 'SECURITY':
+        return <SecurityScreen />;
+      case 'NOTIFICATIONS':
+        return <NotificationsScreen />;
+      case 'HELP_SUPPORT':
+        return <HelpSupportScreen />;
+      case 'PRIVACY':
+        return <PrivacyScreen />;
+
       default:
-        return <HomeScreen />;
+        return <MerchantHomeScreen />;
     }
   };
 
@@ -155,7 +110,6 @@ const AppContent: React.FC = () => {
     currentScreen !== 'MOBILE_NUMBER' &&
     currentScreen !== 'SMS_OTP' &&
     currentScreen !== 'PERMISSIONS' &&
-    currentScreen !== 'PAYMENT_SUCCESS' &&
     currentScreen !== 'MERCHANT_SETUP' &&
     currentScreen !== 'MERCHANT_BANK_LINK' &&
     currentScreen !== 'MERCHANT_PIN_SETUP' &&
@@ -171,11 +125,7 @@ const AppContent: React.FC = () => {
       {/* Global Fixed Bottom Navigation */}
       {showBottomNav && <BottomNavigation />}
 
-      {/* Camera / QR Scanner Viewfinder Screen Overlay */}
-      <ScanScreen />
-
       {/* Bottom Sheet Modals */}
-      <PayBillPinModal />
       <LanguageModal />
       <LogoutModal />
       <AddBankModal />

@@ -33,7 +33,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   const handleAvatarClick = () => {
     if (currentScreen === 'PROFILE') {
-      navigateTo('HOME');
+      navigateTo('MERCHANT_HOME');
     } else {
       navigateTo('PROFILE');
     }
@@ -151,7 +151,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {displayTitle}
           </h2>
         ) : (
-          <div onClick={() => navigateTo('HOME')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <div onClick={() => navigateTo('MERCHANT_HOME')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             <AlphPayLogo variant="header" size={24} themeMode="dark" />
           </div>
         )}
@@ -187,7 +187,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
         {showSettings && !rightAction && (
           <button
-            onClick={() => navigateTo('UPI_SETTINGS')}
+            onClick={() => navigateTo('MERCHANT_SETUP')}
             aria-label="Settings"
             className="interactive-tap"
             style={{

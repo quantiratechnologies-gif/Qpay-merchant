@@ -24,7 +24,6 @@ export interface Contact {
   upiId: string;
   mobile: string;
   avatarInitials: string;
-  isMerchant?: boolean;
 }
 
 export interface Transaction {
@@ -50,24 +49,6 @@ export interface AppNotification {
   type: 'success' | 'info' | 'alert';
 }
 
-export interface ElectricityBill {
-  consumerNumber: string;
-  providerName: string;
-  amount: number;
-  dueDate: string;
-  billDate: string;
-  isPaid: boolean;
-}
-
-export interface MoneyRequest {
-  id: string;
-  requesterName: string;
-  upiId: string;
-  amount: number;
-  note?: string;
-  date: string;
-  status: 'pending' | 'accepted' | 'declined';
-}
 
 export interface DeviceSession {
   id: string;
@@ -133,30 +114,13 @@ export type ScreenId =
   | 'MOBILE_NUMBER'
   | 'SMS_OTP'
   | 'PERMISSIONS'
-  | 'HOME'
-  | 'PAY_ANYONE'
-  | 'SEND_AMOUNT'
-  | 'ELECTRICITY'
-  | 'PAYMENT_SUCCESS'
-  | 'HISTORY'
-  | 'RECEIVE'
-  | 'SCAN'
-  | 'REQUEST_MONEY'
   | 'PROFILE'
   | 'BANK_ACCOUNTS'
-  | 'UPI_SETTINGS'
-  | 'PAYMENT_METHODS'
   | 'SECURITY'
   | 'NOTIFICATIONS'
-  | 'ALL_SERVICES'
-  | 'MONEY_REQUESTS'
   | 'HELP_SUPPORT'
   | 'PRIVACY'
-  | 'SHOPPING'
-  | 'MESSAGES'
-  | 'TRAVEL'
-  | 'REWARDS'
-  | 'FOOD'
+  | 'HISTORY'
   // Merchant Ecosystem Screens
   | 'MERCHANT_HOME'
   | 'MERCHANT_SETUP'

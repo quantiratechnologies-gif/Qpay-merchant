@@ -83,7 +83,7 @@ export const PermissionsScreen: React.FC = () => {
     }, 1800);
 
     setTimeout(() => {
-      navigateTo('HOME');
+      navigateTo('MERCHANT_HOME');
     }, 2700);
   };
 

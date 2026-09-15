@@ -8,7 +8,6 @@ import {
   Landmark,
   Store,
   Monitor,
-  User,
   ReceiptText,
   Radio,
 } from 'lucide-react';
@@ -24,7 +23,6 @@ export const MerchantHomeScreen: React.FC = () => {
     merchantInfo,
     merchantCollections,
     navigateTo,
-    setUserRole,
     speakSoundBox,
     language,
     isRtl,
@@ -142,34 +140,8 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Slot: Customer Switch Pill + Web Portal Button */}
+        {/* Right Slot: Web Portal Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 2 }}>
-          {/* Role Switcher Button */}
-          <button
-            onClick={() => {
-              setUserRole('customer');
-              navigateTo('HOME');
-            }}
-            title={isAr ? 'التبديل إلى وضع العميل' : 'Switch to Customer Mode'}
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
-              color: '#FFFFFF',
-              borderRadius: '12px',
-              padding: '6px 10px',
-              fontSize: '11.5px',
-              fontWeight: 800,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              cursor: 'pointer',
-            }}
-          >
-            <User size={13} color="#7FE87F" />
-            <span>{isAr ? 'عميل' : 'Customer'}</span>
-          </button>
-
           {/* Web Admin Portal Button */}
           <button
             onClick={() => navigateTo('MERCHANT_WEB')}

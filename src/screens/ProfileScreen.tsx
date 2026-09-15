@@ -2,22 +2,18 @@ import React from 'react';
 import {
   Edit3,
   QrCode,
-  Landmark,
-  Zap,
+  Building2,
   CreditCard,
-  Download,
   History,
-  Gift,
-  ShoppingBag,
   ShieldCheck,
   Bell,
   Globe,
   HelpCircle,
   LogOut,
   Lock,
-  MessageSquare,
-  Plane,
-  Utensils,
+  Volume2,
+  Smartphone,
+  Link2,
 } from 'lucide-react';
 import { AppHeader } from '../components/AppHeader';
 import { SamaLogo } from '../components/SamaLogo';
@@ -27,6 +23,7 @@ import { useApp } from '../state/AppContext';
 export const ProfileScreen: React.FC = () => {
   const {
     user,
+    merchantInfo,
     language,
     navigateTo,
     setIsLanguageModalOpen,
@@ -36,11 +33,11 @@ export const ProfileScreen: React.FC = () => {
     isRtl,
   } = useApp();
 
-  const displayName = t(user.name, user.name);
+  const displayName = merchantInfo.businessName || t(user.name, user.name);
 
   return (
     <div className="fade-in" style={{ backgroundColor: '#0B0B14', minHeight: '100%', paddingBottom: '96px' }}>
-      <AppHeader title={t('profile.title', 'Profile')} showSettings={false} showBack={true} onBack={() => navigateTo('HOME')} />
+      <AppHeader title={t('profile.title', 'Merchant Profile')} showSettings={false} showBack={true} onBack={() => navigateTo('MERCHANT_HOME')} />
 
       {/* User Header Profile Hero Card */}
       <div
@@ -80,13 +77,13 @@ export const ProfileScreen: React.FC = () => {
           }}
         >
           <SamaLogo height={10} themeMode="green" />
-          <span>{language === 'العربية' ? 'موثق عبر نفاذ' : 'KYC VERIFIED'}</span>
+          <span>{language === 'العربية' ? 'موثق عبر نفاذ وسجل تجاري' : 'VERIFIED MERCHANT'}</span>
         </div>
 
         {/* Avatar with Edit Badge */}
         <div style={{ position: 'relative', marginBottom: '14px', marginTop: '6px' }}>
           <div
-            onClick={() => navigateTo('HOME')}
+            onClick={() => navigateTo('MERCHANT_HOME')}
             role="button"
             tabIndex={0}
             aria-label={language === 'العربية' ? 'الذهاب للرئيسية' : 'Go to Home'}
@@ -110,7 +107,7 @@ export const ProfileScreen: React.FC = () => {
             {user.avatarUrl ? (
               <img src={user.avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              user.avatarInitials
+              merchantInfo.businessName ? merchantInfo.businessName.substring(0, 2).toUpperCase() : user.avatarInitials
             )}
           </div>
           <button
@@ -144,20 +141,20 @@ export const ProfileScreen: React.FC = () => {
           {displayName}
         </h2>
         <div style={{ fontSize: '12px', color: '#7FE87F', fontWeight: '700', marginTop: '4px', letterSpacing: '0.01em' }} dir="ltr">
-          {user.upiId} • {user.mobile}
+          CR: {merchantInfo.crNumber || '1010892341'} • VAT: {merchantInfo.vatNumber || '310294857200003'}
         </div>
         <div style={{ fontSize: '11px', color: '#A2A2BA', fontWeight: '600', marginTop: '3px' }}>
-          {user.email}
+          {user.email} • {merchantInfo.storePhone || user.mobile}
         </div>
 
-        {/* Action Buttons: Edit Profile & My QR Code */}
+        {/* Action Buttons: Edit Business Info & Merchant QR Code */}
         <div style={{ display: 'flex', gap: '10px', marginTop: '18px', width: '100%', justifyContent: 'center' }}>
           <button
-            onClick={() => setIsEditProfileModalOpen(true)}
+            onClick={() => navigateTo('MERCHANT_SETUP')}
             className="interactive-tap"
             style={{
               flex: 1,
-              maxWidth: '150px',
+              maxWidth: '160px',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -173,15 +170,15 @@ export const ProfileScreen: React.FC = () => {
               boxShadow: 'none',
             }}
           >
-            <Edit3 size={14} color="#0B0B14" />
-            {t('btn.edit_profile', 'Edit Profile')}
+            <Building2 size={14} color="#0B0B14" />
+            {language === 'العربية' ? 'بيانات المنشأة' : 'Business Info'}
           </button>
           <button
-            onClick={() => navigateTo('RECEIVE')}
+            onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
             className="interactive-tap"
             style={{
               flex: 1,
-              maxWidth: '150px',
+              maxWidth: '160px',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -198,48 +195,35 @@ export const ProfileScreen: React.FC = () => {
             }}
           >
             <QrCode size={14} color="#7FE87F" />
-            {language === 'العربية' ? 'الرمز الخاص بي' : 'My QR'}
+            {language === 'العربية' ? 'رمز المتجر QR' : 'Merchant QR'}
           </button>
         </div>
       </div>
 
       {/* Menu Sections */}
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {/* Payment & Banking */}
+        {/* Merchant Business & Settlement */}
         <div>
           <div style={{ fontSize: '11px', fontWeight: '800', color: '#6E6E85', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'المدفوعات والحسابات' : 'Payment & Accounts'}
+            {language === 'العربية' ? 'بيانات المنشأة والتسوية' : 'Business & Settlement'}
           </div>
           <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<Landmark size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الحسابات البنكية' : 'Bank Accounts'} onClick={() => navigateTo('BANK_ACCOUNTS')} />
-            <ListRow icon={<Zap size={18} color="#7FE87F" />} label={language === 'العربية' ? 'إعدادات سريع والرمز السري' : 'Sarie Settings & PIN'} onClick={() => navigateTo('UPI_SETTINGS')} />
-            <ListRow icon={<CreditCard size={18} color="#7FE87F" />} label={language === 'العربية' ? 'البطاقات وطرق الدفع' : 'Saved Cards & Methods'} onClick={() => navigateTo('PAYMENT_METHODS')} />
+            <ListRow icon={<Building2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'إعدادات المنشأة والسجل التجاري' : 'Business Profile & CR / VAT'} onClick={() => navigateTo('MERCHANT_SETUP')} />
+            <ListRow icon={<CreditCard size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الحساب البنكي للتسوية اليومية' : 'Daily Settlement Bank Account'} onClick={() => navigateTo('MERCHANT_BANK_LINK')} />
+            <ListRow icon={<Volume2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'إعدادات الصندوق الصوتي SoundBox' : 'SoundBox Audio Notifier'} onClick={() => navigateTo('SOUNDBOX_NOTIFIER')} />
           </div>
         </div>
 
-        {/* Transactions & Money */}
+        {/* POS & Collections */}
         <div>
           <div style={{ fontSize: '11px', fontWeight: '800', color: '#6E6E85', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'التحويلات والطلبات' : 'Transfers & Requests'}
+            {language === 'العربية' ? 'نقاط البيع والتحصيل' : 'POS & Collections'}
           </div>
           <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<Download size={18} color="#7FE87F" />} label={language === 'العربية' ? 'طلبات الأموال' : 'Money Requests'} onClick={() => navigateTo('MONEY_REQUESTS')} />
-            <ListRow icon={<History size={18} color="#7FE87F" />} label={language === 'العربية' ? 'سجل العمليات' : 'Transaction History'} onClick={() => navigateTo('HISTORY')} />
-            <ListRow icon={<QrCode size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الرمز الخاص بي' : 'My QR Code'} onClick={() => navigateTo('RECEIVE')} />
-          </div>
-        </div>
-
-        {/* Lifestyle & Offers */}
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#6E6E85', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'المكافآت والخدمات' : 'Lifestyle & Rewards'}
-          </div>
-          <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<Gift size={18} color="#7FE87F" />} label={language === 'العربية' ? 'المكافآت والاسترداد' : 'Rewards & Cashback'} onClick={() => navigateTo('REWARDS')} />
-            <ListRow icon={<ShoppingBag size={18} color="#7FE87F" />} label={language === 'العربية' ? 'عروض التسوق' : 'Shopping Deals'} onClick={() => navigateTo('SHOPPING')} />
-            <ListRow icon={<MessageSquare size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الرسائل' : 'Messages'} onClick={() => navigateTo('MESSAGES')} />
-            <ListRow icon={<Plane size={18} color="#7FE87F" />} label={language === 'العربية' ? 'حجوزات السفر' : 'Travel Bookings'} onClick={() => navigateTo('TRAVEL')} />
-            <ListRow icon={<Utensils size={18} color="#7FE87F" />} label={language === 'العربية' ? 'المطاعم والمقاهي' : 'Dining & Food'} onClick={() => navigateTo('FOOD')} />
+            <ListRow icon={<Smartphone size={18} color="#7FE87F" />} label={language === 'العربية' ? 'نقطة البيع بالجوال SoftPOS' : 'SoftPOS Terminal (NFC Tap)'} onClick={() => navigateTo('SOFTPOS_TERMINAL')} />
+            <ListRow icon={<History size={18} color="#7FE87F" />} label={language === 'العربية' ? 'سجل العمليات والتحصيلات' : 'Collections & Settlements'} onClick={() => navigateTo('MERCHANT_COLLECTIONS')} />
+            <ListRow icon={<Link2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'روابط الدفع السريعة' : 'Instant Payment Links'} onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')} />
+            <ListRow icon={<QrCode size={18} color="#7FE87F" />} label={language === 'العربية' ? 'رمز QR المتوافق مع هيئة الزكاة' : 'ZATCA Compliant QR Code'} onClick={() => navigateTo('MERCHANT_QR_GENERATOR')} />
           </div>
         </div>
 
@@ -249,16 +233,16 @@ export const ProfileScreen: React.FC = () => {
             {language === 'العربية' ? 'الإعدادات والأمان' : 'Settings & Security'}
           </div>
           <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<ShieldCheck size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الأمان والأجهزة' : 'Security & Devices'} onClick={() => navigateTo('SECURITY')} />
-            <ListRow icon={<Bell size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الإشعارات' : 'Notifications'} onClick={() => navigateTo('NOTIFICATIONS')} />
+            <ListRow icon={<ShieldCheck size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الأمان والأجهزة المسجلة' : 'Security & Registered Devices'} onClick={() => navigateTo('SECURITY')} />
+            <ListRow icon={<Bell size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الإشعارات والتنبيهات' : 'Notifications & Alerts'} onClick={() => navigateTo('NOTIFICATIONS')} />
             <ListRow
               icon={<Globe size={18} color="#7FE87F" />}
               label={language === 'العربية' ? 'لغة التطبيق' : 'App Language'}
               rightElement={<span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>{language}</span>}
               onClick={() => setIsLanguageModalOpen(true)}
             />
-            <ListRow icon={<HelpCircle size={18} color="#7FE87F" />} label={language === 'العربية' ? 'المساعدة والدعم' : 'Help & Support'} onClick={() => navigateTo('HELP_SUPPORT')} />
-            <ListRow icon={<Lock size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الخصوصية والشروط' : 'Privacy & Terms'} onClick={() => navigateTo('PRIVACY')} />
+            <ListRow icon={<HelpCircle size={18} color="#7FE87F" />} label={language === 'العربية' ? 'المساعدة ودعم التجار' : 'Merchant Help & Support'} onClick={() => navigateTo('HELP_SUPPORT')} />
+            <ListRow icon={<Lock size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الشروط والامتثال المالي' : 'Compliance & Terms'} onClick={() => navigateTo('PRIVACY')} />
           </div>
         </div>
 
