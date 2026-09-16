@@ -83,15 +83,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'Turn Phone into SoftPOS',
       subtitle: 'Accept card payments instantly',
       visual: (
-        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '250px',
-              height: '250px',
+              width: '300px',
+              height: '300px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
-              filter: 'blur(30px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.28) 0%, transparent 70%)',
+              filter: 'blur(35px)',
               pointerEvents: 'none',
             }}
           />
@@ -102,8 +102,9 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              borderRadius: '24px',
+              mixBlendMode: 'screen',
               display: 'block',
+              filter: 'contrast(1.05)',
             }}
           />
         </div>
@@ -114,15 +115,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'ZATCA Phase 2 Invoicing',
       subtitle: 'Instant 15% VAT QR invoices',
       visual: (
-        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '250px',
-              height: '250px',
+              width: '300px',
+              height: '300px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
-              filter: 'blur(30px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.28) 0%, transparent 70%)',
+              filter: 'blur(35px)',
               pointerEvents: 'none',
             }}
           />
@@ -133,8 +134,9 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              borderRadius: '24px',
+              mixBlendMode: 'screen',
               display: 'block',
+              filter: 'contrast(1.05)',
             }}
           />
         </div>
@@ -145,15 +147,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'Instant Payouts & SoundBox',
       subtitle: 'Real-time payouts with voice alerts',
       visual: (
-        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '250px',
-              height: '250px',
+              width: '300px',
+              height: '300px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
-              filter: 'blur(30px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.28) 0%, transparent 70%)',
+              filter: 'blur(35px)',
               pointerEvents: 'none',
             }}
           />
@@ -164,8 +166,9 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              borderRadius: '24px',
+              mixBlendMode: 'screen',
               display: 'block',
+              filter: 'contrast(1.05)',
             }}
           />
         </div>

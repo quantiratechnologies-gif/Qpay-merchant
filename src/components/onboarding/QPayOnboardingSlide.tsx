@@ -40,8 +40,8 @@ export const QPayOnboardingSlide: React.FC<QPayOnboardingSlideProps> = ({
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          padding: '10px 0',
-          minHeight: '260px',
+          padding: '4px 0',
+          minHeight: '320px',
         }}
       >
         {slide.visual}
@@ -57,7 +57,7 @@ export const QPayOnboardingSlide: React.FC<QPayOnboardingSlideProps> = ({
           textAlign: 'center',
           padding: '0 24px',
           boxSizing: 'border-box',
-          marginTop: '16px',
+          marginTop: '10px',
         }}
       >
         {/* Bold Headline */}
