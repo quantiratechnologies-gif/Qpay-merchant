@@ -94,22 +94,22 @@ export const MerchantPinSetupScreen: React.FC = () => {
             width: '60px',
             height: '60px',
             borderRadius: '18px',
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 12px auto',
           }}
         >
-          <Lock size={28} color="#7FE87F" />
+          <Lock size={28} color="#00C853" />
         </div>
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
           {step === 'create'
             ? (isAr ? 'تعيين الرمز السري للتاجر' : 'Create Merchant PIN')
             : (isAr ? 'تأكيد الرمز السري للتاجر' : 'Confirm Merchant PIN')}
         </h2>
-        <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
           {step === 'create'
             ? (isAr ? 'عيّن رمزاً سرياً مكوناً من ٤ أرقام لعمليات نقاط البيع والاسترداد' : 'Set a 4-digit encrypted PIN for SoftPOS terminal and refunds')
             : (isAr ? 'أعد إدخال رمز الأمان المكون من ٤ أرقام' : 'Re-enter your 4-digit security PIN')}
@@ -128,8 +128,8 @@ export const MerchantPinSetupScreen: React.FC = () => {
                   width: '18px',
                   height: '18px',
                   borderRadius: '50%',
-                  backgroundColor: isFilled ? '#7FE87F' : '#151524',
-                  border: isFilled ? '2px solid #7FE87F' : '2px solid #2C2C44',
+                  backgroundColor: isFilled ? '#00C853' : '#111726',
+                  border: isFilled ? '2px solid #00C853' : '2px solid #1E293B',
                   transition: 'all 0.15s ease',
                   transform: isFilled ? 'scale(1.15)' : 'scale(1)',
                 }}
@@ -139,13 +139,13 @@ export const MerchantPinSetupScreen: React.FC = () => {
         </div>
 
         {errorMsg && (
-          <div style={{ fontSize: '12px', color: '#FF6B6B', fontWeight: 700, marginBottom: '8px' }}>
+          <div style={{ fontSize: '12px', color: '#FF4757', fontWeight: 700, marginBottom: '8px' }}>
             {errorMsg}
           </div>
         )}
 
         {isSuccess && (
-          <div style={{ fontSize: '13px', color: '#7FE87F', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ fontSize: '13px', color: '#00C853', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <CheckCircle2 size={16} /> {isAr ? 'تم تعيين الرمز السري للتاجر بنجاح' : 'Merchant PIN Created Successfully'}
           </div>
         )}
@@ -163,8 +163,8 @@ export const MerchantPinSetupScreen: React.FC = () => {
               style={{
                 height: '56px',
                 borderRadius: '16px',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 color: '#FFFFFF',
                 fontSize: '22px',
                 fontWeight: 800,
@@ -188,8 +188,8 @@ export const MerchantPinSetupScreen: React.FC = () => {
             style={{
               height: '56px',
               borderRadius: '16px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               color: '#FFFFFF',
               fontSize: '22px',
               fontWeight: 800,
@@ -210,9 +210,9 @@ export const MerchantPinSetupScreen: React.FC = () => {
             style={{
               height: '56px',
               borderRadius: '16px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
-              color: '#A2A2BA',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -226,7 +226,7 @@ export const MerchantPinSetupScreen: React.FC = () => {
 
       {/* Quantira Technologies Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '20px' }}>
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
           {isAr ? 'محمي بتشفير عتادي ٢٥٦-بت • تقنيات كوانتيرا' : '256-Bit Hardware Encrypted • Quantira Technologies'}
         </span>
       </div>

@@ -36,7 +36,7 @@ export const MobileNumberScreen: React.FC = () => {
       }}
     >
       {/* Top Header with Brand Logo */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '8px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px' }}>
         <div
           style={{
             marginBottom: '16px',
@@ -78,7 +78,7 @@ export const MobileNumberScreen: React.FC = () => {
       <div
         style={{
           width: '100%',
-          maxWidth: '380px',
+          maxWidth: '400px',
           margin: '20px auto',
           backgroundColor: '#111726',
           border: '1px solid #1E293B',
@@ -107,7 +107,7 @@ export const MobileNumberScreen: React.FC = () => {
             <div
               style={{
                 backgroundColor: '#161F30',
-                border: '1px solid #2A364F',
+                border: '1px solid #1E293B',
                 borderRadius: '12px',
                 padding: '12px 14px',
                 display: 'flex',
@@ -116,7 +116,7 @@ export const MobileNumberScreen: React.FC = () => {
                 transition: 'border-color 0.2s ease',
               }}
             >
-              <User size={17} color="#94A3B8" style={{ flexShrink: 0 }} />
+              <User size={17} color="#00C853" style={{ flexShrink: 0 }} />
               <input
                 id="owner-name-input"
                 type="text"
@@ -167,7 +167,7 @@ export const MobileNumberScreen: React.FC = () => {
                   alignItems: 'center',
                   gap: '6px',
                   backgroundColor: '#161F30',
-                  border: '1px solid #2A364F',
+                  border: '1px solid #1E293B',
                   borderRadius: '12px',
                   padding: '12px 12px',
                   fontWeight: 700,
@@ -187,7 +187,7 @@ export const MobileNumberScreen: React.FC = () => {
                 style={{
                   flex: 1,
                   backgroundColor: '#161F30',
-                  border: '1px solid #2A364F',
+                  border: '1px solid #1E293B',
                   borderRadius: '12px',
                   padding: '12px 14px',
                   display: 'flex',
@@ -195,7 +195,7 @@ export const MobileNumberScreen: React.FC = () => {
                   gap: '8px',
                 }}
               >
-                <Phone size={15} color="#94A3B8" style={{ flexShrink: 0 }} />
+                <Phone size={16} color="#00C853" style={{ flexShrink: 0 }} />
                 <input
                   id="merchant-phone-input"
                   type="tel"

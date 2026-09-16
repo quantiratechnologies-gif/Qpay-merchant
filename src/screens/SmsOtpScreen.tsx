@@ -143,7 +143,7 @@ export const SmsOtpScreen: React.FC = () => {
             height: '40px',
             borderRadius: '12px',
             backgroundColor: '#161F30',
-            border: '1px solid #2A364F',
+            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -156,9 +156,9 @@ export const SmsOtpScreen: React.FC = () => {
       </div>
 
       {/* Main Content Hub */}
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto' }}>
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
         {/* Verification Emblem */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
           <div
             style={{
               position: 'relative',
@@ -222,10 +222,12 @@ export const SmsOtpScreen: React.FC = () => {
             backgroundColor: '#111726',
             border: '1px solid #1E293B',
             borderRadius: '20px',
-            padding: '24px 18px',
+            padding: '22px 18px',
             boxSizing: 'border-box',
-            marginBottom: '20px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
           }}
         >
           {/* OTP Digit Boxes */}
@@ -234,7 +236,6 @@ export const SmsOtpScreen: React.FC = () => {
               display: 'flex',
               gap: '8px',
               justifyContent: 'center',
-              marginBottom: '20px',
               direction: 'ltr',
             }}
           >
@@ -267,7 +268,7 @@ export const SmsOtpScreen: React.FC = () => {
                       height: '100%',
                       borderRadius: '12px',
                       backgroundColor: '#161F30',
-                      border: isFilled ? '1.5px solid #00C853' : '1px solid #2A364F',
+                      border: isFilled ? '1.5px solid #00C853' : '1px solid #1E293B',
                       fontSize: '20px',
                       fontWeight: 800,
                       color: '#FFFFFF',
@@ -303,10 +304,9 @@ export const SmsOtpScreen: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
+              border: '1px solid #1E293B',
               padding: '10px 14px',
               borderRadius: '12px',
-              marginBottom: '16px',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -352,8 +352,10 @@ export const SmsOtpScreen: React.FC = () => {
               {isAr
                 ? timer > 0
                   ? `إعادة الإرسال بعد (${toArabicNumerals(timer < 10 ? `0${timer}` : timer)} ثانية)`
-                  : 'إعادة إرسال'
-                : `Resend in ${timer > 0 ? `00:${timer < 10 ? `0${timer}` : timer}` : 'Now'}`}
+                  : 'إعادة إرسال الآن'
+                : timer > 0
+                ? `Resend in 00:${timer < 10 ? `0${timer}` : timer}`
+                : 'Resend Now'}
             </button>
           </div>
 
@@ -364,41 +366,41 @@ export const SmsOtpScreen: React.FC = () => {
                 fontSize: '11.5px',
                 color: '#00C853',
                 fontWeight: 700,
-                marginTop: '10px',
               }}
             >
               {isAr ? '✓ تم إرسال رمز جديد بنجاح' : '✓ New OTP code dispatched to mobile'}
             </div>
           )}
-        </div>
 
-        {/* Primary CTA: Verify & Proceed */}
-        <button
-          onClick={handleVerify}
-          disabled={otp.some((d) => !d)}
-          className="interactive-tap"
-          style={{
-            width: '100%',
-            backgroundColor: '#00C853',
-            color: '#080C14',
-            border: 'none',
-            borderRadius: '14px',
-            padding: '14px 20px',
-            fontSize: '15px',
-            fontWeight: 800,
-            cursor: otp.some((d) => !d) ? 'not-allowed' : 'pointer',
-            opacity: otp.some((d) => !d) ? 0.5 : 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <span>{isAr ? 'التحقق والمتابعة' : 'Verify & Proceed'}</span>
-          <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-        </button>
+          {/* Primary CTA: Verify & Proceed (Inside Card Container) */}
+          <button
+            onClick={handleVerify}
+            disabled={otp.some((d) => !d)}
+            className="interactive-tap"
+            style={{
+              width: '100%',
+              backgroundColor: '#00C853',
+              color: '#080C14',
+              border: 'none',
+              borderRadius: '14px',
+              padding: '14px 20px',
+              fontSize: '15px',
+              fontWeight: 800,
+              cursor: otp.some((d) => !d) ? 'not-allowed' : 'pointer',
+              opacity: otp.some((d) => !d) ? 0.5 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
+              transition: 'all 0.2s ease',
+              marginTop: '4px',
+            }}
+          >
+            <span>{isAr ? 'التحقق والمتابعة' : 'Verify & Proceed'}</span>
+            <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </button>
+        </div>
       </div>
 
       {/* Powered by Quantira Technologies */}

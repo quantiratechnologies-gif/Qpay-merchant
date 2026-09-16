@@ -20,9 +20,9 @@ export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
       style={{
         width: fullWidth ? '100%' : 'auto',
         backgroundColor: 'transparent',
-        color: disabled ? '#808099' : '#7FE87F',
-        border: disabled ? '1.5px solid #4D4D6B' : '1.5px solid #7FE87F',
-        borderRadius: '8px',
+        color: disabled ? '#64748B' : '#00C853',
+        border: disabled ? '1.5px solid #1E293B' : '1.5px solid #1E293B',
+        borderRadius: '14px',
         padding: '13px 20px',
         fontSize: '15px',
         fontWeight: 700,

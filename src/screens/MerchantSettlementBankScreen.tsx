@@ -85,26 +85,26 @@ export const MerchantSettlementBankScreen: React.FC = () => {
             width: '60px',
             height: '60px',
             borderRadius: '18px',
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 12px auto',
           }}
         >
-          <Landmark size={30} color="#7FE87F" />
+          <Landmark size={30} color="#00C853" />
         </div>
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
           {isAr ? 'حساب بنك التسوية للمنشأة' : 'Settlement Bank Account'}
         </h2>
-        <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
           {isAr ? 'اختر حساب المنشأة البنكي السعودي للتحويل والإيداع اليومي الفوري عبر سريع' : 'Choose your corporate Saudi bank for daily automated Sarie payouts'}
         </p>
       </div>
 
       {/* Bank Options List */}
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {SAUDI_SETTLEMENT_BANKS.map((bank) => {
           const isSelected = selectedBank === bank.name;
           return (
@@ -117,8 +117,8 @@ export const MerchantSettlementBankScreen: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '14px 16px',
-                backgroundColor: '#151524',
-                border: isSelected ? '1.5px solid #7FE87F' : '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: isSelected ? '1.5px solid #00C853' : '1px solid #1E293B',
                 borderRadius: '16px',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
@@ -130,12 +130,12 @@ export const MerchantSettlementBankScreen: React.FC = () => {
                     width: '38px',
                     height: '38px',
                     borderRadius: '12px',
-                    backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.15)' : '#1E1E32',
-                    border: isSelected ? '1px solid #7FE87F' : '1px solid #2C2C44',
+                    backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.15)' : '#161F30',
+                    border: isSelected ? '1px solid #00C853' : '1px solid #1E293B',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isSelected ? '#7FE87F' : '#FFFFFF',
+                    color: isSelected ? '#00C853' : '#FFFFFF',
                   }}
                 >
                   <Landmark size={20} />
@@ -144,7 +144,7 @@ export const MerchantSettlementBankScreen: React.FC = () => {
                   <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
                     {isAr ? bank.arabicName : bank.name}
                   </div>
-                  <div style={{ fontSize: '11px', color: '#A2A2BA', fontFamily: 'monospace', letterSpacing: '0.04em', marginTop: '2px', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', fontFamily: 'monospace', letterSpacing: '0.04em', marginTop: '2px', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
                     {bank.iban}
                   </div>
                 </div>
@@ -156,11 +156,11 @@ export const MerchantSettlementBankScreen: React.FC = () => {
                     width: '24px',
                     height: '24px',
                     borderRadius: '50%',
-                    backgroundColor: '#7FE87F',
+                    backgroundColor: '#00C853',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#000000',
+                    color: '#080C14',
                   }}
                 >
                   <Check size={14} strokeWidth={3} />
@@ -173,8 +173,8 @@ export const MerchantSettlementBankScreen: React.FC = () => {
         {/* Settlement Payout Notice */}
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '14px',
             padding: '12px 14px',
             display: 'flex',
@@ -183,8 +183,8 @@ export const MerchantSettlementBankScreen: React.FC = () => {
             marginTop: '4px',
           }}
         >
-          <Clock size={18} color="#7FE87F" />
-          <span style={{ fontSize: '11.5px', color: '#A2A2BA' }}>
+          <Clock size={18} color="#00C853" />
+          <span style={{ fontSize: '11.5px', color: '#94A3B8' }}>
             {isAr
               ? 'تتم التسوية اليومية تلقائياً الساعة ١٢:٠٠ منتصف الليل مباشرة إلى حساب المنشأة.'
               : 'Daily collections settle automatically at 12:00 AM directly via Sarie rail.'}
@@ -193,13 +193,13 @@ export const MerchantSettlementBankScreen: React.FC = () => {
       </div>
 
       {/* Footer & CTA */}
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <PrimaryButton onClick={handleContinue}>
           {t('btn.continue', 'Continue')} <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
         </PrimaryButton>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+          <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
             {isAr ? 'تسوية مباشرة وفورية مدعومة بتقنيات كوانتيرا' : 'Instant Sarie Direct Settlement • Quantira Technologies'}
           </span>
         </div>
