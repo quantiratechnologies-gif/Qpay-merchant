@@ -62,12 +62,12 @@ export const SplashScreen: React.FC = () => {
             marginTop: '14px',
             fontSize: '11px',
             fontWeight: 800,
-            letterSpacing: '0.12em',
+            letterSpacing: '0.18em',
             color: '#7FE87F',
             textTransform: 'uppercase',
           }}
         >
-          Saudi Merchant SoftPOS • ZATCA Phase 2 • Sarie Settlement
+          QUICK | TRUSTED | PAYMENTS
         </div>
       </div>
 

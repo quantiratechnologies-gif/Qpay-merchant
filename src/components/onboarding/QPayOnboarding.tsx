@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Smartphone, QrCode, Radio } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { AlphPayLogo } from '../AlphPayLogo';
 import { QPayOnboardingProgress } from './QPayOnboardingProgress';
 import { QPayOnboardingSlide, type OnboardingSlideData } from './QPayOnboardingSlide';
@@ -81,58 +81,96 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
     {
       id: 'softpos',
       title: 'Turn Phone into SoftPOS',
-      subtitle: 'Accept mada, Apple Pay, Visa, and Mastercard contactless cards directly on your phone with zero POS hardware required.',
+      subtitle: 'Accept card payments instantly',
       visual: (
-        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127, 232, 127, 0.15) 0%, transparent 70%)' }} />
-          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(127, 232, 127, 0.12)', border: '1px solid rgba(127, 232, 127, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7FE87F' }}>
-              <Smartphone size={24} />
-            </div>
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              <span style={{ fontSize: '10px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '2px 8px', borderRadius: '6px' }}>🇸🇦 mada</span>
-              <span style={{ fontSize: '10px', fontWeight: 800, color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '2px 8px', borderRadius: '6px' }}> Pay</span>
-            </div>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>Tap & Pay NFC</div>
-          </div>
+        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              position: 'absolute',
+              width: '210px',
+              height: '210px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
+              filter: 'blur(20px)',
+              pointerEvents: 'none',
+            }}
+          />
+          <img
+            src="/onboarding-softpos.jpg"
+            alt="SoftPOS NFC Tap"
+            style={{
+              width: '220px',
+              height: '220px',
+              objectFit: 'cover',
+              borderRadius: '24px',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
+            }}
+          />
         </div>
       ),
     },
     {
       id: 'zatca',
       title: 'ZATCA Phase 2 Invoicing',
-      subtitle: 'Generate cryptographic QR tax invoices instantly with automated 15% VAT calculation and audit-ready compliance.',
+      subtitle: 'Instant 15% VAT QR invoices',
       visual: (
-        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(235, 180, 50, 0.15) 0%, transparent 70%)' }} />
-          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(235, 180, 50, 0.12)', border: '1px solid rgba(235, 180, 50, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EBB432' }}>
-              <QrCode size={24} />
-            </div>
-            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#EBB432', backgroundColor: 'rgba(235, 180, 50, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
-              ZATCA Fatoora
-            </span>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>15% VAT Auto-Calculated</div>
-          </div>
+        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              position: 'absolute',
+              width: '210px',
+              height: '210px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%)',
+              filter: 'blur(20px)',
+              pointerEvents: 'none',
+            }}
+          />
+          <img
+            src="/onboarding-zatca.jpg"
+            alt="ZATCA Phase 2 E-Invoice QR"
+            style={{
+              width: '220px',
+              height: '220px',
+              objectFit: 'cover',
+              borderRadius: '24px',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.12)',
+            }}
+          />
         </div>
       ),
     },
     {
       id: 'soundbox',
       title: 'Instant Payouts & SoundBox',
-      subtitle: 'Enjoy real-time voice payment announcements and automated daily settlements directly to your Saudi corporate IBAN.',
+      subtitle: 'Real-time payouts with voice alerts',
       visual: (
-        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127, 232, 127, 0.15) 0%, transparent 70%)' }} />
-          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(127, 232, 127, 0.12)', border: '1px solid rgba(127, 232, 127, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7FE87F' }}>
-              <Radio size={24} />
-            </div>
-            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
-              Voice Alert 5G
-            </span>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>Sarie Daily Payouts</div>
-          </div>
+        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              position: 'absolute',
+              width: '210px',
+              height: '210px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
+              filter: 'blur(20px)',
+              pointerEvents: 'none',
+            }}
+          />
+          <img
+            src="/onboarding-soundbox.jpg"
+            alt="Instant Sarie Payouts & SoundBox"
+            style={{
+              width: '220px',
+              height: '220px',
+              objectFit: 'cover',
+              borderRadius: '24px',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
+            }}
+          />
         </div>
       ),
     },
