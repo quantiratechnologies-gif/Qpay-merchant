@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
+import { AlphPayLogo } from '../components/AlphPayLogo';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
@@ -89,7 +90,7 @@ export const MerchantHomeScreen: React.FC = () => {
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* 1. Top Sticky Header (Store Selector, Soundbox Online, Notification & Profile) */}
+      {/* 1. Top Sticky Header (Left: Store Icon, Center: AlphPay Logo, Right: Notifications & Profile) */}
       <div
         style={{
           position: 'sticky',
@@ -98,68 +99,41 @@ export const MerchantHomeScreen: React.FC = () => {
           backgroundColor: 'rgba(8, 12, 20, 0.94)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          padding: '16px 20px 14px 20px',
+          padding: '14px 20px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        <div
+        {/* Left: Store Icon Button */}
+        <button
           onClick={() => navigateTo('PROFILE')}
+          aria-label="Store Profile"
           className="interactive-tap"
-          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#161F30',
+            border: '1px solid #2A364F',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}
         >
-          {/* Store Squircle Icon */}
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '12px',
-              backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFFFFF',
-              flexShrink: 0,
-            }}
-          >
-            <Store size={20} />
-          </div>
+          <Store size={20} />
+        </button>
 
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-                {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
-              </span>
-              <ChevronDown size={15} color="#94A3B8" />
-            </div>
-            <div
-              onClick={(e) => {
-                e.stopPropagation();
-                navigateTo('SOUNDBOX_NOTIFIER');
-              }}
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', cursor: 'pointer' }}
-            >
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#00C853',
-                  display: 'inline-block',
-                  boxShadow: '0 0 6px #00C853',
-                }}
-              />
-              <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
-                {isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
-              </span>
-            </div>
-          </div>
+        {/* Center: Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        {/* Right Header Buttons */}
+        {/* Right: Notification & Profile Icon Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Notification Button */}
           <button
@@ -220,6 +194,55 @@ export const MerchantHomeScreen: React.FC = () => {
 
       {/* Main Content Area */}
       <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Store Name & Speaker Online Row */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '2px 4px',
+          }}
+        >
+          <div
+            onClick={() => navigateTo('PROFILE')}
+            className="interactive-tap"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
+          >
+            <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+              {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
+            </span>
+            <ChevronDown size={15} color="#94A3B8" />
+          </div>
+
+          <div
+            onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
+            className="interactive-tap"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.25)',
+              borderRadius: '20px',
+              padding: '4px 10px',
+              cursor: 'pointer',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#00C853',
+                display: 'inline-block',
+                boxShadow: '0 0 6px #00C853',
+              }}
+            />
+            <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
+              {isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
+            </span>
+          </div>
+        </div>
         {/* Toast / Notification Messages */}
         {settleSuccessMsg && (
           <div
