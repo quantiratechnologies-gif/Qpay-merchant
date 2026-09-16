@@ -1,16 +1,82 @@
 import React, { useState } from 'react';
-import { Delete, ShieldCheck } from 'lucide-react';
+import { Delete, CheckCircle2, Wifi, ArrowLeft } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { PrimaryButton } from '../components/PrimaryButton';
-import { AppHeader } from '../components/AppHeader';
-import { formatCurrency } from '../utils/formatters';
-import { formatSaudiCurrency, toArabicNumerals } from '../utils/i18n';
+import { toArabicNumerals } from '../utils/i18n';
 
-const CARD_SCHEMES = [
-  { id: 'mada', label: 'mada Debit', labelAr: 'مدى', icon: '🇸🇦' },
-  { id: 'applepay', label: 'Apple Pay', labelAr: 'أبل باي', icon: '' },
-  { id: 'visa', label: 'Visa', labelAr: 'فيزا', icon: '💳' },
-  { id: 'mastercard', label: 'Mastercard', labelAr: 'ماستركارد', icon: '💳' },
+interface PaymentRail {
+  id: string;
+  name: string;
+  renderIcon: () => React.ReactNode;
+}
+
+const PAYMENT_RAILS: PaymentRail[] = [
+  {
+    id: 'mada',
+    name: 'mada',
+    renderIcon: () => (
+      <span
+        style={{
+          display: 'inline-block',
+          width: '7px',
+          height: '7px',
+          borderRadius: '50%',
+          backgroundColor: '#00C853',
+        }}
+      />
+    ),
+  },
+  {
+    id: 'applepay',
+    name: 'Pay',
+    renderIcon: () => <span style={{ fontSize: '13px', lineHeight: 1 }}></span>,
+  },
+  {
+    id: 'visa',
+    name: 'VISA',
+    renderIcon: () => (
+      <span
+        style={{
+          fontSize: '11px',
+          fontWeight: 900,
+          fontStyle: 'italic',
+          color: '#3B82F6',
+          letterSpacing: '0.05em',
+        }}
+      >
+        VISA
+      </span>
+    ),
+  },
+  {
+    id: 'mastercard',
+    name: 'Master',
+    renderIcon: () => (
+      <div style={{ display: 'flex', alignItems: 'center', width: '16px', height: '11px', position: 'relative' }}>
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            width: '11px',
+            height: '11px',
+            borderRadius: '50%',
+            backgroundColor: '#EB001B',
+            opacity: 0.9,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            right: 0,
+            width: '11px',
+            height: '11px',
+            borderRadius: '50%',
+            backgroundColor: '#F79E1B',
+            opacity: 0.9,
+          }}
+        />
+      </div>
+    ),
+  },
 ];
 
 export const SoftPOSTerminalScreen: React.FC = () => {
@@ -20,9 +86,9 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     softPosCardScheme,
     setSoftPosCardScheme,
     navigateTo,
+    goBack,
     language,
     isRtl,
-    t,
   } = useApp();
 
   const isAr = language === 'العربية';
@@ -32,6 +98,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
   );
 
   const numericValue = (parseInt(rawAmountStr || '0', 10) / 100) || 0;
+  const vatAmount = numericValue > 0 ? (numericValue - numericValue / 1.15).toFixed(2) : '0.00';
 
   const handleKeyPress = (digit: string) => {
     if (rawAmountStr.length < 8) {
@@ -42,6 +109,16 @@ export const SoftPOSTerminalScreen: React.FC = () => {
 
   const handleDelete = () => {
     setRawAmountStr((prev) => (prev.length > 1 ? prev.slice(0, -1) : '0'));
+  };
+
+  const handleQuickAdd = (addSar: number) => {
+    const current = (parseInt(rawAmountStr || '0', 10) / 100) || 0;
+    const updated = current + addSar;
+    setRawAmountStr(Math.round(updated * 100).toString());
+  };
+
+  const handleClear = () => {
+    setRawAmountStr('0');
   };
 
   const handleCharge = () => {
@@ -66,102 +143,241 @@ export const SoftPOSTerminalScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        paddingBottom: '24px',
+        padding: '16px 20px 24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Standardized Navigation */}
-      <AppHeader
-        title={t('merchant.softpos_title', 'SoftPOS Terminal')}
-        showBack={true}
-        showSettings={false}
-        rightAction={
+      {/* Top Bar with Back Button */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <button
+          onClick={goBack}
+          aria-label="Go Back"
+          className="interactive-tap"
+          style={{
+            width: '38px',
+            height: '38px',
+            borderRadius: '12px',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            cursor: 'pointer',
+          }}
+        >
+          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+        </button>
+
+        <span style={{ fontSize: '14px', fontWeight: 700, color: '#94A3B8' }}>
+          {isAr ? 'نقطة بيع بالجوال' : 'SoftPOS Terminal'}
+        </span>
+
+        <div style={{ width: '38px' }} />
+      </div>
+
+      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {/* Top Amount Display Card */}
+        <div
+          style={{
+            backgroundColor: '#0D1424',
+            border: '1px solid #1A263D',
+            borderRadius: '24px',
+            padding: '20px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
+            background: 'radial-gradient(ellipse at top, rgba(0, 200, 83, 0.08) 0%, #0D1424 70%)',
+          }}
+        >
+          {/* Header Tag */}
+          <div
+            style={{
+              fontSize: '11px',
+              fontWeight: 800,
+              color: '#00C853',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              marginBottom: '6px',
+            }}
+          >
+            {isAr ? 'أدخل مبلغ التحصيل' : 'ENTER CHARGE AMOUNT'}
+          </div>
+
+          {/* Amount: Green SAR + Massive Number */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'center',
+              gap: '8px',
+              margin: '2px 0 10px 0',
+              direction: 'ltr',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '22px',
+                fontWeight: 900,
+                color: '#00C853',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              SAR
+            </span>
+            <span
+              className="tabular-nums"
+              style={{
+                fontSize: '48px',
+                fontWeight: 900,
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+              }}
+            >
+              {numericValue.toFixed(2)}
+            </span>
+          </div>
+
+          {/* 15% ZATCA VAT Breakdown Tag */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              backgroundColor: 'rgba(127, 232, 127, 0.12)',
-              border: '1px solid rgba(127, 232, 127, 0.25)',
-              borderRadius: '10px',
-              padding: '6px 10px',
-              fontSize: '11px',
-              fontWeight: 800,
-              color: '#7FE87F',
+              gap: '6px',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '20px',
+              padding: '5px 14px',
+              marginBottom: '16px',
             }}
           >
-            <ShieldCheck size={14} />
-            <span>mada NFC</span>
+            <CheckCircle2 size={13} color="#00C853" />
+            <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#E2E8F0' }}>
+              {isAr ? (
+                <>شامل {vatAmount} ر.س (ضريبة زاتكا ١٥٪)</>
+              ) : (
+                <>Includes SAR {vatAmount} (15% ZATCA VAT)</>
+              )}
+            </span>
           </div>
-        }
-      />
 
-      {/* Center: Amount Display & Scheme Selector (Gradient Green-Black) */}
-      <div
-        style={{
-          textAlign: 'center',
-          margin: '14px 0',
-          background: 'linear-gradient(135deg, #052e16 0%, #064e3b 35%, #031c12 70%, #0e0e18 100%)',
-          border: '1px solid rgba(127, 232, 127, 0.35)',
-          borderRadius: '20px',
-          padding: '20px 16px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <div style={{ fontSize: '11.5px', color: '#C8E6C9', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 800, marginBottom: '4px' }}>
-          {isAr ? 'مبلغ التحصيل (نقاط بيع بالجوال)' : 'Charge Amount (Sarie SoftPOS)'}
-        </div>
-
-        <div className="tabular-nums" style={{ fontSize: '40px', fontWeight: 900, color: '#FFFFFF', letterSpacing: '-0.02em', margin: '4px 0 8px 0' }}>
-          {formatCurrency(numericValue, language)}
-        </div>
-
-        {/* 15% ZATCA VAT Breakdown Tag */}
-        <div style={{ fontSize: '12px', color: '#A2E6A2', fontWeight: 700 }}>
-          {isAr ? (
-            <>شامل ضريبة زاتكا ١٥٪ ({formatSaudiCurrency(numericValue - numericValue / 1.15, language)})</>
-          ) : (
-            <>Includes SAR {(numericValue - numericValue / 1.15).toFixed(2)} (15% ZATCA VAT)</>
-          )}
-        </div>
-
-        {/* Card Scheme Selection */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '14px' }}>
-          {CARD_SCHEMES.map((scheme) => {
-            const isSelected = softPosCardScheme === scheme.id;
-            return (
+          {/* Quick Increment Chips + Clear */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              width: '100%',
+              flexWrap: 'wrap',
+            }}
+          >
+            {[5, 10, 50, 100].map((sar) => (
               <button
-                key={scheme.id}
+                key={sar}
                 type="button"
-                onClick={() => setSoftPosCardScheme(scheme.id)}
+                onClick={() => handleQuickAdd(sar)}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.22)' : 'rgba(0, 0, 0, 0.4)',
-                  border: isSelected ? '1.5px solid #7FE87F' : '1px solid rgba(127, 232, 127, 0.2)',
-                  color: isSelected ? '#FFFFFF' : '#A2A2BA',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  color: '#FFFFFF',
                   borderRadius: '12px',
                   padding: '6px 12px',
-                  fontSize: '11.5px',
-                  fontWeight: 800,
+                  fontSize: '12.5px',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
                 }}
               >
-                <span>{scheme.icon}</span>
-                <span>{isAr ? scheme.labelAr : scheme.label}</span>
+                +{sar}
               </button>
-            );
-          })}
+            ))}
+            <button
+              type="button"
+              onClick={handleClear}
+              className="interactive-tap"
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#FF6B81',
+                borderRadius: '12px',
+                padding: '6px 14px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              {isAr ? 'مسح' : 'Clear'}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* POS Numeric Keypad */}
-      <div style={{ width: '100%', maxWidth: '330px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+        {/* Accepted Payment Rails Section */}
+        <div>
+          <div
+            style={{
+              fontSize: '10.5px',
+              fontWeight: 800,
+              color: '#94A3B8',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              textAlign: 'center',
+              marginBottom: '8px',
+            }}
+          >
+            {isAr ? 'طرق الدفع المقبولة' : 'ACCEPTED PAYMENT RAILS'}
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '8px',
+            }}
+          >
+            {PAYMENT_RAILS.map((rail) => {
+              const isSelected = softPosCardScheme === rail.id;
+              return (
+                <button
+                  key={rail.id}
+                  type="button"
+                  onClick={() => setSoftPosCardScheme(rail.id)}
+                  className="interactive-tap"
+                  style={{
+                    backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.12)' : '#111726',
+                    border: isSelected ? '1.5px solid #00C853' : '1px solid #1E293B',
+                    borderRadius: '14px',
+                    padding: '8px 4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '5px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {rail.id !== 'visa' && rail.renderIcon()}
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
+                    }}
+                  >
+                    {rail.id === 'visa' ? rail.renderIcon() : rail.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 3x4 POS Numeric Keypad */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {digits.map((d) => (
             <button
               key={d}
@@ -169,35 +385,36 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               onClick={() => handleKeyPress(d)}
               className="interactive-tap"
               style={{
-                height: '52px',
-                borderRadius: '14px',
-                backgroundColor: '#111726',
+                height: '56px',
+                borderRadius: '16px',
+                backgroundColor: '#151B28',
                 border: '1px solid #1E293B',
                 color: '#FFFFFF',
-                fontSize: '22px',
+                fontSize: '24px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
               }}
             >
               {isAr ? toArabicNumerals(d) : d}
             </button>
           ))}
 
-          {/* Quick Double Zero */}
+          {/* 00 */}
           <button
             type="button"
             onClick={() => handleKeyPress('00')}
             className="interactive-tap"
             style={{
-              height: '52px',
-              borderRadius: '14px',
-              backgroundColor: '#111726',
+              height: '56px',
+              borderRadius: '16px',
+              backgroundColor: '#151B28',
               border: '1px solid #1E293B',
               color: '#FFFFFF',
-              fontSize: '18px',
+              fontSize: '20px',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
@@ -208,18 +425,18 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             {isAr ? '٠٠' : '00'}
           </button>
 
-          {/* Zero */}
+          {/* 0 */}
           <button
             type="button"
             onClick={() => handleKeyPress('0')}
             className="interactive-tap"
             style={{
-              height: '52px',
-              borderRadius: '14px',
-              backgroundColor: '#111726',
+              height: '56px',
+              borderRadius: '16px',
+              backgroundColor: '#151B28',
               border: '1px solid #1E293B',
               color: '#FFFFFF',
-              fontSize: '22px',
+              fontSize: '24px',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
@@ -230,15 +447,15 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             {isAr ? '٠' : '0'}
           </button>
 
-          {/* Delete */}
+          {/* Backspace Delete */}
           <button
             type="button"
             onClick={handleDelete}
             className="interactive-tap"
             style={{
-              height: '52px',
-              borderRadius: '14px',
-              backgroundColor: '#111726',
+              height: '56px',
+              borderRadius: '16px',
+              backgroundColor: '#151B28',
               border: '1px solid #1E293B',
               color: '#94A3B8',
               cursor: 'pointer',
@@ -247,20 +464,46 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            <Delete size={20} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            <Delete size={22} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </div>
 
-        {/* Charge CTA */}
-        <div style={{ marginTop: '16px' }}>
-          <PrimaryButton onClick={handleCharge} disabled={numericValue <= 0}>
+        {/* Big Vibrant Green Charge Button */}
+        <button
+          type="button"
+          onClick={handleCharge}
+          disabled={numericValue <= 0}
+          className="interactive-tap"
+          style={{
+            marginTop: '4px',
+            width: '100%',
+            height: '54px',
+            backgroundColor: '#00C853',
+            color: '#080C14',
+            border: 'none',
+            borderRadius: '16px',
+            fontSize: '16px',
+            fontWeight: 900,
+            cursor: numericValue <= 0 ? 'not-allowed' : 'pointer',
+            opacity: numericValue <= 0 ? 0.45 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            boxShadow: '0 4px 24px rgba(0, 200, 83, 0.4)',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <Wifi size={20} style={{ transform: 'rotate(90deg)' }} />
+          <span>
             {isAr
-              ? `تحصيل لا تلامسي (${formatCurrency(numericValue, language)})`
-              : `Charge Contactless (${formatCurrency(numericValue, language)})`}
-          </PrimaryButton>
-        </div>
+              ? `تحصيل (${numericValue.toFixed(2)} ر.س)`
+              : `Charge (SAR ${numericValue.toFixed(2)})`}
+          </span>
+        </button>
       </div>
     </div>
   );
 };
+
 

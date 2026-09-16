@@ -57,7 +57,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
   test('5. SoftPOS Keypad and Card Tap Simulation', async ({ page }) => {
     await page.goto('/?screen=SOFTPOS_TERMINAL');
     await expect(page.locator('text=SoftPOS Terminal').first()).toBeVisible();
-    await expect(page.locator('text=mada Debit')).toBeVisible();
+    await expect(page.locator('text=mada').first()).toBeVisible();
     await expect(page.locator('button:has-text("Charge")').first()).toBeVisible();
 
     await page.click('button:has-text("Charge")');
@@ -112,7 +112,6 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Registered Business Name')).toBeVisible();
     await expect(page.locator('text=Business Category')).toBeVisible();
     await expect(page.locator('text=ZATCA VAT ID')).toBeVisible();
-    await expect(page.locator('text=SAMA & Absher Verified')).toBeVisible();
     await expect(page.locator('text=City')).toBeVisible();
     await expect(page.locator('text=Postal Code')).toBeVisible();
     await expect(page.locator('button:has-text("Save & Continue")')).toBeVisible();

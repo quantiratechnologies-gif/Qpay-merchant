@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
@@ -12,6 +12,7 @@ export const SmsOtpScreen: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(['5', '8', '2', '', '', '']);
   const [timer, setTimer] = useState(28);
   const [isResent, setIsResent] = useState(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,6 +20,85 @@ export const SmsOtpScreen: React.FC = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Auto-focus first empty input on mount
+  useEffect(() => {
+    const firstEmptyIndex = otp.findIndex((d) => !d);
+    const targetIndex = firstEmptyIndex !== -1 ? firstEmptyIndex : 0;
+    inputRefs.current[targetIndex]?.focus();
+  }, []);
+
+  const handleDigitChange = (index: number, value: string) => {
+    // Handle paste or multi-character entry
+    const digitsOnly = value.replace(/\D/g, '');
+    if (!digitsOnly) {
+      const newOtp = [...otp];
+      newOtp[index] = '';
+      setOtp(newOtp);
+      return;
+    }
+
+    if (digitsOnly.length > 1) {
+      const pasteDigits = digitsOnly.slice(0, 6).split('');
+      const newOtp = [...otp];
+      for (let i = 0; i < 6; i++) {
+        if (i < pasteDigits.length) {
+          newOtp[i] = pasteDigits[i];
+        }
+      }
+      setOtp(newOtp);
+      const nextIndex = Math.min(pasteDigits.length, 5);
+      inputRefs.current[nextIndex]?.focus();
+      return;
+    }
+
+    const digit = digitsOnly.slice(-1);
+    const newOtp = [...otp];
+    newOtp[index] = digit;
+    setOtp(newOtp);
+
+    // Auto-advance to next box
+    if (digit && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace') {
+      if (!otp[index] && index > 0) {
+        // Current is empty, delete previous and focus previous
+        const newOtp = [...otp];
+        newOtp[index - 1] = '';
+        setOtp(newOtp);
+        inputRefs.current[index - 1]?.focus();
+      } else if (otp[index]) {
+        // Current has value, clear it
+        const newOtp = [...otp];
+        newOtp[index] = '';
+        setOtp(newOtp);
+      }
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      e.preventDefault();
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pastedData) return;
+
+    const newOtp = [...otp];
+    for (let i = 0; i < 6; i++) {
+      newOtp[i] = pastedData[i] || '';
+    }
+    setOtp(newOtp);
+    const focusIndex = Math.min(pastedData.length, 5);
+    inputRefs.current[focusIndex]?.focus();
+  };
 
   const handleVerify = () => {
     navigateTo('PERMISSIONS');
@@ -31,7 +111,9 @@ export const SmsOtpScreen: React.FC = () => {
   };
 
   const handleAutofillDemo = () => {
-    setOtp(['5', '8', '2', '9', '0', '4']);
+    const demo = ['5', '8', '2', '9', '0', '4'];
+    setOtp(demo);
+    inputRefs.current[5]?.focus();
   };
 
   return (
@@ -158,7 +240,6 @@ export const SmsOtpScreen: React.FC = () => {
           >
             {otp.map((digit, i) => {
               const isFilled = Boolean(digit);
-              const isCurrent = !digit && (i === 0 || Boolean(otp[i - 1]));
               return (
                 <div
                   key={i}
@@ -169,32 +250,29 @@ export const SmsOtpScreen: React.FC = () => {
                   }}
                 >
                   <input
-                    type="text"
-                    maxLength={1}
-                    value={isAr && digit ? toArabicNumerals(digit) : digit}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/[^0-9]/g, '');
-                      const newOtp = [...otp];
-                      newOtp[i] = val;
-                      setOtp(newOtp);
+                    ref={(el) => {
+                      inputRefs.current[i] = el;
                     }}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleDigitChange(i, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(i, e)}
+                    onPaste={handlePaste}
                     className="tabular-nums"
                     style={{
                       width: '100%',
                       height: '100%',
                       borderRadius: '12px',
                       backgroundColor: '#161F30',
-                      border: isCurrent
-                        ? '2px solid #00C853'
-                        : isFilled
-                        ? '1.5px solid #2A364F'
-                        : '1px solid #1E293B',
+                      border: isFilled ? '1.5px solid #00C853' : '1px solid #2A364F',
                       fontSize: '20px',
                       fontWeight: 800,
                       color: '#FFFFFF',
                       textAlign: 'center',
                       outline: 'none',
-                      boxShadow: isCurrent ? '0 0 12px rgba(0, 200, 83, 0.3)' : 'none',
                       boxSizing: 'border-box',
                       transition: 'all 0.2s ease',
                     }}

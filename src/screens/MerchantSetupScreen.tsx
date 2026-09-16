@@ -5,7 +5,6 @@ import {
   Camera,
   Edit2,
   ChevronDown,
-  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { QuantiraLogo } from '../components/QuantiraLogo';
@@ -291,38 +290,20 @@ export const MerchantSetupScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* 4. ZATCA VAT ID with Verified Badge */}
+          {/* 4. ZATCA VAT ID */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <label
-                style={{
-                  fontSize: '11.5px',
-                  fontWeight: 700,
-                  color: '#CBD5E1',
-                  textAlign: isRtl ? 'right' : 'left',
-                }}
-              >
-                {isAr ? 'الرقم الضريبي زاتكا' : 'ZATCA VAT ID'} <span style={{ color: '#00C853' }}>*</span>
-              </label>
-
-              {/* SAMA & Absher Verified Tag */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  backgroundColor: 'rgba(0, 200, 83, 0.1)',
-                  border: '1px solid rgba(0, 200, 83, 0.3)',
-                  borderRadius: '6px',
-                  padding: '2px 7px',
-                }}
-              >
-                <CheckCircle2 size={11} color="#00C853" />
-                <span style={{ fontSize: '9.5px', fontWeight: 800, color: '#00C853' }}>
-                  {isAr ? 'موثق عبر نفاذ وأبشر' : 'SAMA & Absher Verified'}
-                </span>
-              </div>
-            </div>
+            <label
+              style={{
+                fontSize: '11.5px',
+                fontWeight: 700,
+                color: '#CBD5E1',
+                marginBottom: '6px',
+                display: 'block',
+                textAlign: isRtl ? 'right' : 'left',
+              }}
+            >
+              {isAr ? 'الرقم الضريبي زاتكا' : 'ZATCA VAT ID'} <span style={{ color: '#00C853' }}>*</span>
+            </label>
 
             <div
               style={{

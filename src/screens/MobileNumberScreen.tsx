@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { AlphPayLogo } from '../components/AlphPayLogo';
 import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 
@@ -34,30 +35,22 @@ export const MobileNumberScreen: React.FC = () => {
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Header with Beacon Pin */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '16px' }}>
-        {/* Neon Green Location / Merchant Beacon */}
+      {/* Top Header with Brand Logo */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px' }}>
         <div
           style={{
-            width: '48px',
-            height: '48px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(0, 200, 83, 0.12)',
-            border: '1.5px solid rgba(0, 200, 83, 0.4)',
+            marginBottom: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#00C853',
-            boxShadow: '0 0 24px rgba(0, 200, 83, 0.25)',
-            marginBottom: '20px',
           }}
         >
-          <MapPin size={26} strokeWidth={2.4} />
+          <AlphPayLogo variant="horizontal" size={32} themeMode="dark" />
         </div>
 
         <h1
           style={{
-            fontSize: '24px',
+            fontSize: '22px',
             fontWeight: 800,
             color: '#FFFFFF',
             margin: '0 0 6px 0',
@@ -73,6 +66,8 @@ export const MobileNumberScreen: React.FC = () => {
             color: '#94A3B8',
             margin: 0,
             textAlign: 'center',
+            maxWidth: '320px',
+            lineHeight: 1.4,
           }}
         >
           {isAr ? 'إدارة نقاط البيع وعمليات الفوترة والمدفوعات' : 'Access your POS terminal & business payment hub'}
