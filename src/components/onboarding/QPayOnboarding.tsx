@@ -83,15 +83,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'Turn Phone into SoftPOS',
       subtitle: 'Accept card payments instantly',
       visual: (
-        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '210px',
-              height: '210px',
+              width: '250px',
+              height: '250px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
-              filter: 'blur(20px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
+              filter: 'blur(30px)',
               pointerEvents: 'none',
             }}
           />
@@ -99,12 +99,11 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             src="/onboarding-softpos.jpg"
             alt="SoftPOS NFC Tap"
             style={{
-              width: '220px',
-              height: '220px',
-              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
               borderRadius: '24px',
-              border: '1px solid rgba(0, 200, 83, 0.3)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
+              display: 'block',
             }}
           />
         </div>
@@ -115,15 +114,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'ZATCA Phase 2 Invoicing',
       subtitle: 'Instant 15% VAT QR invoices',
       visual: (
-        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '210px',
-              height: '210px',
+              width: '250px',
+              height: '250px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
-              filter: 'blur(20px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
+              filter: 'blur(30px)',
               pointerEvents: 'none',
             }}
           />
@@ -131,12 +130,11 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             src="/onboarding-zatca.jpg"
             alt="ZATCA Phase 2 E-Invoice QR"
             style={{
-              width: '220px',
-              height: '220px',
-              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
               borderRadius: '24px',
-              border: '1px solid rgba(0, 200, 83, 0.3)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
+              display: 'block',
             }}
           />
         </div>
@@ -147,15 +145,15 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
       title: 'Instant Payouts & SoundBox',
       subtitle: 'Real-time payouts with voice alerts',
       visual: (
-        <div style={{ position: 'relative', width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '280px', height: '280px', maxWidth: '85vw', maxHeight: '85vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
             style={{
               position: 'absolute',
-              width: '210px',
-              height: '210px',
+              width: '250px',
+              height: '250px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
-              filter: 'blur(20px)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.25) 0%, transparent 70%)',
+              filter: 'blur(30px)',
               pointerEvents: 'none',
             }}
           />
@@ -163,12 +161,11 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             src="/onboarding-soundbox.jpg"
             alt="Instant Sarie Payouts & SoundBox"
             style={{
-              width: '220px',
-              height: '220px',
-              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
               borderRadius: '24px',
-              border: '1px solid rgba(0, 200, 83, 0.3)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
+              display: 'block',
             }}
           />
         </div>
