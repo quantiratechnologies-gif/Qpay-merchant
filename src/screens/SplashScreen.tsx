@@ -18,8 +18,8 @@ export const SplashScreen: React.FC = () => {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#070D0A',
-        backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(52, 211, 153, 0.15) 0%, rgba(7, 13, 10, 0.95) 70%)',
+        backgroundColor: '#080C14',
+        backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(127, 232, 127, 0.12) 0%, rgba(8, 12, 20, 0.98) 70%)',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -51,7 +51,7 @@ export const SplashScreen: React.FC = () => {
             width: '140px',
             height: '140px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(52, 211, 153, 0.2)',
+            backgroundColor: 'rgba(127, 232, 127, 0.18)',
             filter: 'blur(40px)',
             pointerEvents: 'none',
           }}
@@ -59,15 +59,15 @@ export const SplashScreen: React.FC = () => {
         <AlphPayLogo variant="horizontal" size={48} themeMode="dark" />
         <div
           style={{
-            marginTop: '12px',
+            marginTop: '14px',
             fontSize: '11px',
             fontWeight: 800,
-            letterSpacing: '0.2em',
-            color: '#86efac',
+            letterSpacing: '0.12em',
+            color: '#7FE87F',
             textTransform: 'uppercase',
           }}
         >
-          Quick • Trusted • Payments
+          Saudi Merchant SoftPOS • ZATCA Phase 2 • Sarie Settlement
         </div>
       </div>
 

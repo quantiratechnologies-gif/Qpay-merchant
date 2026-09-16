@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
-import { User as UserIcon, ArrowRight, Store } from 'lucide-react';
+import { Store, ArrowRight } from 'lucide-react';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SamaLogo } from '../components/SamaLogo';
 import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
-  const { navigateTo, user, updateUser, setUserRole, setIsKycModalOpen, t, isRtl, language } = useApp();
-  const [accountType, setAccountType] = useState<'customer' | 'merchant'>('merchant');
+  const { navigateTo, user, updateUser, setUserRole, t, isRtl, language } = useApp();
   const [fullName, setFullName] = useState<string>(user.name || 'Fahad Al-Harbi');
   const [mobileNumber, setMobileNumber] = useState<string>('501234567');
 
   const handleContinue = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (mobileNumber.length >= 9 && fullName.trim().length > 0) {
-      setUserRole(accountType);
+      setUserRole('merchant');
       updateUser({ name: fullName, mobile: `+966 ${mobileNumber}` });
-      if (accountType === 'merchant') {
-        setIsKycModalOpen(true);
-      } else {
-        navigateTo('SMS_OTP', { mobile: mobileNumber, name: fullName });
-      }
+      navigateTo('SMS_OTP', { mobile: mobileNumber, name: fullName });
     }
   };
 
@@ -54,7 +49,7 @@ export const MobileNumberScreen: React.FC = () => {
         <AlphPayLogo variant="horizontal" size={32} themeMode="dark" />
       </div>
 
-      {/* Main Form: Account Type Selector, Input Fields & Action Button */}
+      {/* Main Form */}
       <div
         style={{
           width: '100%',
@@ -68,64 +63,24 @@ export const MobileNumberScreen: React.FC = () => {
           boxShadow: 'none',
         }}
       >
-        {/* Account Type Selector Toggle */}
+        {/* Merchant Badge Banner */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             gap: '8px',
             backgroundColor: '#080C14',
             border: '1px solid #1E293B',
             borderRadius: '16px',
-            padding: '4px',
+            padding: '10px 16px',
             marginBottom: '18px',
           }}
         >
-          <button
-            type="button"
-            onClick={() => setAccountType('merchant')}
-            className="interactive-tap"
-            style={{
-              backgroundColor: accountType === 'merchant' ? '#7FE87F' : 'transparent',
-              color: accountType === 'merchant' ? '#080C14' : '#94A3B8',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '10px',
-              fontSize: '12.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <Store size={15} /> {t('auth.merchant', 'Merchant')}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setAccountType('customer')}
-            className="interactive-tap"
-            style={{
-              backgroundColor: accountType === 'customer' ? '#7FE87F' : 'transparent',
-              color: accountType === 'customer' ? '#080C14' : '#94A3B8',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '10px',
-              fontSize: '12.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <UserIcon size={15} /> {t('auth.customer', 'Staff / Agent')}
-          </button>
+          <Store size={16} color="#7FE87F" />
+          <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#7FE87F' }}>
+            {language === 'العربية' ? 'تسجيل الدخول لبوابة التاجر ونقاط البيع' : 'Merchant SoftPOS Login'}
+          </span>
         </div>
 
         <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -143,7 +98,7 @@ export const MobileNumberScreen: React.FC = () => {
                 display: 'block',
               }}
             >
-              {language === 'العربية' ? 'الاسم الكامل للمالك أو المدير' : 'Business Owner / Manager Name'}
+              {language === 'العربية' ? 'اسم مالك المنشأة أو المفوض' : 'Merchant Owner / Manager Name'}
             </label>
             <div
               style={{
@@ -153,10 +108,9 @@ export const MobileNumberScreen: React.FC = () => {
                 border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '14px 16px',
-                transition: 'border-color 0.2s ease',
               }}
             >
-              <UserIcon size={18} color="#7FE87F" style={{ marginInlineEnd: '12px', flexShrink: 0 }} />
+              <Store size={18} color="#7FE87F" style={{ marginInlineEnd: '12px', flexShrink: 0 }} />
               <input
                 id="fullname-input"
                 type="text"
@@ -201,7 +155,6 @@ export const MobileNumberScreen: React.FC = () => {
                 border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '14px 16px',
-                transition: 'border-color 0.2s ease',
               }}
             >
               {/* Country Code Pill */}

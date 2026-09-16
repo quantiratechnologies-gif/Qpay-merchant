@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Smartphone, QrCode, Radio } from 'lucide-react';
 import { AlphPayLogo } from '../AlphPayLogo';
 import { QPayOnboardingProgress } from './QPayOnboardingProgress';
 import { QPayOnboardingSlide, type OnboardingSlideData } from './QPayOnboardingSlide';
-import { CardsIllustration } from './CardsIllustration';
-import { HubIllustration } from './HubIllustration';
-import { SecurityIllustration } from './SecurityIllustration';
 
 interface QPayOnboardingProps {
   onComplete: () => void;
@@ -82,22 +79,62 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
 
   const slides: OnboardingSlideData[] = [
     {
-      id: 'cards',
-      title: 'Diverse Card Options',
-      subtitle: 'Explore a variety of payment cards tailored to your daily needs. Pay instantly with bank-grade security.',
-      visual: <CardsIllustration />,
+      id: 'softpos',
+      title: 'Turn Phone into SoftPOS',
+      subtitle: 'Accept mada, Apple Pay, Visa, and Mastercard contactless cards directly on your phone with zero POS hardware required.',
+      visual: (
+        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127, 232, 127, 0.15) 0%, transparent 70%)' }} />
+          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(127, 232, 127, 0.12)', border: '1px solid rgba(127, 232, 127, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7FE87F' }}>
+              <Smartphone size={24} />
+            </div>
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+              <span style={{ fontSize: '10px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '2px 8px', borderRadius: '6px' }}>🇸🇦 mada</span>
+              <span style={{ fontSize: '10px', fontWeight: 800, color: '#FFFFFF', backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '2px 8px', borderRadius: '6px' }}> Pay</span>
+            </div>
+            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>Tap & Pay NFC</div>
+          </div>
+        </div>
+      ),
     },
     {
-      id: 'wealth',
-      title: 'Grow Your Wealth',
-      subtitle: 'Discover a smarter way to manage your finances. Link and control all Saudi bank accounts in one unified dashboard.',
-      visual: <HubIllustration />,
+      id: 'zatca',
+      title: 'ZATCA Phase 2 Invoicing',
+      subtitle: 'Generate cryptographic QR tax invoices instantly with automated 15% VAT calculation and audit-ready compliance.',
+      visual: (
+        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(235, 180, 50, 0.15) 0%, transparent 70%)' }} />
+          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(235, 180, 50, 0.12)', border: '1px solid rgba(235, 180, 50, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EBB432' }}>
+              <QrCode size={24} />
+            </div>
+            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#EBB432', backgroundColor: 'rgba(235, 180, 50, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
+              ZATCA Fatoora
+            </span>
+            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>15% VAT Auto-Calculated</div>
+          </div>
+        </div>
+      ),
     },
     {
-      id: 'security',
-      title: 'Secure & Reliable',
-      subtitle: 'Your security is our top priority. Protected by SAMA 256-bit encryption and Sarie national payment rail.',
-      visual: <SecurityIllustration />,
+      id: 'soundbox',
+      title: 'Instant Payouts & SoundBox',
+      subtitle: 'Enjoy real-time voice payment announcements and automated daily settlements directly to your Saudi corporate IBAN.',
+      visual: (
+        <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127, 232, 127, 0.15) 0%, transparent 70%)' }} />
+          <div style={{ width: '150px', height: '180px', borderRadius: '24px', backgroundColor: '#111726', border: '1.5px solid #1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '16px', boxSizing: 'border-box' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(127, 232, 127, 0.12)', border: '1px solid rgba(127, 232, 127, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7FE87F' }}>
+              <Radio size={24} />
+            </div>
+            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
+              Voice Alert 5G
+            </span>
+            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8' }}>Sarie Daily Payouts</div>
+          </div>
+        </div>
+      ),
     },
   ];
 
@@ -112,7 +149,7 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
         position: 'relative',
         minHeight: '100vh',
         width: '100%',
-        backgroundColor: '#0B0B14',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -146,9 +183,9 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
           }}
           className="interactive-tap"
           style={{
-            backgroundColor: '#1E1E32',
-            border: '1px solid #2C2C44',
-            color: '#A2A2BA',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            color: '#94A3B8',
             fontSize: '12px',
             fontWeight: 700,
             padding: '5px 14px',
@@ -221,7 +258,7 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             height: '48px',
             borderRadius: '12px',
             backgroundColor: '#7FE87F',
-            color: '#0B0B14',
+            color: '#080C14',
             border: 'none',
             fontSize: '14px',
             fontWeight: 800,

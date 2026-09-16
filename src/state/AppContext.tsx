@@ -365,7 +365,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         navigateTo('MERCHANT_COLLECTIONS');
         break;
       case 'profile':
-        navigateTo('MERCHANT_BANK_LINK');
+        navigateTo('PROFILE');
         break;
     }
   };

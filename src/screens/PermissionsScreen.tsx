@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageSquare, Phone, Users, Camera, MapPin, Mic, ShieldCheck, ArrowRight, Lock, Landmark, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { Wifi, Camera, MapPin, Radio, Bell, ShieldCheck, ArrowRight, Lock, Landmark, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
@@ -10,12 +10,11 @@ export const PermissionsScreen: React.FC = () => {
   const { navigateTo, goBack, t, isRtl, language } = useApp();
 
   const [toggles, setToggles] = useState<Record<string, boolean>>({
-    sms: true,
-    phone: true,
-    contacts: true,
+    nfc: true,
     camera: true,
     location: true,
-    mic: false,
+    bluetooth: true,
+    notifications: true,
   });
   const [isDiscovering, setIsDiscovering] = useState<boolean>(false);
   const [discoveryStep, setDiscoveryStep] = useState<number>(0);
@@ -26,39 +25,33 @@ export const PermissionsScreen: React.FC = () => {
 
   const permissions = [
     {
-      key: 'sms',
-      icon: <MessageSquare size={19} />,
-      name: language === 'العربية' ? 'التحقق عبر الرسائل القصيرة (SMS)' : 'SMS Verification',
+      key: 'nfc',
+      icon: <Wifi size={19} />,
+      name: language === 'العربية' ? 'شريحة الدفع اللاتلامسي (NFC SoftPOS)' : 'NFC SoftPOS & Contactless Reader',
       required: true,
-    },
-    {
-      key: 'phone',
-      icon: <Phone size={19} />,
-      name: language === 'العربية' ? 'حالة الشريحة والجهاز' : 'Phone & SIM Status',
-      required: true,
-    },
-    {
-      key: 'contacts',
-      icon: <Users size={19} />,
-      name: language === 'العربية' ? 'الوصول لجهات الاتصال' : 'Contacts Access',
-      required: false,
     },
     {
       key: 'camera',
       icon: <Camera size={19} />,
-      name: language === 'العربية' ? 'الكاميرا ومسح الباركود' : 'Camera & QR Scanner',
-      required: false,
+      name: language === 'العربية' ? 'كاميرا مسح فواتير زاتكا (ZATCA QR)' : 'Camera & ZATCA QR Scanner',
+      required: true,
     },
     {
       key: 'location',
       icon: <MapPin size={19} />,
-      name: language === 'العربية' ? 'أمان الموقع الجغرافي' : 'Location Security',
+      name: language === 'العربية' ? 'الموقع الجغرافي لأمان نقاط البيع' : 'Location & SAMA Geofencing',
+      required: true,
+    },
+    {
+      key: 'bluetooth',
+      icon: <Radio size={19} />,
+      name: language === 'العربية' ? 'بلوتوث الربط بمكبر الصوت SoundBox' : 'Bluetooth SoundBox Gateway',
       required: false,
     },
     {
-      key: 'mic',
-      icon: <Mic size={19} />,
-      name: language === 'العربية' ? 'التنبيهات الصوتية والدفع الصوتي' : 'Audio Alerts & Voice Pay',
+      key: 'notifications',
+      icon: <Bell size={19} />,
+      name: language === 'العربية' ? 'إشعارات التحصيل والتسوية اليومية' : 'Daily Settlement Alerts',
       required: false,
     },
   ];
@@ -83,14 +76,14 @@ export const PermissionsScreen: React.FC = () => {
     }, 1800);
 
     setTimeout(() => {
-      navigateTo('MERCHANT_HOME');
+      navigateTo('MERCHANT_SETUP');
     }, 2700);
   };
 
   return (
     <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingBottom: '32px', color: '#FFFFFF' }}>
       <div>
-        <AppHeader title={t('auth.permissions_title', 'App Permissions')} showBack={true} onBack={goBack} showSettings={false} />
+        <AppHeader title={t('auth.permissions_title', 'SoftPOS Permissions')} showBack={true} onBack={goBack} showSettings={false} />
 
         <div style={{ padding: '20px' }}>
           {/* Header Card with SAMA Central Bank Logo */}
@@ -127,10 +120,10 @@ export const PermissionsScreen: React.FC = () => {
               </div>
               <div>
                 <div style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {language === 'العربية' ? 'معايير الأمان والتحقق المعتمدة من ساما' : 'SAMA Mandated Security & e-KYC'}
+                  {language === 'العربية' ? 'معايير أمان نقاط البيع المعتمدة من ساما' : 'SAMA Mandated SoftPOS Security'}
                 </div>
                 <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                  {language === 'العربية' ? 'المعايير التنظيمية للبنك المركزي السعودي' : 'Saudi Central Bank Regulatory Standard'}
+                  {language === 'العربية' ? 'المعايير التنظيمية للبنك المركزي السعودي' : 'Saudi Central Bank Merchant POS Standard'}
                 </div>
               </div>
             </div>
@@ -152,8 +145,8 @@ export const PermissionsScreen: React.FC = () => {
             }}
           >
             {language === 'العربية'
-              ? `صلاحيات الجهاز (تم منح ${Object.values(toggles).filter(Boolean).length}/٦)`
-              : `Device Permissions (${Object.values(toggles).filter(Boolean).length}/6 Granted)`}
+              ? `صلاحيات نقطة البيع (تم منح ${Object.values(toggles).filter(Boolean).length}/٥)`
+              : `POS Hardware Access (${Object.values(toggles).filter(Boolean).length}/5 Granted)`}
           </div>
 
           {/* Grouped Permissions Card */}
@@ -260,7 +253,7 @@ export const PermissionsScreen: React.FC = () => {
       {/* Action Buttons */}
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <PrimaryButton onClick={handleGrantPermissions}>
-          {t('auth.allow_continue', 'Allow & Continue')}{' '}
+          {t('auth.allow_continue', 'Allow & Configure Store')}{' '}
           <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
         </PrimaryButton>
         <SecondaryButton onClick={handleGrantPermissions}>
@@ -275,7 +268,7 @@ export const PermissionsScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Bank Discovery & Instant KYC Modal */}
+      {/* Interactive Terminal Initialization Modal */}
       {isDiscovering && (
         <div
           style={{
@@ -324,15 +317,15 @@ export const PermissionsScreen: React.FC = () => {
             </div>
 
             <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 8px 0' }}>
-              {discoveryStep === 1 && (language === 'العربية' ? 'جاري اكتشاف الحسابات البنكية...' : 'Discovering Bank Accounts...')}
-              {discoveryStep === 2 && (language === 'العربية' ? 'تم ربط الحسابات بنجاح' : 'Accounts Linked')}
-              {discoveryStep === 3 && (language === 'العربية' ? 'تم التحقق الإلكتروني (KYC)' : 'KYC Verified')}
+              {discoveryStep === 1 && (language === 'العربية' ? 'تهيئة شريحة نقطة البيع SoftPOS...' : 'Initializing SoftPOS Chipset...')}
+              {discoveryStep === 2 && (language === 'العربية' ? 'التحقق من السجل التجاري وزاتكا...' : 'ZATCA & CR Verified')}
+              {discoveryStep === 3 && (language === 'العربية' ? 'منظومة نقاط البيع جاهزة' : 'POS Engine Ready')}
             </h3>
 
             <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 20px 0', lineHeight: '1.4' }}>
-              {discoveryStep === 1 && (language === 'العربية' ? 'التحقق من تسجيل شبكة سريع على الرقم +966 50 123 4567' : 'Verifying SAMA Sarie registration on +966 50 123 4567')}
-              {discoveryStep === 2 && (language === 'العربية' ? 'تم العثور على حسابات مصرف الراجحي والبنك الأهلي السعودي' : 'Discovered Al Rajhi Bank and SNB accounts')}
-              {discoveryStep === 3 && (language === 'العربية' ? 'تم التحقق بنجاح من البنك المركزي السعودي. جاري الانتقال للرئيسية...' : 'SAMA e-KYC verified. Redirecting to home...')}
+              {discoveryStep === 1 && (language === 'العربية' ? 'تأمين اتصال NFC المشفر مع البنك المركزي' : 'Securing NFC SoftPOS encryption with SAMA')}
+              {discoveryStep === 2 && (language === 'العربية' ? 'الربط بمنظومة الفوترة الإلكترونية المرحلة الثانية' : 'Enrolled in ZATCA Phase 2 E-Invoicing')}
+              {discoveryStep === 3 && (language === 'العربية' ? 'تم تفعيل شبكة مدى وسريع. جاري إكمال بيانات المتجر...' : 'mada & Sarie POS enabled. Proceeding to store setup...')}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: isRtl ? 'right' : 'left' }}>
@@ -349,7 +342,7 @@ export const PermissionsScreen: React.FC = () => {
               >
                 {discoveryStep >= 1 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#94A3B8" />}
                 <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 1 ? '#FFFFFF' : '#94A3B8' }}>
-                  {language === 'العربية' ? 'ربط الجهاز والتحقق من الشريحة' : 'Device Binding & SIM Verification'}
+                  {language === 'العربية' ? 'ربط الجهاز وتفويض نقطة البيع SoftPOS' : 'Device Binding & SoftPOS Authorization'}
                 </span>
               </div>
 
@@ -366,7 +359,7 @@ export const PermissionsScreen: React.FC = () => {
               >
                 {discoveryStep >= 2 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#94A3B8" />}
                 <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 2 ? '#FFFFFF' : '#94A3B8' }}>
-                  {language === 'العربية' ? 'تم اكتشاف الحسابات (الراجحي، الأهلي SNB)' : 'Bank Accounts Discovered (Al Rajhi Bank, SNB)'}
+                  {language === 'العربية' ? 'التحقق من منصة فاتورة وهيئة الزكاة' : 'ZATCA Fatoora Platform Verified'}
                 </span>
               </div>
 
@@ -384,7 +377,7 @@ export const PermissionsScreen: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {discoveryStep >= 3 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Sparkles size={16} color="#94A3B8" />}
                   <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 3 ? '#7FE87F' : '#94A3B8' }}>
-                    {language === 'العربية' ? 'التحقق الوطني الفوري عبر نفاذ' : 'SAMA Instant e-KYC (Nafath)'}
+                    {language === 'العربية' ? 'جاهزية شبكة مدى وسريع' : 'mada & Sarie POS Engine Ready'}
                   </span>
                 </div>
                 {discoveryStep >= 3 && <SamaLogo height={14} themeMode="green" />}
