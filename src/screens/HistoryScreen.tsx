@@ -53,7 +53,6 @@ export const HistoryScreen: React.FC = () => {
         title={t('history.title', 'Transactions')}
         showSearch
         onSearchClick={() => setShowSearchInput(!showSearchInput)}
-        showSettings
       />
 
       {showSearchInput && (

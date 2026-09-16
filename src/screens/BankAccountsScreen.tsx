@@ -53,7 +53,7 @@ export const BankAccountsScreen: React.FC = () => {
 
   return (
     <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100%', paddingBottom: '96px' }}>
-      <AppHeader title={t('banks.title', 'Bank Accounts')} showBack showSettings />
+      <AppHeader title={t('banks.title', 'Bank Accounts')} showBack />
 
       <div style={{ padding: '16px 20px' }}>
         {/* Top Summary Banner */}

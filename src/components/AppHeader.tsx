@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Search, Settings, Store, Bell } from 'lucide-react';
+import { ArrowLeft, Search, Settings, Store } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AlphPayLogo } from './AlphPayLogo';
 import { designSystem } from '../design-system';
@@ -21,7 +21,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onBack,
   showSearch = false,
   onSearchClick,
-  showSettings = true,
+  showSettings = false,
   rightAction,
 }) => {
   const { goBack, navigateTo, currentScreen, isRtl, t } = useApp();
@@ -202,64 +202,31 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {rightAction}
 
         {showSettings && !rightAction && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              onClick={() => navigateTo('NOTIFICATIONS')}
-              aria-label="Notifications"
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#151524',
-                border: `1px solid ${designSystem.colors.borderHairline}`,
-                color: '#FFFFFF',
-                width: '38px',
-                height: '38px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: 'none',
-                position: 'relative',
-                transition: 'background-color 0.15s ease',
-              }}
-            >
-              <Bell size={18} />
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '8px',
-                  right: '8px',
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#00C853',
-                  boxShadow: '0 0 6px #00C853',
-                }}
-              />
-            </button>
+          <button
+            onClick={() => navigateTo('MERCHANT_SETUP')}
+            aria-label="Settings"
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#151524',
+              border: `1px solid ${designSystem.colors.borderHairline}`,
+              color: '#FFFFFF',
+              width: '38px',
+              height: '38px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: 'none',
+              transition: 'background-color 0.15s ease',
+            }}
+          >
+            <Settings size={18} />
+          </button>
+        )}
 
-            <button
-              onClick={() => navigateTo('MERCHANT_SETUP')}
-              aria-label="Settings"
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#151524',
-                border: `1px solid ${designSystem.colors.borderHairline}`,
-                color: '#FFFFFF',
-                width: '38px',
-                height: '38px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: 'none',
-                transition: 'background-color 0.15s ease',
-              }}
-            >
-              <Settings size={18} />
-            </button>
-          </div>
+        {!showSearch && !rightAction && !showSettings && (
+          <div style={{ width: '38px', height: '38px' }} />
         )}
       </div>
     </header>

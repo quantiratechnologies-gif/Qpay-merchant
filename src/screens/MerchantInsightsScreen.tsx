@@ -121,7 +121,7 @@ export const MerchantInsightsScreen: React.FC = () => {
       <AppHeader
         title={t('insights.title', 'Insights & Analytics')}
         showBack={false}
-        showSettings={true}
+        showSettings={false}
       />
 
       <div style={{ padding: `${spacing.space4} ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space4 }}>
