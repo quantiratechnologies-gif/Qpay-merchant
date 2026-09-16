@@ -122,7 +122,7 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
               width: '210px',
               height: '210px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(0, 200, 83, 0.22) 0%, transparent 70%)',
               filter: 'blur(20px)',
               pointerEvents: 'none',
             }}
@@ -135,8 +135,8 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
               height: '220px',
               objectFit: 'cover',
               borderRadius: '24px',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 83, 0.12)',
             }}
           />
         </div>
