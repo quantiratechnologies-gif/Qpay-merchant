@@ -99,6 +99,20 @@ export interface MerchantCollection {
   zatcaQrCode?: string;
 }
 
+export interface MerchantSettlement {
+  id: string;
+  settlementRef: string;
+  utr: string;
+  amount: number;
+  vatAmount: number;
+  date: string;
+  timestamp: Date;
+  status: 'settled' | 'in_progress' | 'failed';
+  bankName: string;
+  ibanMasked: string;
+  method: 'auto_settle' | 'instant_settlenow';
+}
+
 export interface CashierInfo {
   id: string;
   name: string;

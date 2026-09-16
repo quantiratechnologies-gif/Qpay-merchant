@@ -278,6 +278,42 @@ export const TRANSLATIONS: Record<string, { en: string; ar: string }> = {
   'merchant.filter_settled': { en: 'Settled', ar: 'مكتملة' },
   'merchant.filter_refunded': { en: 'Refunded', ar: 'مستردة' },
   'merchant.refund_success': { en: 'Refund Authorized Successfully', ar: 'تم تأكيد الاسترداد بنجاح' },
+
+  // SettleNow & Settlements Ledger
+  'settlenow.banner_title': { en: 'SettleNow — Instant Sarie Transfer', ar: 'التحويل الفوري عبر سريع (SettleNow)' },
+  'settlenow.banner_sub': { en: 'Direct 24/7 liquidity straight to your IBAN with 0 fees', ar: 'سيولة فورية مباشرة إلى حسابك البنكي على مدار الساعة بدون رسوم' },
+  'settlenow.cta': { en: 'Settle Now', ar: 'تسوية فورية' },
+  'settlenow.check_now': { en: 'Check Now', ar: 'التحقق الآن' },
+  'settlenow.auto_schedule': { en: 'Auto-settles daily at 06:00 AM', ar: 'تسوية تلقائية يومياً الساعة ٠٦:٠٠ صباحاً' },
+  'settlenow.success_title': { en: 'Settlement Initiated Instantly', ar: 'تم بدء التسوية الفورية بنجاح' },
+  'settlenow.success_sub': { en: 'Funds have been dispatched directly to your verified Saudi IBAN via Sarie.', ar: 'تم إرسال الأموال مباشرة إلى حساب الآيبان السعودي المعتمد عبر سريع.' },
+  
+  'settlements.title': { en: 'Collections & Settlements', ar: 'التحصيلات والتسويات' },
+  'settlements.tab_transactions': { en: 'Transactions', ar: 'العمليات' },
+  'settlements.tab_settlements': { en: 'Settlements', ar: 'التسويات البنكية' },
+  'settlements.utr': { en: 'Sarie UTR', ar: 'مرجع سريع' },
+  'settlements.tax_invoice': { en: 'Tax Invoice (ZATCA)', ar: 'الفاتورة الضريبية (زاتكا)' },
+  'settlements.download_invoice': { en: 'Download VAT Invoice', ar: 'تحميل الفاتورة الضريبية' },
+  'settlements.status_settled': { en: 'Settled', ar: 'مكتملة' },
+  'settlements.status_in_progress': { en: 'In Progress', ar: 'قيد المعالجة' },
+  'settlements.status_failed': { en: 'Failed', ar: 'فشلت' },
+  'settlements.settled_to': { en: 'Settled to', ar: 'تم التحويل إلى' },
+  'settlements.no_settlements': { en: 'No settlements recorded yet', ar: 'لا توجد تسويات مسجلة حتى الآن' },
+
+  // Financing & Growth Working Capital
+  'financing.badge': { en: 'Pre-Approved', ar: 'موافقة مسبقة' },
+  'financing.title': { en: 'Merchant Growth Financing', ar: 'تمويل نمو المتاجر والسيولة' },
+  'financing.sub': { en: 'Get instant working capital up to SAR 50,000 based on your card sales', ar: 'احصل على تمويل فوري يصل إلى ٥٠,٠٠٠ ر.س بناءً على مبيعات متجرك' },
+  'financing.cta': { en: 'Get Working Capital', ar: 'طلب التمويل الفوري' },
+
+  // QR Standalone Hub
+  'qr.hub_title': { en: 'My Store QR Hub', ar: 'باركود المتجر الموحد' },
+  'qr.scan_to_pay': { en: 'Scan with any Saudi Banking or Wallet App', ar: 'امسح للدفع بأي تطبيق بنكي أو محفظة رقمية' },
+  'qr.download_poster': { en: 'Download Stand Poster', ar: 'تحميل ملصق الباركود' },
+  'qr.share_qr': { en: 'Share via WhatsApp', ar: 'مشاركة عبر واتساب' },
+  'qr.terminal_id': { en: 'Terminal ID', ar: 'معرف الجهاز' },
+  'qr.merchant_id': { en: 'Merchant ID', ar: 'معرف التاجر' },
+  'qr.payment_rails': { en: 'Supported Payment Rails', ar: 'شبكات الدفع المعتمدة' },
   
   // Deals & Travel
   'QTPay Travel Desk': { en: 'QTPay Travel Desk', ar: 'مكتب سفريات كيو تي باي' },

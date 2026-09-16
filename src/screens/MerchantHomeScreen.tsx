@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   QrCode,
   Link2,
@@ -9,6 +9,11 @@ import {
   ReceiptText,
   ShieldCheck,
   SmartphoneNfc,
+  Zap,
+  TrendingUp,
+  Sparkles,
+  ArrowUpRight,
+  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -21,6 +26,7 @@ export const MerchantHomeScreen: React.FC = () => {
   const {
     merchantInfo,
     merchantCollections,
+    triggerSettleNow,
     navigateTo,
     speakSoundBox,
     language,
@@ -28,11 +34,33 @@ export const MerchantHomeScreen: React.FC = () => {
     t,
   } = useApp();
 
+  const [isSettling, setIsSettling] = useState(false);
+  const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
+
   const isAr = language === 'العربية';
   const totalToday = merchantCollections.reduce((acc, c) => acc + (c.status === 'settled' ? c.amount : 0), 0);
   const totalVat = merchantCollections.reduce((acc, c) => acc + (c.status === 'settled' ? c.vatAmount : 0), 0);
   const settledCount = merchantCollections.filter((c) => c.status === 'settled').length;
   const recentCollections = merchantCollections.slice(0, 3);
+
+  const handleSettleNowClick = async () => {
+    setIsSettling(true);
+    try {
+      const settlement = await triggerSettleNow();
+      setSettleSuccessMsg(
+        isAr
+          ? `تم إرسال تسوية فورية بقيمة ${formatSaudiCurrency(settlement.amount, language)} عبر سريع إلى ${settlement.bankName}`
+          : `Instant payout of SAR ${settlement.amount.toFixed(2)} dispatched via Sarie to ${settlement.bankName}`
+      );
+      setTimeout(() => {
+        setSettleSuccessMsg(null);
+      }, 4000);
+    } catch {
+      // noop
+    } finally {
+      setIsSettling(false);
+    }
+  };
 
   const getMethodBadge = (method: string) => {
     switch (method) {
@@ -138,6 +166,105 @@ export const MerchantHomeScreen: React.FC = () => {
 
       {/* Main Content Area */}
       <div style={{ padding: '16px 20px 0 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+        {/* Instant SettleNow Success Banner / Toast */}
+        {settleSuccessMsg && (
+          <div
+            style={{
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid #00C853',
+              borderRadius: '12px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#F8FAFC',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <span>{settleSuccessMsg}</span>
+          </div>
+        )}
+
+        {/* SettleNow Instant Sarie Banner */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #07271B 0%, #0D3B2A 50%, #131B26 100%)',
+            border: '1px solid rgba(0, 200, 83, 0.35)',
+            borderRadius: '16px',
+            padding: '16px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            boxShadow: '0 8px 24px rgba(0, 200, 83, 0.08)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(0, 200, 83, 0.15)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#00C853',
+                flexShrink: 0,
+              }}
+            >
+              <Zap size={20} fill="#00C853" />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  {t('settlenow.banner_title', 'SettleNow — Instant Sarie Transfer')}
+                </h3>
+                <span style={{ fontSize: '9.5px', fontWeight: 800, backgroundColor: '#00C853', color: '#000000', padding: '1px 5px', borderRadius: '4px' }}>
+                  {isAr ? 'فوري' : 'INSTANT'}
+                </span>
+              </div>
+              <p style={{ fontSize: '11px', color: '#94A3B8', margin: '3px 0 0 0', lineHeight: 1.3 }}>
+                {t('settlenow.banner_sub', 'Direct 24/7 liquidity straight to your IBAN with 0 fees')}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={handleSettleNowClick}
+            disabled={isSettling}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#00C853',
+              color: '#000000',
+              border: 'none',
+              borderRadius: '10px',
+              padding: '9px 14px',
+              fontSize: '12px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: '0 4px 12px rgba(0, 200, 83, 0.3)',
+              flexShrink: 0,
+            }}
+          >
+            {isSettling ? (
+              isAr ? 'جاري التحويل...' : 'Settling...'
+            ) : (
+              <>
+                <span>{t('settlenow.cta', 'Settle Now')}</span>
+                <ArrowUpRight size={14} />
+              </>
+            )}
+          </button>
+        </div>
 
         {/* 3. Collections Overview Card */}
         <div
@@ -491,6 +618,93 @@ export const MerchantHomeScreen: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Merchant Growth Financing Card */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #131B26 0%, #1A2738 100%)',
+            border: '1px solid #1E293B',
+            borderRadius: '16px',
+            padding: '16px 18px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                  border: '1px solid rgba(59, 130, 246, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#3B82F6',
+                }}
+              >
+                <TrendingUp size={16} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  {t('financing.title', 'Merchant Growth Financing')}
+                </h4>
+                <span style={{ fontSize: '10.5px', color: '#3B82F6', fontWeight: 700 }}>
+                  {t('financing.badge', 'Pre-Approved')} &bull; {isAr ? 'معدل ربح ٠٪ للشهر الأول' : '0% Margin Month 1'}
+                </span>
+              </div>
+            </div>
+            <span
+              style={{
+                backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                color: '#60A5FA',
+                fontSize: '11px',
+                fontWeight: 800,
+                padding: '3px 8px',
+                borderRadius: '6px',
+              }}
+            >
+              SAR 50,000
+            </span>
+          </div>
+
+          <p style={{ fontSize: '11.5px', color: '#94A3B8', margin: '0 0 12px 0', lineHeight: 1.4 }}>
+            {t('financing.sub', 'Get instant working capital up to SAR 50,000 based on your card sales')}
+          </p>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              onClick={() => {
+                alert(
+                  isAr
+                    ? 'تم استلام طلب التمويل بقيمة ٥٠,٠٠٠ ر.س بنجاح! سيتم التواصل معكم فوراً.'
+                    : 'Financing request for SAR 50,000 received! An approval specialist will reach out shortly.'
+                );
+              }}
+              className="interactive-tap"
+              style={{
+                flex: 1,
+                backgroundColor: '#1E293B',
+                color: '#F8FAFC',
+                border: '1px solid #334155',
+                borderRadius: '10px',
+                padding: '9px 12px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}
+            >
+              <Sparkles size={14} color="#60A5FA" />
+              <span>{t('financing.cta', 'Get Working Capital')}</span>
+            </button>
           </div>
         </div>
 

@@ -12,6 +12,7 @@ import type {
   MerchantCollection,
   PaymentAcceptanceMethod,
   CashierInfo,
+  MerchantSettlement,
 } from '../types';
 import { authService } from '../services/authService';
 import { bankService } from '../services/bankService';
@@ -90,6 +91,8 @@ interface AppContextType {
   merchantInfo: MerchantInfo;
   updateMerchantInfo: (info: Partial<MerchantInfo>) => void;
   merchantCollections: MerchantCollection[];
+  merchantSettlements: MerchantSettlement[];
+  triggerSettleNow: () => Promise<MerchantSettlement>;
   lastMerchantCollection: MerchantCollection | null;
   processMerchantCollection: (params: {
     amount: number;
@@ -199,6 +202,61 @@ const INITIAL_MERCHANT_COLLECTIONS: MerchantCollection[] = [
   },
 ];
 
+const INITIAL_MERCHANT_SETTLEMENTS: MerchantSettlement[] = [
+  {
+    id: 'STL-908124',
+    settlementRef: 'SETTLE-2026-0916-01',
+    utr: 'SARIE88290184201',
+    amount: 1862.50,
+    vatAmount: 242.93,
+    date: 'Today, 06:00 AM',
+    timestamp: new Date(),
+    status: 'settled',
+    bankName: 'Al Rajhi Bank',
+    ibanMasked: 'SA03 8000 •••• 5005',
+    method: 'auto_settle',
+  },
+  {
+    id: 'STL-908123',
+    settlementRef: 'SETTLE-2026-0915-02',
+    utr: 'SARIE88290183994',
+    amount: 3450.00,
+    vatAmount: 450.00,
+    date: 'Yesterday, 06:00 AM',
+    timestamp: new Date(Date.now() - 86400000),
+    status: 'settled',
+    bankName: 'Al Rajhi Bank',
+    ibanMasked: 'SA03 8000 •••• 5005',
+    method: 'auto_settle',
+  },
+  {
+    id: 'STL-908122',
+    settlementRef: 'SETTLE-2026-0914-01',
+    utr: 'SARIE88290181120',
+    amount: 5120.75,
+    vatAmount: 667.92,
+    date: '14 Sep 2026, 08:30 PM',
+    timestamp: new Date(Date.now() - 172800000),
+    status: 'settled',
+    bankName: 'Al Rajhi Bank',
+    ibanMasked: 'SA03 8000 •••• 5005',
+    method: 'instant_settlenow',
+  },
+  {
+    id: 'STL-908121',
+    settlementRef: 'SETTLE-2026-0913-01',
+    utr: 'SARIE88290179921',
+    amount: 4210.00,
+    vatAmount: 549.13,
+    date: '13 Sep 2026, 06:00 AM',
+    timestamp: new Date(Date.now() - 259200000),
+    status: 'settled',
+    bankName: 'Al Rajhi Bank',
+    ibanMasked: 'SA03 8000 •••• 5005',
+    method: 'auto_settle',
+  },
+];
+
 const INITIAL_CASHIERS: CashierInfo[] = [
   { id: 'csh-1', name: 'Khalid Mansour', role: 'Supervisor', pin: '1122', active: true, terminal: 'Terminal 01 (Main POS)' },
   { id: 'csh-2', name: 'Yasmin Al-Harbi', role: 'Cashier', pin: '3344', active: true, terminal: 'Terminal 02 (Express Checkout)' },
@@ -228,6 +286,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [userRole, setUserRole] = useState<UserRole>('merchant');
   const [merchantInfo, setMerchantInfo] = useState<MerchantInfo>(INITIAL_MERCHANT_INFO);
   const [merchantCollections, setMerchantCollections] = useState<MerchantCollection[]>(INITIAL_MERCHANT_COLLECTIONS);
+  const [merchantSettlements, setMerchantSettlements] = useState<MerchantSettlement[]>(INITIAL_MERCHANT_SETTLEMENTS);
   const [lastMerchantCollection, setLastMerchantCollection] = useState<MerchantCollection | null>(null);
   const [cashiers, setCashiers] = useState<CashierInfo[]>(INITIAL_CASHIERS);
   const [softPosAmount, setSoftPosAmount] = useState<number>(67.0);
@@ -584,6 +643,47 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPendingPaymentData(null);
   };
 
+  const triggerSettleNow = async (): Promise<MerchantSettlement> => {
+    const totalCollections = merchantCollections
+      .filter((c) => c.status === 'settled')
+      .reduce((sum, c) => sum + c.amount, 0);
+    const settleAmount = totalCollections > 0 ? totalCollections : 1862.50;
+    const netAmount = Number((settleAmount / 1.15).toFixed(2));
+    const vatAmount = Number((settleAmount - netAmount).toFixed(2));
+
+    const newSettlement: MerchantSettlement = {
+      id: 'STL-' + Math.floor(100000 + Math.random() * 900000).toString(),
+      settlementRef:
+        'SETTLE-' +
+        new Date().toISOString().slice(0, 10).replace(/-/g, '') +
+        '-' +
+        Math.floor(10 + Math.random() * 90).toString(),
+      utr: 'SARIE' + Math.floor(10000000000 + Math.random() * 90000000000).toString(),
+      amount: settleAmount,
+      vatAmount,
+      date: 'Today, ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: new Date(),
+      status: 'settled',
+      bankName: merchantInfo.settlementBank || 'Al Rajhi Bank',
+      ibanMasked: merchantInfo.settlementIban || 'SA03 8000 •••• 5005',
+      method: 'instant_settlenow',
+    };
+
+    setMerchantSettlements((prev) => [newSettlement, ...prev]);
+
+    const newNotif: AppNotification = {
+      id: `notif-${Date.now()}`,
+      title: 'Instant Sarie Payout Dispatched',
+      description: `SAR ${settleAmount.toFixed(2)} credited instantly to ${newSettlement.bankName}. UTR: ${newSettlement.utr}`,
+      timestamp: 'Just now',
+      read: false,
+      type: 'success',
+    };
+    setNotifications((prev) => [newNotif, ...prev]);
+
+    return newSettlement;
+  };
+
   const updateUser = (updatedData: Partial<User>) => {
     setUser((prev) => {
       const newName = updatedData.name !== undefined ? updatedData.name : prev.name;
@@ -688,6 +788,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         merchantInfo,
         updateMerchantInfo,
         merchantCollections,
+        merchantSettlements,
+        triggerSettleNow,
         lastMerchantCollection,
         processMerchantCollection,
         processMerchantRefund,
