@@ -10,9 +10,11 @@ export const MobileNumberScreen: React.FC = () => {
   const [fullName, setFullName] = useState<string>(user.name || (isAr ? 'فهد الحربي' : 'Fahad Al-Harbi'));
   const [mobileNumber, setMobileNumber] = useState<string>('501234567');
 
+  const isFormValid = mobileNumber.length >= 9 && fullName.trim().length > 0;
+
   const handleContinue = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (mobileNumber.length >= 9 && fullName.trim().length > 0) {
+    if (isFormValid) {
       setUserRole('merchant');
       updateUser({ name: fullName, mobile: `+966 ${mobileNumber}` });
       navigateTo('SMS_OTP', { mobile: mobileNumber, name: fullName });
@@ -29,67 +31,57 @@ export const MobileNumberScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '32px 20px 24px 20px',
+        padding: '24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Header with Brand Logo */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px' }}>
+      {/* Top Header Section (Aligned at consistent Y-position) */}
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
+        {/* Top Navigation Row */}
         <div
           style={{
-            marginBottom: '16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            height: '40px',
+            marginBottom: '24px',
           }}
         >
-          <AlphPayLogo variant="horizontal" size={30} themeMode="dark" />
+          <AlphPayLogo variant="horizontal" size={26} themeMode="dark" />
         </div>
 
-        <h1
-          style={{
-            fontSize: '22px',
-            fontWeight: 800,
-            color: '#FFFFFF',
-            margin: '0 0 6px 0',
-            textAlign: 'center',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          {isAr ? 'تسجيل دخول التاجر' : 'Merchant Login'}
-        </h1>
-        <p
-          style={{
-            fontSize: '13px',
-            color: '#94A3B8',
-            margin: 0,
-            textAlign: 'center',
-            maxWidth: '320px',
-            lineHeight: 1.4,
-          }}
-        >
-          {isAr ? 'إدارة نقاط البيع وعمليات الفوترة والمدفوعات' : 'Access your POS terminal & business payment hub'}
-        </p>
-      </div>
+        {/* Title Block */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1
+            style={{
+              fontSize: '26px',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              margin: '0 0 8px 0',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {isAr ? 'تسجيل دخول التاجر' : 'Merchant Login'}
+          </h1>
+          <p
+            style={{
+              fontSize: '13.5px',
+              color: '#94A3B8',
+              margin: 0,
+              lineHeight: 1.5,
+            }}
+          >
+            {isAr
+              ? 'أدخل بيانات المالك ورقم الجوال للوصول إلى نقطة البيع'
+              : 'Enter your merchant credentials to access your POS terminal'}
+          </p>
+        </div>
 
-      {/* Main Form Box */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          margin: '20px auto',
-          backgroundColor: '#111726',
-          border: '1px solid #1E293B',
-          borderRadius: '20px',
-          padding: '22px 18px',
-          boxSizing: 'border-box',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-        }}
-      >
+        {/* Form Container */}
         <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Merchant Owner Name Field */}
+          {/* Owner Name Field */}
           <div>
             <label
               htmlFor="owner-name-input"
@@ -106,17 +98,18 @@ export const MobileNumberScreen: React.FC = () => {
             </label>
             <div
               style={{
-                backgroundColor: '#161F30',
+                backgroundColor: '#111726',
                 border: '1px solid #1E293B',
-                borderRadius: '12px',
-                padding: '12px 14px',
+                borderRadius: '14px',
+                padding: '14px 16px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                transition: 'border-color 0.2s ease',
+                gap: '12px',
+                height: '52px',
+                boxSizing: 'border-box',
               }}
             >
-              <User size={17} color="#00C853" style={{ flexShrink: 0 }} />
+              <User size={18} color="#00C853" style={{ flexShrink: 0 }} />
               <input
                 id="owner-name-input"
                 type="text"
@@ -153,28 +146,24 @@ export const MobileNumberScreen: React.FC = () => {
             >
               {isAr ? 'رقم الجوال' : 'Phone Number'} <span style={{ color: '#00C853' }}>*</span>
             </label>
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center',
-              }}
-            >
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               {/* Country Code Pill */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  backgroundColor: '#161F30',
+                  backgroundColor: '#111726',
                   border: '1px solid #1E293B',
-                  borderRadius: '12px',
-                  padding: '12px 12px',
+                  borderRadius: '14px',
+                  padding: '0 14px',
+                  height: '52px',
                   fontWeight: 700,
                   fontSize: '13.5px',
                   color: '#FFFFFF',
                   flexShrink: 0,
                   direction: 'ltr',
+                  boxSizing: 'border-box',
                 }}
               >
                 <span>🇸🇦</span>
@@ -186,16 +175,18 @@ export const MobileNumberScreen: React.FC = () => {
               <div
                 style={{
                   flex: 1,
-                  backgroundColor: '#161F30',
+                  backgroundColor: '#111726',
                   border: '1px solid #1E293B',
-                  borderRadius: '12px',
-                  padding: '12px 14px',
+                  borderRadius: '14px',
+                  padding: '0 16px',
+                  height: '52px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '10px',
+                  boxSizing: 'border-box',
                 }}
               >
-                <Phone size={16} color="#00C853" style={{ flexShrink: 0 }} />
+                <Phone size={17} color="#00C853" style={{ flexShrink: 0 }} />
                 <input
                   id="merchant-phone-input"
                   type="tel"
@@ -208,7 +199,7 @@ export const MobileNumberScreen: React.FC = () => {
                     background: 'none',
                     border: 'none',
                     outline: 'none',
-                    fontSize: '14.5px',
+                    fontSize: '15px',
                     fontWeight: 700,
                     color: '#FFFFFF',
                     width: '100%',
@@ -222,27 +213,26 @@ export const MobileNumberScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Primary CTA: Get OTP & Verify */}
+          {/* Primary Action Button */}
           <button
             type="submit"
-            disabled={mobileNumber.length < 9 || fullName.trim().length === 0}
+            disabled={!isFormValid}
             className="interactive-tap"
             style={{
-              marginTop: '8px',
-              backgroundColor: '#00C853',
-              color: '#080C14',
-              border: 'none',
+              marginTop: '12px',
+              height: '52px',
+              backgroundColor: isFormValid ? '#00C853' : '#161F30',
+              color: isFormValid ? '#080C14' : '#64748B',
+              border: isFormValid ? 'none' : '1px solid #1E293B',
               borderRadius: '14px',
-              padding: '14px 20px',
-              fontSize: '15px',
+              fontSize: '15.5px',
               fontWeight: 800,
-              cursor: mobileNumber.length < 9 || fullName.trim().length === 0 ? 'not-allowed' : 'pointer',
-              opacity: mobileNumber.length < 9 || fullName.trim().length === 0 ? 0.5 : 1,
+              cursor: isFormValid ? 'pointer' : 'not-allowed',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
+              boxShadow: isFormValid ? '0 4px 20px rgba(0, 200, 83, 0.35)' : 'none',
               transition: 'all 0.2s ease',
             }}
           >
@@ -262,7 +252,7 @@ export const MobileNumberScreen: React.FC = () => {
           gap: '6px',
           width: '100%',
           textAlign: 'center',
-          paddingBottom: '8px',
+          paddingTop: '24px',
         }}
       >
         <span

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 import { toArabicNumerals } from '../utils/i18n';
@@ -13,6 +13,8 @@ export const SmsOtpScreen: React.FC = () => {
   const [timer, setTimer] = useState(28);
   const [isResent, setIsResent] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const isOtpComplete = otp.every((d) => d.trim().length > 0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,7 +31,6 @@ export const SmsOtpScreen: React.FC = () => {
   }, []);
 
   const handleDigitChange = (index: number, value: string) => {
-    // Handle paste or multi-character entry
     const digitsOnly = value.replace(/\D/g, '');
     if (!digitsOnly) {
       const newOtp = [...otp];
@@ -57,7 +58,6 @@ export const SmsOtpScreen: React.FC = () => {
     newOtp[index] = digit;
     setOtp(newOtp);
 
-    // Auto-advance to next box
     if (digit && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -66,13 +66,11 @@ export const SmsOtpScreen: React.FC = () => {
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace') {
       if (!otp[index] && index > 0) {
-        // Current is empty, delete previous and focus previous
         const newOtp = [...otp];
         newOtp[index - 1] = '';
         setOtp(newOtp);
         inputRefs.current[index - 1]?.focus();
       } else if (otp[index]) {
-        // Current has value, clear it
         const newOtp = [...otp];
         newOtp[index] = '';
         setOtp(newOtp);
@@ -101,7 +99,9 @@ export const SmsOtpScreen: React.FC = () => {
   };
 
   const handleVerify = () => {
-    navigateTo('PERMISSIONS');
+    if (isOtpComplete) {
+      navigateTo('PERMISSIONS');
+    }
   };
 
   const handleResend = () => {
@@ -132,81 +132,58 @@ export const SmsOtpScreen: React.FC = () => {
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Bar with Back Button */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '100%' }}>
-        <button
-          onClick={goBack}
-          aria-label="Go Back"
-          className="interactive-tap"
+      {/* Top Section */}
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
+        {/* Top Navigation Row (Back Button at exact top-left) */}
+        <div
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            backgroundColor: '#161F30',
-            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            color: '#FFFFFF',
-            cursor: 'pointer',
+            justifyContent: 'flex-start',
+            height: '40px',
+            marginBottom: '24px',
           }}
         >
-          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-        </button>
-      </div>
-
-      {/* Main Content Hub */}
-      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
-        {/* Verification Emblem */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-          <div
+          <button
+            onClick={goBack}
+            aria-label="Go Back"
+            className="interactive-tap"
             style={{
-              position: 'relative',
-              width: '64px',
-              height: '64px',
-              borderRadius: '20px',
+              width: '40px',
+              height: '40px',
+              borderRadius: '12px',
               backgroundColor: '#111726',
               border: '1px solid #1E293B',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00C853',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-              marginBottom: '16px',
+              color: '#FFFFFF',
+              cursor: 'pointer',
             }}
           >
-            <ShieldCheck size={32} strokeWidth={2.2} />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-2px',
-                right: '-2px',
-                width: '14px',
-                height: '14px',
-                borderRadius: '50%',
-                backgroundColor: '#00C853',
-                border: '2px solid #111726',
-              }}
-            />
-          </div>
+            <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </button>
+        </div>
 
+        {/* Title Block (Exact same vertical Y-position & font hierarchy) */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h1
             style={{
-              fontSize: '22px',
+              fontSize: '26px',
               fontWeight: 800,
               color: '#FFFFFF',
-              margin: '0 0 6px 0',
-              textAlign: 'center',
+              margin: '0 0 8px 0',
+              letterSpacing: '-0.02em',
             }}
           >
             {isAr ? 'التحقق من الرمز' : 'Verify OTP'}
           </h1>
           <p
             style={{
-              fontSize: '13px',
+              fontSize: '13.5px',
               color: '#94A3B8',
               margin: 0,
-              textAlign: 'center',
+              lineHeight: 1.5,
             }}
           >
             {isAr ? 'تم إرسال رمز التحقق في رسالة نصية إلى' : 'Code sent via SMS to'}{' '}
@@ -216,20 +193,8 @@ export const SmsOtpScreen: React.FC = () => {
           </p>
         </div>
 
-        {/* OTP Input Card */}
-        <div
-          style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '20px',
-            padding: '22px 18px',
-            boxSizing: 'border-box',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-          }}
-        >
+        {/* Form Container */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* OTP Digit Boxes */}
           <div
             style={{
@@ -246,7 +211,7 @@ export const SmsOtpScreen: React.FC = () => {
                   key={i}
                   style={{
                     position: 'relative',
-                    width: '46px',
+                    width: '48px',
                     height: '54px',
                   }}
                 >
@@ -266,10 +231,10 @@ export const SmsOtpScreen: React.FC = () => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      borderRadius: '12px',
-                      backgroundColor: '#161F30',
+                      borderRadius: '14px',
+                      backgroundColor: '#111726',
                       border: isFilled ? '1.5px solid #00C853' : '1px solid #1E293B',
-                      fontSize: '20px',
+                      fontSize: '22px',
                       fontWeight: 800,
                       color: '#FFFFFF',
                       textAlign: 'center',
@@ -278,7 +243,6 @@ export const SmsOtpScreen: React.FC = () => {
                       transition: 'all 0.2s ease',
                     }}
                   />
-                  {/* Active Indicator Underline */}
                   {isFilled && (
                     <div
                       style={{
@@ -303,15 +267,17 @@ export const SmsOtpScreen: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: '#161F30',
+              backgroundColor: '#111726',
               border: '1px solid #1E293B',
-              padding: '10px 14px',
-              borderRadius: '12px',
+              padding: '12px 16px',
+              borderRadius: '14px',
+              height: '52px',
+              boxSizing: 'border-box',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle2 size={16} color="#00C853" />
-              <span style={{ fontSize: '12px', fontWeight: 700, color: '#E2E8F0' }}>
+              <span style={{ fontSize: '13px', fontWeight: 700, color: '#E2E8F0' }}>
                 {isAr ? `رمز الرسالة: ${toArabicNumerals('582904')}` : 'Demo OTP: 582904'}
               </span>
             </div>
@@ -324,8 +290,8 @@ export const SmsOtpScreen: React.FC = () => {
                 color: '#00C853',
                 border: '1px solid rgba(0, 200, 83, 0.4)',
                 borderRadius: '8px',
-                padding: '4px 10px',
-                fontSize: '11px',
+                padding: '6px 12px',
+                fontSize: '11.5px',
                 fontWeight: 800,
                 cursor: 'pointer',
               }}
@@ -335,7 +301,7 @@ export const SmsOtpScreen: React.FC = () => {
           </div>
 
           {/* Resend SMS Counter */}
-          <div style={{ textAlign: 'center', fontSize: '12.5px', color: '#94A3B8' }}>
+          <div style={{ textAlign: 'center', fontSize: '13px', color: '#94A3B8', margin: '4px 0' }}>
             <span>{isAr ? 'لم تستلم الرمز؟ ' : "Didn't receive code? "}</span>
             <button
               disabled={timer > 0}
@@ -363,7 +329,7 @@ export const SmsOtpScreen: React.FC = () => {
             <div
               style={{
                 textAlign: 'center',
-                fontSize: '11.5px',
+                fontSize: '12px',
                 color: '#00C853',
                 fontWeight: 700,
               }}
@@ -372,29 +338,28 @@ export const SmsOtpScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Primary CTA: Verify & Proceed (Inside Card Container) */}
+          {/* Primary Action Button */}
           <button
+            type="button"
             onClick={handleVerify}
-            disabled={otp.some((d) => !d)}
+            disabled={!isOtpComplete}
             className="interactive-tap"
             style={{
-              width: '100%',
-              backgroundColor: '#00C853',
-              color: '#080C14',
-              border: 'none',
+              marginTop: '4px',
+              height: '52px',
+              backgroundColor: isOtpComplete ? '#00C853' : '#161F30',
+              color: isOtpComplete ? '#080C14' : '#64748B',
+              border: isOtpComplete ? 'none' : '1px solid #1E293B',
               borderRadius: '14px',
-              padding: '14px 20px',
-              fontSize: '15px',
+              fontSize: '15.5px',
               fontWeight: 800,
-              cursor: otp.some((d) => !d) ? 'not-allowed' : 'pointer',
-              opacity: otp.some((d) => !d) ? 0.5 : 1,
+              cursor: isOtpComplete ? 'pointer' : 'not-allowed',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
+              boxShadow: isOtpComplete ? '0 4px 20px rgba(0, 200, 83, 0.35)' : 'none',
               transition: 'all 0.2s ease',
-              marginTop: '4px',
             }}
           >
             <span>{isAr ? 'التحقق والمتابعة' : 'Verify & Proceed'}</span>
@@ -413,7 +378,7 @@ export const SmsOtpScreen: React.FC = () => {
           gap: '6px',
           width: '100%',
           textAlign: 'center',
-          paddingBottom: '8px',
+          paddingTop: '24px',
         }}
       >
         <span
