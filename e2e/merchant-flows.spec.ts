@@ -11,7 +11,6 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await page.goto('/?screen=MERCHANT_HOME');
     await expect(page.locator('button[aria-label="Store Profile"]')).toBeVisible();
     await expect(page.locator('button[aria-label="Notifications"]')).toBeVisible();
-    await expect(page.locator('button[aria-label="Profile"]')).toBeVisible();
     await expect(page.locator('text=Starmart Supermarket')).toBeVisible();
     await expect(page.locator('text=Speaker Online')).toBeVisible();
     await expect(page.locator('text=Smart Soundbox Pro')).toBeVisible();

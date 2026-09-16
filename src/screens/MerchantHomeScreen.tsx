@@ -3,7 +3,6 @@ import {
   Store,
   ChevronDown,
   Bell,
-  User,
   Volume2,
   Megaphone,
   Eye,
@@ -135,7 +134,7 @@ export const MerchantHomeScreen: React.FC = () => {
           <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        {/* Right: Notification & Profile Icon Buttons */}
+        {/* Right: Notification Icon Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
           {/* Notification Button */}
           <button
@@ -169,27 +168,6 @@ export const MerchantHomeScreen: React.FC = () => {
                 border: `1.5px solid ${colors.bgInset}`,
               }}
             />
-          </button>
-
-          {/* Profile Button */}
-          <button
-            onClick={() => navigateTo('PROFILE')}
-            aria-label="Profile"
-            className="interactive-tap"
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: radii.full,
-              backgroundColor: colors.bgInset,
-              border: `1px solid ${colors.border}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: colors.textPrimary,
-              cursor: 'pointer',
-            }}
-          >
-            <User size={18} />
           </button>
         </div>
       </div>
