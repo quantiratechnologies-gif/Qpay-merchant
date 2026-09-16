@@ -73,7 +73,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     >
       {/* Top Standardized Navigation */}
       <AppHeader
-        title={t('merchant.softpos', 'SoftPOS Terminal')}
+        title={t('merchant.softpos_title', 'SoftPOS Terminal')}
         showBack={true}
         showSettings={false}
         rightAction={
