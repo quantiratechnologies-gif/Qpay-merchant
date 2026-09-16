@@ -6,7 +6,6 @@ import {
   Volume2,
   ChevronRight,
   Landmark,
-  Store,
   Monitor,
   ReceiptText,
   Radio,
@@ -16,7 +15,7 @@ import { formatCurrency } from '../utils/formatters';
 import { translateText, formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
 import { SamaLogo } from '../components/SamaLogo';
 import { PaymentPartnerLogo } from '../components/PaymentPartnerLogo';
-import { AlphPayLogo } from '../components/AlphPayLogo';
+import { AppHeader } from '../components/AppHeader';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
@@ -64,85 +63,10 @@ export const MerchantHomeScreen: React.FC = () => {
         userSelect: 'none',
       }}
     >
-      {/* 1. Top Merchant Header with Icon-Only Profile, Exact Center Logo & Action Controls */}
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '12px 18px',
-          backgroundColor: 'rgba(11, 11, 20, 0.96)',
-          backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid #2C2C44',
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          minHeight: '58px',
-          boxSizing: 'border-box',
-        }}
-      >
-        {/* Left Slot: Merchant Profile Icon (No Text Next to It) */}
-        <div style={{ display: 'flex', alignItems: 'center', zIndex: 2, minWidth: '38px' }}>
-          <div
-            onClick={() => navigateTo('PROFILE')}
-            role="button"
-            tabIndex={0}
-            aria-label="Merchant Profile"
-            className="interactive-tap"
-            style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(127, 232, 127, 0.15)',
-              border: '1.5px solid #7FE87F',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#7FE87F',
-              cursor: 'pointer',
-              flexShrink: 0,
-            }}
-          >
-            <Store size={18} />
-          </div>
-        </div>
-
-        {/* Exact Top Center Slot: Logo Wordmark with Merchant Indicator */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            zIndex: 1,
-          }}
-        >
-          <div onClick={() => navigateTo('MERCHANT_HOME')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <AlphPayLogo variant="header" size={22} themeMode="dark" />
-            <span
-              style={{
-                fontSize: '9px',
-                fontWeight: 900,
-                backgroundColor: '#7FE87F',
-                color: '#000000',
-                padding: '2px 6px',
-                borderRadius: '4px',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-              }}
-            >
-              {isAr ? 'تاجر' : 'MERCHANT'}
-            </span>
-          </div>
-        </div>
-
-        {/* Right Slot: Web Portal Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 2 }}>
-          {/* Web Admin Portal Button */}
+      {/* 1. Standardized Responsive AppHeader with Notch Clearance */}
+      <AppHeader
+        showBack={false}
+        rightAction={
           <button
             onClick={() => navigateTo('MERCHANT_WEB')}
             title={isAr ? 'فتح بوابة الإدارة الإلكترونية' : 'Open Merchant Web Admin'}
@@ -162,8 +86,8 @@ export const MerchantHomeScreen: React.FC = () => {
           >
             <Monitor size={17} />
           </button>
-        </div>
-      </header>
+        }
+      />
 
       {/* Merchant Business Context Strip */}
       <div style={{ padding: '16px 20px 0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

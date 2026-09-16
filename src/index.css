@@ -119,10 +119,12 @@ body.rtl {
   font-family: var(--font-family);
 }
 
-/* Responsive Browser Viewport (NO Mockup Frame, NO Borders, NO Phone Notches) */
+/* Responsive Browser Viewport (Supports All Devices: Mobile, Tablet, Desktop, Notch Devices) */
 .app-viewport {
   width: 100%;
   max-width: 600px;
+  min-height: 100vh;
+  min-height: 100dvh;
   height: 100vh;
   height: 100dvh;
   background-color: var(--bg-page);
@@ -136,6 +138,7 @@ body.rtl {
   border-bottom: none;
   border-radius: 0 !important;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 @media (max-width: 600px) {
@@ -144,6 +147,44 @@ body.rtl {
     border-left: none;
     border-right: none;
   }
+}
+
+/* Responsive Top App Navigation Bar (Notch & Center Camera Safe Clearance) */
+.app-header {
+  padding-left: max(16px, env(safe-area-inset-left, 16px)) !important;
+  padding-right: max(16px, env(safe-area-inset-right, 16px)) !important;
+  padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
+  padding-bottom: 12px !important;
+  min-height: calc(62px + env(safe-area-inset-top, 0px)) !important;
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 380px) {
+  .app-header {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-top: max(12px, env(safe-area-inset-top, 12px)) !important;
+    padding-bottom: 10px !important;
+  }
+  .app-header h2 {
+    font-size: 14.5px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-header {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    min-height: 68px !important;
+  }
+  .app-header h2 {
+    font-size: 17px !important;
+  }
+}
+
+/* Bottom Navigation Responsive Safe Area Padding */
+nav[role="navigation"] {
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
 }
 
 /* Scrollable Screen Content Container */
