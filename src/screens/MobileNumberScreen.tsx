@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Store, ArrowRight } from 'lucide-react';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
+import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
@@ -210,30 +210,30 @@ export const MobileNumberScreen: React.FC = () => {
         </form>
       </div>
 
-      {/* Down in Center: Associated with SAMA */}
+      {/* Down in Center: Powered by Quantira Technologies */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '8px',
+          gap: '6px',
           width: '100%',
           textAlign: 'center',
         }}
       >
         <span
           style={{
-            fontSize: '11px',
+            fontSize: '10.5px',
             color: '#64748B',
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
           }}
         >
-          {t('home.associated_sama', 'Associated with')}
+          {t('powered.by', 'powered by')}
         </span>
-        <SamaLogo height={20} themeMode="green" />
+        <QuantiraLogo size={20} color="#7FE87F" textColor="#E2E2F0" />
       </div>
     </div>
   );

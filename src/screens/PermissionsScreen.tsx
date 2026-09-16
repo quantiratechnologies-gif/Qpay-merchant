@@ -3,7 +3,6 @@ import { Wifi, Camera, MapPin, Radio, Bell, ShieldCheck, ArrowRight, Lock, Landm
 import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { useApp } from '../state/AppContext';
 
 export const PermissionsScreen: React.FC = () => {
@@ -39,7 +38,7 @@ export const PermissionsScreen: React.FC = () => {
     {
       key: 'location',
       icon: <MapPin size={19} />,
-      name: language === 'العربية' ? 'الموقع الجغرافي لأمان نقاط البيع' : 'Location & SAMA Geofencing',
+      name: language === 'العربية' ? 'الموقع الجغرافي لأمان نقاط البيع' : 'Location & POS Geofencing',
       required: true,
     },
     {
@@ -86,7 +85,7 @@ export const PermissionsScreen: React.FC = () => {
         <AppHeader title={t('auth.permissions_title', 'SoftPOS Permissions')} showBack={true} onBack={goBack} showSettings={false} />
 
         <div style={{ padding: '20px' }}>
-          {/* Header Card with SAMA Central Bank Logo */}
+          {/* Header Card */}
           <div
             style={{
               backgroundColor: '#111726',
@@ -120,16 +119,12 @@ export const PermissionsScreen: React.FC = () => {
               </div>
               <div>
                 <div style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {language === 'العربية' ? 'معايير أمان نقاط البيع المعتمدة من ساما' : 'SAMA Mandated SoftPOS Security'}
+                  {language === 'العربية' ? 'معايير أمان نقاط البيع المعتمدة' : 'SoftPOS Terminal Security Standard'}
                 </div>
                 <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                  {language === 'العربية' ? 'المعايير التنظيمية للبنك المركزي السعودي' : 'Saudi Central Bank Merchant POS Standard'}
+                  {language === 'العربية' ? 'تشفير متقدم لعمليات نقاط البيع والدفع' : 'Encrypted Contactless & QR POS Processing'}
                 </div>
               </div>
-            </div>
-
-            <div style={{ paddingInlineStart: '8px', borderInlineStart: '1px solid #1E293B' }}>
-              <SamaLogo height={20} themeMode="dark" />
             </div>
           </div>
 
@@ -323,7 +318,7 @@ export const PermissionsScreen: React.FC = () => {
             </h3>
 
             <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 20px 0', lineHeight: '1.4' }}>
-              {discoveryStep === 1 && (language === 'العربية' ? 'تأمين اتصال NFC المشفر مع البنك المركزي' : 'Securing NFC SoftPOS encryption with SAMA')}
+              {discoveryStep === 1 && (language === 'العربية' ? 'تأمين اتصال NFC المشفر لنقاط البيع' : 'Securing NFC SoftPOS encrypted connection')}
               {discoveryStep === 2 && (language === 'العربية' ? 'الربط بمنظومة الفوترة الإلكترونية المرحلة الثانية' : 'Enrolled in ZATCA Phase 2 E-Invoicing')}
               {discoveryStep === 3 && (language === 'العربية' ? 'تم تفعيل شبكة مدى وسريع. جاري إكمال بيانات المتجر...' : 'mada & Sarie POS enabled. Proceeding to store setup...')}
             </p>
@@ -380,7 +375,6 @@ export const PermissionsScreen: React.FC = () => {
                     {language === 'العربية' ? 'جاهزية شبكة مدى وسريع' : 'mada & Sarie POS Engine Ready'}
                   </span>
                 </div>
-                {discoveryStep >= 3 && <SamaLogo height={14} themeMode="green" />}
               </div>
             </div>
           </div>

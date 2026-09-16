@@ -78,21 +78,21 @@ export const SplashScreen: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '6px',
+          gap: '8px',
         }}
       >
         <span
           style={{
-            fontSize: '10.5px',
-            fontWeight: 700,
-            color: '#6E6E85',
-            letterSpacing: '0.08em',
+            fontSize: '11px',
+            fontWeight: 800,
+            color: '#71717A',
+            letterSpacing: '0.14em',
             textTransform: 'uppercase',
           }}
         >
           powered by
         </span>
-        <QuantiraLogo size={22} color="#7FE87F" textColor="#E2E2F0" />
+        <QuantiraLogo size={24} color="#7FE87F" textColor="#FFFFFF" />
       </div>
     </div>
   );
