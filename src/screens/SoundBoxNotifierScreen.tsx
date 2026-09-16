@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Volume2, Radio, Play } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AppHeader } from '../components/AppHeader';
@@ -15,16 +15,9 @@ export const SoundBoxNotifierScreen: React.FC = () => {
   } = useApp();
 
   const isAr = language === 'العربية';
-  const [lastPlayedLog, setLastPlayedLog] = useState<string>(
-    isAr ? 'جاهز لاستقبال إشعارات سريع والمدفوعات الفورية' : 'Ready for incoming Sarie & instant payments'
-  );
 
   const handlePlayTest = (amount: number) => {
     speakSoundBox(amount);
-    const msg = soundBoxLanguage === 'ar' || isAr
-      ? `تم تشغيل الإشعار الصوتي: تم استلام ${amount} ريال سعودي عبر كيو تي باي`
-      : `Played audio announcement: Received SAR ${amount}.00 on QTPay`;
-    setLastPlayedLog(msg);
   };
 
   return (
@@ -118,24 +111,6 @@ export const SoundBoxNotifierScreen: React.FC = () => {
           <span style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', marginTop: '10px' }}>
             SoundBox Pro v2.4
           </span>
-        </div>
-
-        {/* Live Status Toast */}
-        <div
-          style={{
-            marginTop: '14px',
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '12px',
-            padding: '8px 16px',
-            fontSize: '11.5px',
-            color: '#00C853',
-            fontWeight: 700,
-            maxWidth: '320px',
-            textAlign: 'center',
-          }}
-        >
-          {lastPlayedLog}
         </div>
       </div>
 
@@ -251,13 +226,6 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Quantira Technologies Dock */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
-          <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-            {isAr ? 'مدعوم بتقنيات كوانتيرا للأجهزة الذكية' : 'Powered by Quantira Technologies IoT Engine'}
-          </span>
         </div>
       </div>
     </div>

@@ -51,7 +51,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
   const [refundSuccess, setRefundSuccess] = useState(false);
 
   const [isSettling, setIsSettling] = useState(false);
-  const [downloadSuccessMsg, setDownloadSuccessMsg] = useState<string | null>(null);
+  
 
   // Extended mock items if state has only base items
   const allCollections: MerchantCollection[] = merchantCollections.length >= 4
@@ -122,24 +122,13 @@ export const MerchantCollectionsScreen: React.FC = () => {
     setIsSettling(true);
     try {
       await triggerSettleNow();
-      setDownloadSuccessMsg(
-        isAr ? 'تم بدء التسوية الفورية وإيداع المبلغ في حسابك البنكي بنجاح' : 'Instant settlement dispatched to bank successfully.'
-      );
-      setTimeout(() => setDownloadSuccessMsg(null), 3500);
     } finally {
       setIsSettling(false);
     }
   };
 
-  const handleDownloadTaxInvoice = (settlementRef: string) => {
-    setDownloadSuccessMsg(
-      isAr
-        ? `جاري تحميل الفاتورة الضريبية الرسمية لـ ${settlementRef} بتنسيق ZATCA PDF...`
-        : `Downloading ZATCA VAT Tax Invoice for ${settlementRef}...`
-    );
-    setTimeout(() => {
-      setDownloadSuccessMsg(null);
-    }, 3000);
+  const handleDownloadTaxInvoice = (_settlementRef: string) => {
+    // No-op clean action
   };
 
   const renderPaymentIcon = (method: string) => {
@@ -331,28 +320,6 @@ export const MerchantCollectionsScreen: React.FC = () => {
             </div>
           }
         />
-
-        {/* Global Notification Toast */}
-        {downloadSuccessMsg && (
-          <div
-            style={{
-              backgroundColor: colors.successLight,
-              border: `1px solid ${colors.accentGreen}`,
-              borderRadius: radii.md,
-              padding: '10px 14px',
-              marginBottom: spacing.space3,
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing.space2,
-              fontSize: '12px',
-              fontWeight: 700,
-              color: colors.textPrimary,
-            }}
-          >
-            <CheckCircle2 size={16} color={colors.accentGreen} />
-            <span>{downloadSuccessMsg}</span>
-          </div>
-        )}
 
         {/* 1. Dual Tab Segmented Control (Collections vs Settlements) */}
         <div

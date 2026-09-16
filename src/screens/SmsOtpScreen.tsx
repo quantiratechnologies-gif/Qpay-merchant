@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 import { toArabicNumerals } from '../utils/i18n';
 
@@ -366,33 +365,6 @@ export const SmsOtpScreen: React.FC = () => {
             <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </div>
-      </div>
-
-      {/* Powered by Quantira Technologies */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          width: '100%',
-          textAlign: 'center',
-          paddingTop: '24px',
-        }}
-      >
-        <span
-          style={{
-            fontSize: '10px',
-            color: '#64748B',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-          }}
-        >
-          {isAr ? 'مشغل بواسطة' : 'POWERED BY QUANTIRA TECHNOLOGIES'}
-        </span>
-        <QuantiraLogo size={18} color="#00C853" textColor="#CBD5E1" />
       </div>
     </div>
   );

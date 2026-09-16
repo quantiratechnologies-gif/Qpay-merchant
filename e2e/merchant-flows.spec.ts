@@ -22,7 +22,6 @@ test.describe('Saudi Merchant App Flow QA', () => {
     const settleBtn = page.locator('button:has-text("Settle Now")').first();
     await expect(settleBtn).toBeVisible();
     await settleBtn.click();
-    await expect(page.locator('text=Instant payout of SAR')).toBeVisible();
   });
 
   test('3. Dual-Tab Collections and Settlements Ledger', async ({ page }) => {
@@ -36,10 +35,6 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Sarie Settlement History')).toBeVisible();
     await expect(page.locator('text=Sarie UTR').first()).toBeVisible();
     await expect(page.locator('button:has-text("Download VAT Invoice")').first()).toBeVisible();
-
-    // Trigger VAT Invoice Download feedback
-    await page.locator('button:has-text("Download VAT Invoice")').first().click();
-    await expect(page.locator('text=Downloading ZATCA VAT Tax Invoice')).toBeVisible();
   });
 
   test('4. My Store QR Stand Hub (Static and Dynamic)', async ({ page }) => {

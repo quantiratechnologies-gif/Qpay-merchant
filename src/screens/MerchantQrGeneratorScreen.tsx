@@ -5,7 +5,6 @@ import {
   Download,
   Copy,
   Check,
-  CheckCircle2,
   Receipt,
   QrCode,
 } from 'lucide-react';
@@ -31,7 +30,6 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
   const [invoiceAmount, setInvoiceAmount] = useState<string>('150.00');
   const [orderNote, setOrderNote] = useState<string>(isAr ? 'فاتورة رقم #INV-9901' : 'Invoice #INV-9901');
   const [copied, setCopied] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [isSimulatingScan, setIsSimulatingScan] = useState(false);
 
   const numAmount = qrMode === 'invoice' ? (parseFloat(invoiceAmount) || 0) : 0;
@@ -43,10 +41,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
       ? `zatca://taxinvoice?seller=${encodeURIComponent(merchantInfo.businessName)}&vat=${merchantInfo.vatNumber}&total=${numAmount.toFixed(2)}&vat_total=${vatAmount.toFixed(2)}&terminal=${merchantInfo.terminalId}&rail=sarie&ts=${encodeURIComponent(new Date().toISOString())}`
       : `zatca://posqr?seller=${encodeURIComponent(merchantInfo.businessName)}&cr=${merchantInfo.crNumber}&vat=${merchantInfo.vatNumber}&terminal=${merchantInfo.terminalId}&rail=sarie_mada`;
 
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
-  };
+  const showToast = (_msg: string) => {};
 
   const handleSimulateCustomerPayment = async () => {
     const payAmount = qrMode === 'invoice' && numAmount > 0 ? numAmount : 85.0;
@@ -126,28 +121,6 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
             </div>
           }
         />
-
-        {/* Global Toast */}
-        {toastMsg && (
-          <div
-            style={{
-              backgroundColor: 'rgba(0, 200, 83, 0.15)',
-              border: '1px solid #00C853',
-              borderRadius: '12px',
-              padding: '10px 14px',
-              marginBottom: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontSize: '12px',
-              fontWeight: 700,
-              color: '#F8FAFC',
-            }}
-          >
-            <CheckCircle2 size={16} color="#00C853" />
-            <span>{toastMsg}</span>
-          </div>
-        )}
 
         {/* QR Mode Switcher: Store Stand QR vs Dynamic Invoice */}
         <div

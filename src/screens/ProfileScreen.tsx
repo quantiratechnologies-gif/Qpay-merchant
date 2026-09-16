@@ -259,13 +259,6 @@ export const ProfileScreen: React.FC = () => {
             showChevron={true}
           />
         </div>
-
-        {/* Quantira Technologies Dock */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
-          <span style={{ fontSize: '10.5px', color: colors.textMuted, fontWeight: 700 }}>
-            {isAr ? 'منصة مدفوعات تجارية مدعومة بتقنيات كوانتيرا' : 'Merchant Platform • Powered by Quantira Technologies'}
-          </span>
-        </div>
       </div>
     </div>
   );

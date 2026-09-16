@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wifi, Camera, MapPin, Radio, Bell, ShieldCheck, ArrowRight, Lock, Landmark, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { Wifi, Camera, MapPin, Radio, Bell, ShieldCheck, ArrowRight, Landmark, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SecondaryButton } from '../components/SecondaryButton';
@@ -254,13 +254,6 @@ export const PermissionsScreen: React.FC = () => {
         <SecondaryButton onClick={handleGrantPermissions}>
           {language === 'العربية' ? 'تخطي الآن' : 'Skip for Now'}
         </SecondaryButton>
-
-        <div style={{ textAlign: 'center', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <Lock size={12} color="#64748B" />
-          <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
-            {language === 'العربية' ? 'تشفير أجهزة متقدم بمستوى ٢٥٦ بت' : '256-Bit Hardware Encrypted'}
-          </span>
-        </div>
       </div>
 
       {/* Interactive Terminal Initialization Modal */}

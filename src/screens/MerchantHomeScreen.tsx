@@ -15,10 +15,9 @@ import {
   Banknote,
   CreditCard,
   Smartphone,
-  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
+import { formatLocalizedNumber } from '../utils/i18n';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 import { Card, StatusBadge, SectionHeader, ListRow } from '../components/ui';
 import { colors, spacing, radii } from '../design-system/tokens';
@@ -35,9 +34,7 @@ export const MerchantHomeScreen: React.FC = () => {
   } = useApp();
 
   const [isSettling, setIsSettling] = useState(false);
-  const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
   const [showBalance, setShowBalance] = useState(true);
-  const [cashSaleSuccess, setCashSaleSuccess] = useState<string | null>(null);
 
   const isAr = language === 'العربية';
   const totalToday = merchantCollections.reduce(
@@ -51,15 +48,7 @@ export const MerchantHomeScreen: React.FC = () => {
   const handleSettleNowClick = async () => {
     setIsSettling(true);
     try {
-      const settlement = await triggerSettleNow();
-      setSettleSuccessMsg(
-        isAr
-          ? `تم تحويل تسوية فورية بقيمة ${formatSaudiCurrency(settlement.amount, language)} عبر سريع إلى ${settlement.bankName}`
-          : `Instant payout of SAR ${settlement.amount.toFixed(2)} dispatched via Sarie to ${settlement.bankName}`
-      );
-      setTimeout(() => {
-        setSettleSuccessMsg(null);
-      }, 4000);
+      await triggerSettleNow();
     } catch {
       // noop
     } finally {
@@ -72,10 +61,7 @@ export const MerchantHomeScreen: React.FC = () => {
   };
 
   const handleCashSale = () => {
-    setCashSaleSuccess(
-      isAr ? 'تم تسجيل مبيعات نقدية بقيمة ٥٠٫٠٠ ر.س بنجاح' : 'Cash sale of SAR 50.00 recorded successfully'
-    );
-    setTimeout(() => setCashSaleSuccess(null), 3000);
+    // Clean instant action
   };
 
   return (
@@ -202,47 +188,6 @@ export const MerchantHomeScreen: React.FC = () => {
             />
           </div>
         </div>
-
-        {/* Toast / Notification Messages */}
-        {settleSuccessMsg && (
-          <div
-            style={{
-              backgroundColor: colors.successLight,
-              border: `1px solid ${colors.accentGreen}`,
-              borderRadius: radii.md,
-              padding: '12px 14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing.space2,
-              color: colors.textPrimary,
-              fontSize: '12px',
-              fontWeight: 700,
-            }}
-          >
-            <CheckCircle2 size={18} color={colors.accentGreen} style={{ flexShrink: 0 }} />
-            <span>{settleSuccessMsg}</span>
-          </div>
-        )}
-
-        {cashSaleSuccess && (
-          <div
-            style={{
-              backgroundColor: colors.successLight,
-              border: `1px solid ${colors.accentGreen}`,
-              borderRadius: radii.md,
-              padding: '12px 14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing.space2,
-              color: colors.textPrimary,
-              fontSize: '12px',
-              fontWeight: 700,
-            }}
-          >
-            <CheckCircle2 size={18} color={colors.accentGreen} style={{ flexShrink: 0 }} />
-            <span>{cashSaleSuccess}</span>
-          </div>
-        )}
 
         {/* 2. Smart Soundbox Pro Banner */}
         <Card

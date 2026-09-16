@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, ChevronDown, User, Phone } from 'lucide-react';
 import { AlphPayLogo } from '../components/AlphPayLogo';
-import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
@@ -240,33 +239,6 @@ export const MobileNumberScreen: React.FC = () => {
             <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </form>
-      </div>
-
-      {/* Powered by Quantira Technologies */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          width: '100%',
-          textAlign: 'center',
-          paddingTop: '24px',
-        }}
-      >
-        <span
-          style={{
-            fontSize: '10px',
-            color: '#64748B',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-          }}
-        >
-          {isAr ? 'مشغل بواسطة' : 'POWERED BY QUANTIRA TECHNOLOGIES'}
-        </span>
-        <QuantiraLogo size={18} color="#00C853" textColor="#CBD5E1" />
       </div>
     </div>
   );

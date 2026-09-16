@@ -12,7 +12,6 @@ import {
   Mail,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { QuantiraLogo } from '../components/QuantiraLogo';
 
 const CATEGORIES = [
   { en: 'Grocery & Daily Essentials', ar: 'بقالة وتموينات واحتياجات يومية' },
@@ -526,33 +525,6 @@ export const MerchantSetupScreen: React.FC = () => {
             <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </form>
-      </div>
-
-      {/* Powered by Quantira Technologies */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          width: '100%',
-          textAlign: 'center',
-          paddingTop: '24px',
-        }}
-      >
-        <span
-          style={{
-            fontSize: '10px',
-            color: '#64748B',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-          }}
-        >
-          {isAr ? 'مشغل بواسطة' : 'POWERED BY QUANTIRA TECHNOLOGIES'}
-        </span>
-        <QuantiraLogo size={18} color="#00C853" textColor="#CBD5E1" />
       </div>
     </div>
   );

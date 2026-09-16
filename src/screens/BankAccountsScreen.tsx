@@ -106,8 +106,8 @@ export const BankAccountsScreen: React.FC = () => {
                   {language === 'العربية' ? `${bankAccounts.length} نشطة` : `${bankAccounts.length} Active`}
                 </span>
               </div>
-              <div style={{ fontSize: '11.5px', color: '#94A3B8', fontWeight: 600, marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>&bull; {language === 'العربية' ? 'محمي عبر البنية التحتية لسريع وتقنيات كوانتيرا' : 'Sarie Instant Rails Secured • Quantira Technologies'}</span>
+              <div style={{ fontSize: '11.5px', color: '#94A3B8', fontWeight: 600, marginTop: '4px' }}>
+                {language === 'العربية' ? 'حسابات التسوية الفورية عبر سريع' : 'Instant Sarie Settlement Accounts'}
               </div>
             </div>
           </div>
