@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Landmark, Check, ArrowRight, Clock } from 'lucide-react';
+import { Landmark, Check, ArrowRight } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { AppHeader } from '../components/AppHeader';
+import { colors, spacing, radii } from '../design-system/tokens';
 
 const SAUDI_SETTLEMENT_BANKS = [
   {
@@ -61,226 +62,147 @@ export const MerchantSettlementBankScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#080C14',
-        color: '#FFFFFF',
+        backgroundColor: colors.bgPage,
+        color: colors.textPrimary,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        paddingBottom: '30px',
+        paddingBottom: spacing.space6,
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      <AppHeader
-        title={isAr ? 'حساب التسوية البنكية والآيبان' : 'Settlement IBAN & Bank'}
-        showBack={true}
-        showSettings={false}
-      />
+      <div>
+        <AppHeader
+          title={isAr ? 'حساب التسوية البنكي' : 'Settlement Account'}
+          showBack={true}
+          showSettings={false}
+        />
 
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '16px', padding: '0 24px' }}>
-        <div
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '18px',
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 12px auto',
-          }}
-        >
-          <Landmark size={30} color="#00C853" />
-        </div>
-        <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
-          {isAr ? 'حساب بنك التسوية للمنشأة' : 'Settlement Bank Account'}
-        </h2>
-        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
-          {isAr ? 'اختر حساب المنشأة البنكي السعودي للتحويل والإيداع اليومي الفوري عبر سريع' : 'Choose your corporate Saudi bank for daily automated Sarie payouts'}
-        </p>
-      </div>
-
-      {/* Single Verified Settlement Account Card */}
-      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div
-          style={{
-            backgroundColor: '#111726',
-            border: '1.5px solid #00C853',
-            borderRadius: '18px',
-            padding: '18px',
-            position: 'relative',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <span
-              style={{
-                fontSize: '10.5px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
-            >
-              {isAr ? 'الحساب البنكي المعتمد للتسوية' : 'OFFICIAL SETTLEMENT ACCOUNT'}
-            </span>
-            <div
-              style={{
-                backgroundColor: 'rgba(0, 200, 83, 0.15)',
-                border: '1px solid #00C853',
-                color: '#00C853',
-                fontSize: '10.5px',
-                fontWeight: 800,
-                padding: '3px 8px',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <Check size={12} strokeWidth={3} />
-              <span>{isAr ? 'نشط وموثق' : 'Active & Verified'}</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
-            <div
-              style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                border: '1px solid rgba(0, 200, 83, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#00C853',
-                flexShrink: 0,
-              }}
-            >
-              <Landmark size={22} />
-            </div>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF' }}>
-                {selectedBank}
-              </div>
-              <div style={{ fontSize: '12px', color: '#94A3B8', fontFamily: 'monospace', letterSpacing: '0.04em', marginTop: '3px', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
-                {selectedIban}
-              </div>
-            </div>
-          </div>
-
-          <div
+        {/* Clean Screen Intro */}
+        <div style={{ padding: `${spacing.space3} ${spacing.space5} ${spacing.space4} ${spacing.space5}` }}>
+          <h2
             style={{
-              paddingTop: '12px',
-              borderTop: '1px solid #1E293B',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '11px',
-              color: '#94A3B8',
+              fontSize: '18px',
+              fontWeight: 700,
+              margin: '0 0 6px 0',
+              color: colors.textPrimary,
+              letterSpacing: '-0.01em',
             }}
           >
-            <span>{isAr ? 'شبكة التحويل:' : 'Payout Rail:'} <strong style={{ color: '#FFFFFF' }}>Sarie Instant</strong></span>
-            <span style={{ color: '#00C853', fontWeight: 700 }}>Daily 06:00 AM</span>
-          </div>
+            {isAr ? 'اختر حساب التسوية للمنشأة' : 'Select Settlement Account'}
+          </h2>
+          <p
+            style={{
+              fontSize: '13px',
+              color: colors.textSecondary,
+              margin: 0,
+              lineHeight: 1.45,
+              fontWeight: 400,
+            }}
+          >
+            {isAr
+              ? 'يتم إيداع وتحويل مبيعات المتجر اليومية تلقائياً إلى هذا الحساب عبر سريع.'
+              : 'Daily collections from cards and QR will be deposited directly via Sarie.'}
+          </p>
         </div>
 
-        {/* Change / Select Bank Dropdown List */}
-        <div style={{ marginTop: '6px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', marginBottom: '8px', padding: '0 4px' }}>
-            {isAr ? 'تغيير أو اختيار بنك سعودي آخر للمنشأة:' : 'Or switch to another Saudi corporate bank:'}
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {SAUDI_SETTLEMENT_BANKS.map((bank) => {
-              const isSelected = selectedBank === bank.name;
-              return (
-                <div
-                  key={bank.name}
-                  onClick={() => handleSelectBank(bank)}
-                  className="interactive-tap"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.08)' : '#111726',
-                    border: isSelected ? '1.5px solid #00C853' : '1px solid #1E293B',
-                    borderRadius: '14px',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Landmark size={16} color={isSelected ? '#00C853' : '#64748B'} />
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: isSelected ? '#FFFFFF' : '#CBD5E1' }}>
-                        {isAr ? bank.arabicName : bank.name}
-                      </div>
-                      <div style={{ fontSize: '10.5px', color: '#64748B', fontFamily: 'monospace' }}>
-                        {bank.iban}
-                      </div>
-                    </div>
+        {/* Single Selectable Bank List */}
+        <div style={{ padding: `0 ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space2 }}>
+          {SAUDI_SETTLEMENT_BANKS.map((bank) => {
+            const isSelected = selectedBank === bank.name;
+            return (
+              <div
+                key={bank.name}
+                onClick={() => handleSelectBank(bank)}
+                className="interactive-tap"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 16px',
+                  backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.08)' : colors.bgCard,
+                  border: `1.5px solid ${isSelected ? colors.accentGreen : colors.border}`,
+                  borderRadius: radii.lg,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space3 }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: radii.md,
+                      backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.12)' : colors.bgInset,
+                      border: `1px solid ${isSelected ? 'rgba(0, 200, 83, 0.25)' : colors.border}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isSelected ? colors.accentGreen : colors.textMuted,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Landmark size={20} />
                   </div>
 
-                  {isSelected && (
+                  <div>
                     <div
                       style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        backgroundColor: '#00C853',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#080C14',
+                        fontSize: '14px',
+                        fontWeight: isSelected ? 700 : 600,
+                        color: isSelected ? colors.textPrimary : '#CBD5E1',
+                        letterSpacing: '-0.01em',
                       }}
                     >
-                      <Check size={12} strokeWidth={3} />
+                      {isAr ? bank.arabicName : bank.name}
                     </div>
-                  )}
+                    <div
+                      style={{
+                        fontSize: '11.5px',
+                        color: colors.textSecondary,
+                        fontFamily: 'monospace',
+                        marginTop: '2px',
+                        letterSpacing: '0.02em',
+                        direction: 'ltr',
+                        textAlign: isRtl ? 'right' : 'left',
+                      }}
+                    >
+                      {bank.iban}
+                    </div>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Settlement Payout Notice */}
-        <div
-          style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '14px',
-            padding: '12px 14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            marginTop: '4px',
-          }}
-        >
-          <Clock size={16} color="#00C853" />
-          <span style={{ fontSize: '11px', color: '#94A3B8' }}>
-            {isAr
-              ? 'تتم التسوية اليومية تلقائياً الساعة ٠٦:٠٠ صباحاً مباشرة إلى حساب المنشأة.'
-              : 'Daily collections settle automatically at 06:00 AM directly via Sarie rail.'}
-          </span>
+                {/* Selection Radio Indicator */}
+                <div
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: radii.full,
+                    backgroundColor: isSelected ? colors.accentGreen : 'transparent',
+                    border: `1.5px solid ${isSelected ? colors.accentGreen : colors.border}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#080C14',
+                    transition: 'all 0.15s ease',
+                    flexShrink: 0,
+                  }}
+                >
+                  {isSelected && <Check size={13} strokeWidth={3} />}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Footer & CTA */}
-      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {/* Sticky Bottom Action */}
+      <div style={{ padding: `0 ${spacing.space5}`, marginTop: spacing.space4 }}>
         <PrimaryButton onClick={handleContinue}>
           {t('btn.continue', 'Continue')} <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
         </PrimaryButton>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-            {isAr ? 'تسوية مباشرة وفورية مدعومة بتقنيات كوانتيرا' : 'Instant Sarie Direct Settlement • Quantira Technologies'}
-          </span>
-        </div>
       </div>
     </div>
   );
