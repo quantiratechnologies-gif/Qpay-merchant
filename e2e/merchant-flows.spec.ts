@@ -71,16 +71,19 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Quick Audio Triggers')).toBeVisible();
   });
 
-  test('7. My Store Profile Hub & Business Loan Banner', async ({ page }) => {
+  test('7. My Store Profile Hub & Business Management', async ({ page }) => {
     await page.goto('/?screen=PROFILE');
-    await expect(page.locator('text=Starmart Supermarket')).toBeVisible();
-    await expect(page.locator('text=Avail Instant Business Loan')).toBeVisible();
-    await expect(page.locator('text=Collateral Free')).toBeVisible();
+    await expect(page.locator('text=My Store').first()).toBeVisible();
+    await expect(page.locator('text=SETTLEMENT ACCOUNT')).toBeVisible();
     await expect(page.locator('text=Al Rajhi Bank')).toBeVisible();
+    await expect(page.locator('text=SAMA Verified')).toBeVisible();
     await expect(page.locator('text=Business Profile')).toBeVisible();
     await expect(page.locator('text=KYC Verification')).toBeVisible();
     await expect(page.locator('text=Manage QR')).toBeVisible();
-    await expect(page.locator('text=Payment Settings')).toBeVisible();
+    await expect(page.locator('text=Payment Instruments')).toBeVisible();
+    await expect(page.locator('text=Manage Staff')).toBeVisible();
+    await expect(page.locator('text=Change Language')).toBeVisible();
+    await expect(page.locator('text=Log Out Account')).toBeVisible();
   });
 
   test('8. Redesigned Merchant Login Screen', async ({ page }) => {

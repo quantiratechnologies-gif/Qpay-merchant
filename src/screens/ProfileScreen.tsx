@@ -1,22 +1,20 @@
 import React from 'react';
 import {
-  Building2,
-  Briefcase,
-  BadgeCheck,
+  Store,
+  ShieldCheck,
   QrCode,
-  Settings,
+  SlidersHorizontal,
   CreditCard,
   Users,
   Languages,
   LogOut,
   ChevronRight,
-  Coins,
-  Bell,
-  HelpCircle,
+  LayoutGrid,
+  Check,
+  Building2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { SamaLogo } from '../components/SamaLogo';
-import { translateText } from '../utils/i18n';
 
 export const ProfileScreen: React.FC = () => {
   const {
@@ -30,7 +28,6 @@ export const ProfileScreen: React.FC = () => {
   } = useApp();
 
   const isAr = language === 'العربية';
-  const businessName = merchantInfo.businessName || 'Starmart Supermarket';
 
   return (
     <div
@@ -41,504 +38,576 @@ export const ProfileScreen: React.FC = () => {
         paddingBottom: '96px',
         color: '#FFFFFF',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* 1. Top Store Canopy Header matching reference */}
-      <header
+      {/* 1. Top Screen Header */}
+      <div
         style={{
-          backgroundColor: '#00C853',
-          padding: '16px 20px',
+          padding: '20px 20px 14px 20px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
-          color: '#000000',
+          alignItems: 'flex-start',
         }}
       >
         <div>
-          <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', opacity: 0.85, display: 'block' }}>
-            {isAr ? 'متجري' : 'My Store'}
-          </span>
-          <h1 style={{ fontSize: '18px', fontWeight: 900, margin: '2px 0 0 0', color: '#000000', letterSpacing: '-0.01em' }}>
-            {translateText(businessName, language)}
-          </h1>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={() => navigateTo('NOTIFICATIONS')}
-            className="interactive-tap"
-            style={{
-              background: 'rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#000000',
-              cursor: 'pointer',
-            }}
-            title={isAr ? 'التنبيهات' : 'Notifications'}
-          >
-            <Bell size={18} />
-          </button>
-
-          <button
-            onClick={() => navigateTo('HELP_SUPPORT')}
-            className="interactive-tap"
-            style={{
-              background: 'rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '6px 12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              color: '#000000',
-              fontSize: '12px',
-              fontWeight: 800,
-              cursor: 'pointer',
-            }}
-          >
-            <HelpCircle size={15} />
-            <span>{isAr ? 'مساعدة' : 'Help'}</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-        {/* 2. Avail Instant Business Loan Banner matching reference */}
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #064E3B 0%, #0F3B2C 50%, #131B26 100%)',
-            border: '1px solid rgba(0, 200, 83, 0.35)',
-            borderRadius: '18px',
-            padding: '16px 18px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 8px 24px rgba(0, 200, 83, 0.08)',
-          }}
-        >
-          <div style={{ flex: 1, zIndex: 1 }}>
-            <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0' }}>
-              {isAr ? 'تمويل فوري لنمو المتجر' : 'Avail Instant Business Loan'}
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px', color: '#CBD5E1', marginBottom: '12px', fontWeight: 600 }}>
-              <span>✔ {isAr ? 'بدون ضمانات معقدة' : 'Collateral Free'}</span>
-              <span>✔ {isAr ? 'إيداع فوري عبر سريع' : 'Instant Sarie Disbursal'}</span>
-              <span>✔ {isAr ? 'هامش ربح منافس ومنخفض' : 'Low Profit Margin'}</span>
-            </div>
-
-            <button
-              onClick={() => {
-                alert(
-                  isAr
-                    ? 'تم استلام طلب التمويل بقيمة ٥٠,٠٠٠ ر.س بنجاح! سيتم التواصل معكم فوراً.'
-                    : 'Business loan inquiry for SAR 50,000 received! A financing specialist will contact you shortly.'
-                );
-              }}
-              className="interactive-tap"
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h1
               style={{
-                backgroundColor: '#FFFFFF',
-                color: '#064E3B',
-                border: 'none',
-                borderRadius: '20px',
-                padding: '6px 14px',
-                fontSize: '11px',
+                fontSize: '22px',
                 fontWeight: 900,
-                cursor: 'pointer',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                margin: 0,
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em',
               }}
             >
-              {isAr ? 'معرفة المزيد' : 'KNOW MORE'}
-            </button>
+              {isAr ? 'متجري' : 'My Store'}
+            </h1>
+            <span
+              style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#00C853',
+                display: 'inline-block',
+                boxShadow: '0 0 8px #00C853',
+              }}
+            />
           </div>
-
-          {/* 3D Gold Graphic Aura */}
-          <div
+          <p
             style={{
-              width: '85px',
-              height: '85px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(234, 179, 8, 0.25) 0%, rgba(0, 200, 83, 0.1) 70%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FACC15',
-              flexShrink: 0,
+              fontSize: '12.5px',
+              color: '#94A3B8',
+              margin: '4px 0 0 0',
+              fontWeight: 500,
             }}
           >
-            <Coins size={44} />
-          </div>
+            {isAr ? 'إدارة ملف المتجر والأجهزة والامتثال' : 'Manage store profile, hardware & compliance'}
+          </p>
         </div>
 
-        {/* 3. 2x2 Core Business Hub Cards Matrix matching reference */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-          {/* Card 1: Bank Account */}
+        {/* Quick Hub Grid Icon Button */}
+        <button
+          type="button"
+          onClick={() => navigateTo('MERCHANT_WEB')}
+          aria-label="App Hub"
+          className="interactive-tap"
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#CBD5E1',
+            cursor: 'pointer',
+          }}
+        >
+          <LayoutGrid size={18} />
+        </button>
+      </div>
+
+      {/* Main Container */}
+      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {/* 2. Settlement Account Card */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            padding: '16px 18px',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          {/* Header Row */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '12px',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '10.5px',
+                fontWeight: 800,
+                color: '#94A3B8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}
+            >
+              {isAr ? 'حساب التسوية البنكي' : 'SETTLEMENT ACCOUNT'}
+            </span>
+
+            <span
+              style={{
+                fontSize: '9.5px',
+                fontWeight: 800,
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
+                color: '#00C853',
+                padding: '2px 8px',
+                borderRadius: '6px',
+              }}
+            >
+              {isAr ? 'الأساسي' : 'Primary'}
+            </span>
+          </div>
+
+          {/* Account Details Row */}
           <div
             onClick={() => navigateTo('MERCHANT_BANK_LINK')}
             className="interactive-tap"
             style={{
-              backgroundColor: '#111726',
-              border: '1px solid #1E293B',
-              borderRadius: '16px',
-              padding: '14px',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'space-between',
-              minHeight: '110px',
               cursor: 'pointer',
-              position: 'relative',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {/* Bank Squircle Badge */}
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                  border: '1px solid rgba(0, 200, 83, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#00C853',
+                  flexShrink: 0,
                 }}
               >
-                <Building2 size={18} />
+                <Building2 size={22} />
               </div>
-              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+
+              <div>
+                <div style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                  {merchantInfo.settlementBank || 'Al Rajhi Bank'}
+                </div>
+                <div
+                  style={{
+                    fontSize: '12px',
+                    color: '#94A3B8',
+                    marginTop: '2px',
+                    fontFamily: 'monospace',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                  }}
+                  dir="ltr"
+                >
+                  •••• {merchantInfo.settlementIban ? merchantInfo.settlementIban.slice(-9) : '6271 5005'}
+                </div>
+              </div>
             </div>
 
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
-                {merchantInfo.settlementIban ? merchantInfo.settlementIban.slice(-9) : 'XXXX 5005'}
-              </div>
-              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
-                {merchantInfo.settlementBank || 'Al Rajhi Bank'}
-              </div>
+            {/* SAMA Verified Tag */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
+                borderRadius: '20px',
+                padding: '4px 10px',
+              }}
+            >
+              <Check size={12} color="#00C853" strokeWidth={3} />
+              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#00C853' }}>
+                {isAr ? 'موثق ساما' : 'SAMA Verified'}
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* Card 2: Business Profile */}
+        {/* 3. Core Store Management Group (Group 1) */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          {/* Row 1: Business Profile */}
           <div
             onClick={() => navigateTo('MERCHANT_SETUP')}
             className="interactive-tap"
             style={{
-              backgroundColor: '#111726',
-              border: '1px solid #1E293B',
-              borderRadius: '16px',
-              padding: '14px',
+              padding: '14px 16px',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'space-between',
-              minHeight: '110px',
               cursor: 'pointer',
-              position: 'relative',
+              borderBottom: '1px solid #1E293B',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#3B82F6',
-                }}
-              >
-                <Briefcase size={18} />
-              </div>
-              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </div>
-
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
-                {isAr ? 'ملف المنشأة' : 'Business Profile'}
-              </div>
-              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
-                {isAr ? 'عرض وتعديل بيانات السجل والضريبة' : 'View & edit store & tax info'}
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: KYC */}
-          <div
-            onClick={() => setIsKycModalOpen(true)}
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#111726',
-              border: '1px solid #1E293B',
-              borderRadius: '16px',
-              padding: '14px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              minHeight: '110px',
-              cursor: 'pointer',
-              position: 'relative',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#F59E0B',
-                }}
-              >
-                <BadgeCheck size={18} />
-              </div>
-              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </div>
-
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
-                {isAr ? 'التحقق والامتثال' : 'KYC Verification'}
-              </div>
-              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
-                {isAr ? 'توثيق معتمد لرفع سقوف التحصيل' : 'Unlock exclusive tier benefits'}
-              </div>
-            </div>
-          </div>
-
-          {/* Card 4: Manage QR & Terminals */}
-          <div
-            onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#111726',
-              border: '1px solid #1E293B',
-              borderRadius: '16px',
-              padding: '14px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              minHeight: '110px',
-              cursor: 'pointer',
-              position: 'relative',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(139, 92, 246, 0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#8B5CF6',
-                }}
-              >
-                <QrCode size={18} />
-              </div>
-              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </div>
-
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
-                {isAr ? 'إدارة الباركود' : 'Manage QR'}
-              </div>
-              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
-                {isAr ? 'طباعة ومشاركة باركود المتجر' : 'Manage & order store QR'}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Manage Business Quick Circular Tools Grid matching reference */}
-        <div>
-          <span style={{ fontSize: '12px', fontWeight: 800, color: '#FFFFFF', marginBottom: '12px', display: 'block' }}>
-            {isAr ? 'إدارة أعمال المتجر' : 'Manage Business'}
-          </span>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-            {/* 1. Payment Settings */}
-            <div
-              onClick={() => navigateTo('SECURITY')}
-              className="interactive-tap"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: '#111726',
-                  border: '1px solid #1E293B',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#00C853',
+                  flexShrink: 0,
                 }}
               >
-                <Settings size={20} />
+                <Store size={18} />
               </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'إعدادات الدفع' : 'Payment settings'}
-              </span>
-            </div>
-
-            {/* 2. Payment Instruments */}
-            <div
-              onClick={() => navigateTo('SOFTPOS_TERMINAL')}
-              className="interactive-tap"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: '#111726',
-                  border: '1px solid #1E293B',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#3B82F6',
-                }}
-              >
-                <CreditCard size={20} />
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                  {isAr ? 'ملف المنشأة' : 'Business Profile'}
+                </div>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                  {isAr ? 'عرض وتعديل بيانات السجل والضريبة' : 'View & edit store & tax info'}
+                </div>
               </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'أجهزة الدفع' : 'Payment Instruments'}
-              </span>
             </div>
-
-            {/* 3. Manage Staff */}
-            <div
-              onClick={() => navigateTo('MERCHANT_WEB')}
-              className="interactive-tap"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: '#111726',
-                  border: '1px solid #1E293B',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#F59E0B',
-                }}
-              >
-                <Users size={20} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'إدارة الكاشير' : 'Manage Staff'}
-              </span>
-            </div>
-
-            {/* 4. Change Language */}
-            <div
-              onClick={() => setIsLanguageModalOpen(true)}
-              className="interactive-tap"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: '#111726',
-                  border: '1px solid #1E293B',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#8B5CF6',
-                }}
-              >
-                <Languages size={20} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'تغيير اللغة' : 'Change Language'}
-              </span>
-            </div>
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </div>
-        </div>
 
-        {/* 5. Log Out & Compliance Section */}
-        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button
-            onClick={() => setIsLogoutModalOpen(true)}
+          {/* Row 2: KYC Verification */}
+          <div
+            onClick={() => setIsKycModalOpen(true)}
             className="interactive-tap"
             style={{
-              backgroundColor: '#111726',
-              border: '1px solid #1E293B',
-              borderRadius: '14px',
-              padding: '12px 16px',
+              padding: '14px 16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              color: '#FF4757',
-              fontSize: '13px',
-              fontWeight: 800,
+              cursor: 'pointer',
+              borderBottom: '1px solid #1E293B',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                  flexShrink: 0,
+                }}
+              >
+                <ShieldCheck size={18} />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                    {isAr ? 'التحقق والامتثال' : 'KYC Verification'}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '9.5px',
+                      fontWeight: 800,
+                      backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                      border: '1px solid rgba(0, 200, 83, 0.3)',
+                      color: '#00C853',
+                      padding: '1px 6px',
+                      borderRadius: '5px',
+                    }}
+                  >
+                    {isAr ? 'موثق' : 'Verified'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                  {isAr ? 'توثيق معتمد لرفع سقوف التحصيل' : 'Unlock exclusive tier benefits'}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </div>
+
+          {/* Row 3: Manage QR */}
+          <div
+            onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              borderBottom: '1px solid #1E293B',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#CBD5E1',
+                  flexShrink: 0,
+                }}
+              >
+                <QrCode size={18} />
+              </div>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                  {isAr ? 'إدارة الباركود' : 'Manage QR'}
+                </div>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                  {isAr ? 'طباعة ومشاركة باركود المتجر' : 'Manage & order store QR'}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </div>
+
+          {/* Row 4: Manage Business (Payment Settings) */}
+          <div
+            onClick={() => navigateTo('SECURITY')}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               cursor: 'pointer',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <LogOut size={16} />
-              <span>{isAr ? 'تسجيل الخروج من الحساب' : 'Log Out Account'}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#CBD5E1',
+                  flexShrink: 0,
+                }}
+              >
+                <SlidersHorizontal size={18} />
+              </div>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                  {isAr ? 'إدارة الأعمال' : 'Manage Business'}
+                </div>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                  {isAr ? 'إعدادات الدفع' : 'Payment settings'}
+                </div>
+              </div>
             </div>
-            <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
-            <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-              {isAr ? 'منصة مدفوعات تجارية مرخصة من البنك المركزي السعودي' : 'SAMA Regulated Merchant Platform'}
-            </span>
-            <SamaLogo height={13} themeMode="green" />
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </div>
         </div>
 
+        {/* 4. Operations & Settings Group (Group 2) */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          {/* Row 1: Payment Instruments */}
+          <div
+            onClick={() => navigateTo('SOFTPOS_TERMINAL')}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              borderBottom: '1px solid #1E293B',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#CBD5E1',
+                  flexShrink: 0,
+                }}
+              >
+                <CreditCard size={18} />
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                {isAr ? 'أجهزة وطرق الدفع' : 'Payment Instruments'}
+              </div>
+            </div>
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </div>
+
+          {/* Row 2: Manage Staff */}
+          <div
+            onClick={() => navigateTo('MERCHANT_WEB')}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              borderBottom: '1px solid #1E293B',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#CBD5E1',
+                  flexShrink: 0,
+                }}
+              >
+                <Users size={18} />
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                {isAr ? 'إدارة طاقم العمل' : 'Manage Staff'}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 600 }}>
+                {isAr ? '٣ نشطين' : '3 Active'}
+              </span>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
+          </div>
+
+          {/* Row 3: Change Language */}
+          <div
+            onClick={() => setIsLanguageModalOpen(true)}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#CBD5E1',
+                  flexShrink: 0,
+                }}
+              >
+                <Languages size={18} />
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                {isAr ? 'تغيير اللغة' : 'Change Language'}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 600 }}>
+                English (EN) / العربية
+              </span>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Logout Group (Group 3) */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <div
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="interactive-tap"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#FF6B81',
+                  flexShrink: 0,
+                }}
+              >
+                <LogOut size={18} />
+              </div>
+              <span style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                {isAr ? 'تسجيل الخروج من الحساب' : 'Log Out Account'}
+              </span>
+            </div>
+            <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </div>
+        </div>
+
+        {/* SAMA Compliance Dock */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
+          <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
+            {isAr ? 'منصة مدفوعات تجارية مرخصة من البنك المركزي السعودي' : 'SAMA Regulated Merchant Platform'}
+          </span>
+          <SamaLogo height={13} themeMode="green" />
+        </div>
       </div>
     </div>
   );
 };
+
