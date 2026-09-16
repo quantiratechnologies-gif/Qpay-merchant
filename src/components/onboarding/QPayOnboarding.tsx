@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { AlphPayLogo } from '../AlphPayLogo';
+import { LanguageSwitchPill } from '../LanguageSwitchPill';
+import { useApp } from '../../state/AppContext';
 import { QPayOnboardingProgress } from './QPayOnboardingProgress';
 import { QPayOnboardingSlide, type OnboardingSlideData } from './QPayOnboardingSlide';
 
@@ -9,6 +11,8 @@ interface QPayOnboardingProps {
 }
 
 export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) => {
+  const { isRtl, language } = useApp();
+  const isAr = language === 'العربية';
   const [currentSlide, setCurrentSlide] = useState<number>(0);
 
   // Touch gesture handling for smooth horizontal swiping
@@ -80,8 +84,8 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
   const slides: OnboardingSlideData[] = [
     {
       id: 'softpos',
-      title: 'Turn Phone into SoftPOS',
-      subtitle: 'Accept card payments instantly',
+      title: isAr ? 'حوّل جوالك إلى نقطة بيع' : 'Turn Phone into SoftPOS',
+      subtitle: isAr ? 'قبول مدفوعات البطاقات ومدى فورياً' : 'Accept card payments instantly',
       visual: (
         <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
@@ -112,8 +116,8 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
     },
     {
       id: 'zatca',
-      title: 'ZATCA Phase 2 Invoicing',
-      subtitle: 'Instant 15% VAT QR invoices',
+      title: isAr ? 'فوترة متوافقة مع هيئة الزكاة' : 'ZATCA Phase 2 Invoicing',
+      subtitle: isAr ? 'إصدار فواتير برمز استجابة ضريبية ١٥٪' : 'Instant 15% VAT QR invoices',
       visual: (
         <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
@@ -144,8 +148,8 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
     },
     {
       id: 'soundbox',
-      title: 'Instant Payouts & SoundBox',
-      subtitle: 'Real-time payouts with voice alerts',
+      title: isAr ? 'تسويات فورية وجهاز إشعار صوتي' : 'Instant Payouts & SoundBox',
+      subtitle: isAr ? 'تسوية لحظية عبر سريع مع تنبيهات صوتية' : 'Real-time payouts with voice alerts',
       visual: (
         <div style={{ position: 'relative', width: '360px', height: '360px', maxWidth: '92vw', maxHeight: '44vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
@@ -196,9 +200,10 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
         boxSizing: 'border-box',
         overflow: 'hidden',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Bar: Brand / Time & Skip Pill */}
+      {/* Top Bar: Brand & Language Switch / Skip Pill */}
       <header
         style={{
           display: 'flex',
@@ -213,28 +218,31 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
           <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            triggerHaptic();
-            onComplete();
-          }}
-          className="interactive-tap"
-          style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            color: '#94A3B8',
-            fontSize: '12px',
-            fontWeight: 700,
-            padding: '5px 14px',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            boxShadow: 'none',
-            transition: 'all 0.15s ease',
-          }}
-        >
-          Skip
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <LanguageSwitchPill variant="compact" />
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic();
+              onComplete();
+            }}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
+              fontSize: '12px',
+              fontWeight: 700,
+              padding: '5px 14px',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              boxShadow: 'none',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {isAr ? 'تخطي' : 'Skip'}
+          </button>
+        </div>
       </header>
 
       {/* Main Slide Carousel Area */}
@@ -310,8 +318,8 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             transition: 'all 0.15s ease',
           }}
         >
-          <span>{isFinalSlide ? 'Get started' : 'Next'}</span>
-          <ArrowRight size={16} />
+          <span>{isFinalSlide ? (isAr ? 'ابدأ الآن' : 'Get started') : (isAr ? 'التالي' : 'Next')}</span>
+          {isRtl ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
         </button>
       </footer>
     </div>

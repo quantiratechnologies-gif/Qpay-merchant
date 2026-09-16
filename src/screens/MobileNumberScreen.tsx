@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ChevronDown, User, Phone } from 'lucide-react';
 import { AlphPayLogo } from '../components/AlphPayLogo';
+import { LanguageSwitchPill } from '../components/LanguageSwitchPill';
 import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
@@ -43,12 +44,14 @@ export const MobileNumberScreen: React.FC = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             height: '40px',
             marginBottom: '24px',
           }}
         >
+          <div style={{ width: '40px' }} />
           <AlphPayLogo variant="horizontal" size={26} themeMode="dark" />
+          <LanguageSwitchPill variant="compact" />
         </div>
 
         {/* Title Block */}

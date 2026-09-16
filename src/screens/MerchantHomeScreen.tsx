@@ -18,6 +18,7 @@ import {
 import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber } from '../utils/i18n';
 import { AlphPayLogo } from '../components/AlphPayLogo';
+import { LanguageSwitchPill } from '../components/LanguageSwitchPill';
 import { Card, StatusBadge, SectionHeader, ListRow } from '../components/ui';
 import { colors, spacing, radii } from '../design-system/tokens';
 
@@ -116,8 +117,10 @@ export const MerchantHomeScreen: React.FC = () => {
           <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        {/* Right: Notification Icon Button */}
+        {/* Right: Language Switcher & Notification Icon Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+          <LanguageSwitchPill variant="compact" />
+          
           {/* Notification Button */}
           <button
             onClick={() => navigateTo('NOTIFICATIONS')}

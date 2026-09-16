@@ -3,6 +3,7 @@ import { ArrowLeft, Search, Settings, Store } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AlphPayLogo } from './AlphPayLogo';
 import { designSystem } from '../design-system';
+import { LanguageSwitchPill } from './LanguageSwitchPill';
 
 interface AppHeaderProps {
   title?: string;
@@ -12,6 +13,7 @@ interface AppHeaderProps {
   onSearchClick?: () => void;
   showSettings?: boolean;
   showUserInfo?: boolean;
+  showLanguageSwitch?: boolean;
   rightAction?: React.ReactNode;
 }
 
@@ -22,6 +24,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showSearch = false,
   onSearchClick,
   showSettings = false,
+  showLanguageSwitch = true,
   rightAction,
 }) => {
   const { goBack, navigateTo, currentScreen, isRtl, t } = useApp();
@@ -164,7 +167,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         )}
       </div>
 
-      {/* Right Slot: Search / Settings / Custom Action */}
+      {/* Right Slot: Search / Settings / LanguageSwitch / Custom Action */}
       <div
         style={{
           display: 'flex',
@@ -175,6 +178,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           justifyContent: 'flex-end',
         }}
       >
+        {showLanguageSwitch && <LanguageSwitchPill variant="compact" />}
+
         {showSearch && (
           <button
             onClick={onSearchClick}
@@ -225,7 +230,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </button>
         )}
 
-        {!showSearch && !rightAction && !showSettings && (
+        {!showLanguageSwitch && !showSearch && !rightAction && !showSettings && (
           <div style={{ width: '38px', height: '38px' }} />
         )}
       </div>

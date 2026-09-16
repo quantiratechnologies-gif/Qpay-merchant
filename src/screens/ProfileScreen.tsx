@@ -239,10 +239,10 @@ export const ProfileScreen: React.FC = () => {
           <ListRow
             onClick={() => setIsLanguageModalOpen(true)}
             leftIcon={<Languages size={18} />}
-            title={isAr ? 'تغيير اللغة' : 'Change Language'}
+            title={isAr ? 'لغة التطبيق' : 'App Language'}
             rightElement={
-              <span style={{ fontSize: '12px', color: colors.textSecondary, fontWeight: 600 }}>
-                English (EN) / العربية
+              <span style={{ fontSize: '12.5px', color: '#00C853', fontWeight: 800 }}>
+                {isAr ? '🇸🇦 العربية' : '🇬🇧 English'}
               </span>
             }
             showChevron={true}

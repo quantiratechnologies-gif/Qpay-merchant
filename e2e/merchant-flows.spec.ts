@@ -77,7 +77,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Manage QR')).toBeVisible();
     await expect(page.locator('text=Payment Instruments')).toBeVisible();
     await expect(page.locator('text=Manage Staff')).toBeVisible();
-    await expect(page.locator('text=Change Language')).toBeVisible();
+    await expect(page.locator('text=App Language')).toBeVisible();
     await expect(page.locator('text=Log Out Account')).toBeVisible();
   });
 
@@ -129,5 +129,32 @@ test.describe('Saudi Merchant App Flow QA', () => {
     // Click "View Full" to navigate to Collections sub-page
     await page.click('button:has-text("View Full")');
     await expect(page.locator('text=Collections & Settlements')).toBeVisible();
+  });
+
+  test('12. Arabic Language Switch & RTL Flow', async ({ page }) => {
+    await page.goto('/?screen=MERCHANT_HOME');
+
+    // Language switch pill is visible on dashboard header
+    const langPill = page.locator('button[title="التحويل إلى اللغة العربية"], button[aria-label="Switch language to Arabic"]');
+    await expect(langPill).toBeVisible();
+
+    // Click to switch to Arabic
+    await langPill.click();
+
+    // Verify document direction switched to RTL
+    const htmlDir = await page.getAttribute('html', 'dir');
+    expect(htmlDir).toBe('rtl');
+
+    // Verify Arabic translations appear
+    await expect(page.locator('text=تحصيلات اليوم')).toBeVisible();
+
+    // Switch back to English
+    const enPill = page.locator('button[title="Switch to English"], button[aria-label="Switch language to English"]');
+    await expect(enPill).toBeVisible();
+    await enPill.click();
+
+    const restoredDir = await page.getAttribute('html', 'dir');
+    expect(restoredDir).toBe('ltr');
+    await expect(page.locator("text=Today's Collection")).toBeVisible();
   });
 });

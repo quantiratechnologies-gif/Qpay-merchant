@@ -68,6 +68,7 @@ interface AppContextType {
   isLanguageModalOpen: boolean;
   setIsLanguageModalOpen: (open: boolean) => void;
   setAppLanguage: (lang: string) => void;
+  toggleLanguage: () => void;
 
   isLogoutModalOpen: boolean;
   setIsLogoutModalOpen: (open: boolean) => void;
@@ -320,8 +321,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
   const [deviceSessions, setDeviceSessions] = useState<DeviceSession[]>(INITIAL_SESSIONS);
 
-  const [language, setLanguage] = useState<string>('English');
-  const [isRtl, setIsRtl] = useState<boolean>(false);
+  const [language, setLanguage] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('qtpay_lang') || 'English';
+    }
+    return 'English';
+  });
+  const [isRtl, setIsRtl] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('qtpay_lang');
+      return saved === 'العربية';
+    }
+    return false;
+  });
 
   // Modals state
   const [isPinModalOpen, setIsPinModalOpen] = useState<boolean>(false);
@@ -362,6 +374,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       openPinModal,
       closePinModal,
       setIsLanguageModalOpen,
+      setAppLanguage,
+      toggleLanguage,
       setIsLogoutModalOpen,
       setIsAddBankModalOpen,
       setIsScanModalOpen,
@@ -719,11 +733,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLanguage(lang);
     const rtl = lang === 'العربية';
     setIsRtl(rtl);
-    if (typeof document !== 'undefined') {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('qtpay_lang', lang);
+      } catch {
+        // noop
+      }
       document.documentElement.dir = rtl ? 'rtl' : 'ltr';
       document.documentElement.lang = rtl ? 'ar' : 'en';
     }
     setIsLanguageModalOpen(false);
+  };
+
+  const toggleLanguage = () => {
+    const nextLang = language === 'العربية' ? 'English' : 'العربية';
+    setAppLanguage(nextLang);
   };
 
   useEffect(() => {
@@ -779,6 +803,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isLanguageModalOpen,
         setIsLanguageModalOpen,
         setAppLanguage,
+        toggleLanguage,
         isLogoutModalOpen,
         setIsLogoutModalOpen,
         performLogout,
