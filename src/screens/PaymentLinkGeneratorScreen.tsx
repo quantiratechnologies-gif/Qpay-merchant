@@ -256,7 +256,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
                 gap: '5px',
               }}
             >
-              {copied ? <Check size={14} color="#7FE87F" /> : <Copy size={14} />}
+              {copied ? <Check size={14} color="#00C853" /> : <Copy size={14} />}
               {copied ? (isAr ? 'تم النسخ' : 'Copied') : (isAr ? 'نسخ الرابط' : 'Copy Link')}
             </button>
 

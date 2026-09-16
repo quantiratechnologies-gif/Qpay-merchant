@@ -104,7 +104,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: 'var(--accent-green-bright, #7FE87F)',
+                color: 'var(--accent-green-bright, #00C853)',
                 fontSize: '13px',
                 fontWeight: 600,
                 cursor: 'pointer',

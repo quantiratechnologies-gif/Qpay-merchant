@@ -103,7 +103,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             <span style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
               {translateText(merchantInfo.businessName, language)}
             </span>
-            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '2px 8px', borderRadius: '10px' }}>
+            <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#00C853', backgroundColor: 'rgba(0, 200, 83, 0.12)', padding: '2px 8px', borderRadius: '10px' }}>
               {isAr ? 'بوابة إدارة التاجر' : 'Web Admin Portal'}
             </span>
           </div>
@@ -127,7 +127,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               gap: '6px',
             }}
           >
-            <Smartphone size={14} color="#7FE87F" /> {isAr ? 'عرض نقاط البيع بالجوال' : 'Mobile POS View'}
+            <Smartphone size={14} color="#00C853" /> {isAr ? 'عرض نقاط البيع بالجوال' : 'Mobile POS View'}
           </button>
         </div>
       </header>
@@ -167,9 +167,9 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     gap: '12px',
                     padding: '12px 14px',
                     borderRadius: '12px',
-                    backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.12)' : 'transparent',
-                    border: isSelected ? '1px solid rgba(127, 232, 127, 0.3)' : '1px solid transparent',
-                    color: isSelected ? '#7FE87F' : '#94A3B8',
+                    backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.12)' : 'transparent',
+                    border: isSelected ? '1px solid rgba(0, 200, 83, 0.3)' : '1px solid transparent',
+                    color: isSelected ? '#00C853' : '#94A3B8',
                     fontSize: '13px',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -191,7 +191,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
               {translateText(merchantInfo.settlementBank, language)}
             </div>
-            <div style={{ fontSize: '10.5px', color: '#7FE87F', marginTop: '2px', fontFamily: 'monospace', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
+            <div style={{ fontSize: '10.5px', color: '#00C853', marginTop: '2px', fontFamily: 'monospace', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
               {merchantInfo.settlementIban.substring(0, 14)}•••
             </div>
           </div>
@@ -218,7 +218,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   style={{
                     backgroundColor: '#1A2234',
                     border: '1px solid #1E293B',
-                    color: '#7FE87F',
+                    color: '#00C853',
                     borderRadius: '10px',
                     padding: '8px 16px',
                     fontSize: '12.5px',
@@ -234,7 +234,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </div>
 
               {exportSuccess && (
-                <div style={{ backgroundColor: 'rgba(127, 232, 127, 0.15)', border: '1px solid #7FE87F', borderRadius: '12px', padding: '12px 16px', color: '#7FE87F', fontWeight: 700, fontSize: '13px' }}>
+                <div style={{ backgroundColor: 'rgba(0, 200, 83, 0.15)', border: '1px solid #00C853', borderRadius: '12px', padding: '12px 16px', color: '#00C853', fontWeight: 700, fontSize: '13px' }}>
                   {isAr ? `✓ تم تنزيل تقرير الفوترة الإلكترونية الضريبي (CSV) بنجاح للسجل التجاري رقم #${merchantInfo.crNumber}` : `✓ ZATCA E-Invoicing CSV Tax Report successfully downloaded for CR #${merchantInfo.crNumber}.`}
                 </div>
               )}
@@ -248,7 +248,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
                     {formatCurrency(totalRevenue, language)}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#7FE87F', marginTop: '6px', fontWeight: 700 }}>
+                  <div style={{ fontSize: '11.5px', color: '#00C853', marginTop: '6px', fontWeight: 700 }}>
                     {isAr ? '+١٤٫٨٪ مقارنة بالشهر السابق' : '+14.8% vs last month'}
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                     {isAr ? 'ضريبة القيمة المضافة المحصلة (١٥٪)' : 'ZATCA 15% VAT Collected'}
                   </div>
-                  <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#7FE87F', marginTop: '6px' }}>
+                  <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#00C853', marginTop: '6px' }}>
                     {formatSaudiCurrency(totalVat, language)}
                   </div>
                   <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '6px' }}>
@@ -272,7 +272,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
                     {formatLocalizedNumber(softPosCount, language)}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#7FE87F', marginTop: '6px' }}>
+                  <div style={{ fontSize: '11.5px', color: '#00C853', marginTop: '6px' }}>
                     {isAr ? '٧٢٪ من إجمالي المبيعات' : '72% of total sales'}
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
                     {formatLocalizedNumber(cashiers.filter(c => c.active).length, language)} / {formatLocalizedNumber(cashiers.length, language)}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#7FE87F', marginTop: '6px' }}>
+                  <div style={{ fontSize: '11.5px', color: '#00C853', marginTop: '6px' }}>
                     {isAr ? '١٠٠٪ جاهزية شبكة المدفوعات' : '100% Engine Uptime'}
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                       {isAr ? 'تسويات العمليات الفورية عبر سريع وتقنيات كوانتيرا' : 'Instant Sarie & Card Settlements • Quantira Technologies'}
                     </span>
                   </div>
-                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#00C853' }}>
                     {isAr ? 'الأسبوع ٣٨ • ٢٠٢٦' : 'Week 38 • 2026'}
                   </span>
                 </div>
@@ -325,7 +325,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                         style={{
                           width: '32px',
                           height: d.height,
-                          background: 'linear-gradient(180deg, #7FE87F 0%, rgba(127, 232, 127, 0.2) 100%)',
+                          background: 'linear-gradient(180deg, #00C853 0%, rgba(0, 200, 83, 0.2) 100%)',
                           borderRadius: '8px 8px 3px 3px',
                           transition: 'height 0.4s ease',
                         }}
@@ -372,15 +372,15 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     {cashiers.map((c) => (
                       <tr key={c.id} style={{ borderBottom: '1px solid #1E293B' }}>
                         <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF' }}>{translateText(c.name, language)}</td>
-                        <td style={{ padding: '14px 18px', color: '#7FE87F', fontWeight: 700 }}>
+                        <td style={{ padding: '14px 18px', color: '#00C853', fontWeight: 700 }}>
                           {isAr ? (c.role === 'Cashier' ? 'كاشير' : c.role === 'Supervisor' ? 'مشرف' : 'مدير') : c.role}
                         </td>
                         <td style={{ padding: '14px 18px', color: '#94A3B8' }}>{translateText(c.terminal, language)}</td>
                         <td style={{ padding: '14px 18px' }}>
                           <span
                             style={{
-                              backgroundColor: c.active ? 'rgba(127, 232, 127, 0.15)' : 'rgba(255, 107, 107, 0.15)',
-                              color: c.active ? '#7FE87F' : '#FF6B6B',
+                              backgroundColor: c.active ? 'rgba(0, 200, 83, 0.15)' : 'rgba(255, 107, 107, 0.15)',
+                              color: c.active ? '#00C853' : '#FF6B6B',
                               padding: '3px 8px',
                               borderRadius: '8px',
                               fontWeight: 800,
@@ -448,7 +448,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   onClick={handleExportZatcaCsv}
                   className="interactive-tap"
                   style={{
-                    backgroundColor: '#7FE87F',
+                    backgroundColor: '#00C853',
                     color: '#000000',
                     border: 'none',
                     borderRadius: '10px',
@@ -488,7 +488,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                       {isAr ? 'حالة منصة فاتورة' : 'ZATCA Platform Status'}
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#7FE87F', marginTop: '4px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853', marginTop: '4px' }}>
                       {isAr ? '✓ مسجل ومفعل في المرحلة الثانية' : '✓ Phase 2 Enrolled & Verified'}
                     </div>
                   </div>
@@ -509,7 +509,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     {isAr ? 'إيداع يومي تلقائي ومباشر في الحساب البنكي التجاري المسجل' : 'Automated daily payouts directly to registered Saudi Corporate IBAN'}
                   </p>
                 </div>
-                <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '4px 10px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#00C853', backgroundColor: 'rgba(0, 200, 83, 0.12)', padding: '4px 10px', borderRadius: '8px' }}>
                   Quantira Payouts
                 </span>
               </div>
@@ -523,11 +523,11 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     <div style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
                       {translateText(merchantInfo.settlementBank, language)}
                     </div>
-                    <div style={{ fontSize: '13px', color: '#7FE87F', marginTop: '2px', fontFamily: 'monospace', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
+                    <div style={{ fontSize: '13px', color: '#00C853', marginTop: '2px', fontFamily: 'monospace', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}>
                       {merchantInfo.settlementIban}
                     </div>
                   </div>
-                  <span style={{ backgroundColor: 'rgba(127, 232, 127, 0.15)', color: '#7FE87F', border: '1px solid #7FE87F', padding: '6px 14px', borderRadius: '10px', fontWeight: 800, fontSize: '12px' }}>
+                  <span style={{ backgroundColor: 'rgba(0, 200, 83, 0.15)', color: '#00C853', border: '1px solid #00C853', padding: '6px 14px', borderRadius: '10px', fontWeight: 800, fontSize: '12px' }}>
                     {isAr ? 'سريع مفعل' : 'Sarie Active'}
                   </span>
                 </div>
@@ -541,7 +541,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <button
                     onClick={() => alert(isAr ? 'تم طلب تسوية فورية عبر سريع إلى ' + translateText(merchantInfo.settlementBank, language) : 'Manual instant Sarie payout initiated to ' + merchantInfo.settlementBank)}
                     style={{
-                      backgroundColor: '#7FE87F',
+                      backgroundColor: '#00C853',
                       color: '#000000',
                       border: 'none',
                       borderRadius: '8px',

@@ -162,7 +162,7 @@ export const FilterPills: React.FC<FilterPillsProps> = ({
                 ? 'rgba(0, 200, 83, 0.15)'
                 : 'var(--bg-inset, #161F30)',
               color: isActive
-                ? 'var(--accent-green-bright, #7FE87F)'
+                ? 'var(--accent-green-bright, #00C853)'
                 : 'var(--text-secondary, #94A3B8)',
               transition: 'all 0.15s ease',
               outline: 'none',

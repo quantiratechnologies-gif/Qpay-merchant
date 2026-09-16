@@ -38,8 +38,8 @@ export const LanguageModal: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px 18px',
-                backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.12)' : '#0B0F19',
-                border: isSelected ? '1.5px solid #7FE87F' : '1px solid #1E293B',
+                backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.12)' : '#0B0F19',
+                border: isSelected ? '1.5px solid #00C853' : '1px solid #1E293B',
                 borderRadius: '16px',
                 marginBottom: '10px',
                 cursor: 'pointer',
@@ -53,8 +53,8 @@ export const LanguageModal: React.FC = () => {
                     width: '40px',
                     height: '40px',
                     borderRadius: '12px',
-                    backgroundColor: isSelected ? '#7FE87F' : '#1A2234',
-                    color: isSelected ? '#080C14' : '#7FE87F',
+                    backgroundColor: isSelected ? '#00C853' : '#1A2234',
+                    color: isSelected ? '#080C14' : '#00C853',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -73,11 +73,11 @@ export const LanguageModal: React.FC = () => {
                       style={{
                         fontSize: '10.5px',
                         fontWeight: 800,
-                        backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                        color: '#7FE87F',
+                        backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                        color: '#00C853',
                         padding: '2px 7px',
                         borderRadius: '6px',
-                        border: '1px solid rgba(127, 232, 127, 0.25)',
+                        border: '1px solid rgba(0, 200, 83, 0.25)',
                       }}
                     >
                       {lang.badge}
@@ -88,7 +88,7 @@ export const LanguageModal: React.FC = () => {
                   </div>
                 </div>
               </div>
-              {isSelected && <Check size={20} color="#7FE87F" />}
+              {isSelected && <Check size={20} color="#00C853" />}
             </div>
           );
         })}

@@ -60,7 +60,7 @@ export const HelpSupportScreen: React.FC = () => {
         <div
           style={{
             backgroundColor: '#111726',
-            border: '1.5px solid rgba(127, 232, 127, 0.35)',
+            border: '1.5px solid rgba(0, 200, 83, 0.35)',
             borderRadius: '16px',
             padding: '24px 20px',
             marginBottom: '22px',
@@ -74,13 +74,13 @@ export const HelpSupportScreen: React.FC = () => {
               width: '54px',
               height: '54px',
               borderRadius: '16px',
-              backgroundColor: 'rgba(127, 232, 127, 0.12)',
-              color: '#7FE87F',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              color: '#00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 12px auto',
-              border: '1px solid rgba(127, 232, 127, 0.3)',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
             }}
           >
             <HelpCircle size={28} />
@@ -99,21 +99,21 @@ export const HelpSupportScreen: React.FC = () => {
 
         <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: 'none' }}>
           <ListRow
-            icon={<MessageSquare size={18} color="#7FE87F" />}
+            icon={<MessageSquare size={18} color="#00C853" />}
             label="Live Chat"
             subLabel="Avg response: ~1 min"
             onClick={() => setActiveModal('chat')}
           />
           <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
-            icon={<PhoneCall size={18} color="#7FE87F" />}
+            icon={<PhoneCall size={18} color="#00C853" />}
             label="Toll-Free Hotline"
             subLabel="800-123-QTPAY"
             onClick={() => setActiveModal('call')}
           />
           <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
-            icon={<ShieldAlert size={18} color="#7FE87F" />}
+            icon={<ShieldAlert size={18} color="#00C853" />}
             label="Dispute & Fraud"
             subLabel="File a transaction complaint"
             onClick={() => setActiveModal('dispute')}
@@ -144,7 +144,7 @@ export const HelpSupportScreen: React.FC = () => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#FFFFFF' }}>{faq.q}</span>
-                  {isExpanded ? <ChevronUp size={16} color="#7FE87F" /> : <ChevronDown size={16} color="#94A3B8" />}
+                  {isExpanded ? <ChevronUp size={16} color="#00C853" /> : <ChevronDown size={16} color="#94A3B8" />}
                 </div>
                 {isExpanded && (
                   <p style={{ fontSize: '12.5px', color: '#94A3B8', marginTop: '10px', marginBottom: 0, lineHeight: '1.5', borderTop: '1px solid #1E293B', paddingTop: '10px' }}>
@@ -165,7 +165,7 @@ export const HelpSupportScreen: React.FC = () => {
               key={i}
               style={{
                 alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                backgroundColor: msg.sender === 'user' ? '#7FE87F' : '#1A2234',
+                backgroundColor: msg.sender === 'user' ? '#00C853' : '#1A2234',
                 color: msg.sender === 'user' ? '#080C14' : '#FFFFFF',
                 border: msg.sender === 'user' ? 'none' : '1px solid #1E293B',
                 padding: '10px 14px',
@@ -190,7 +190,7 @@ export const HelpSupportScreen: React.FC = () => {
           <button
             type="submit"
             className="interactive-tap"
-            style={{ backgroundColor: '#7FE87F', border: 'none', color: '#080C14', padding: '0 16px', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', boxShadow: 'none' }}
+            style={{ backgroundColor: '#00C853', border: 'none', color: '#080C14', padding: '0 16px', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', boxShadow: 'none' }}
           >
             <Send size={16} />
           </button>
@@ -205,13 +205,13 @@ export const HelpSupportScreen: React.FC = () => {
               width: '56px',
               height: '56px',
               borderRadius: '16px',
-              backgroundColor: 'rgba(127, 232, 127, 0.12)',
-              color: '#7FE87F',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              color: '#00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 14px auto',
-              border: '1.5px solid rgba(127, 232, 127, 0.3)',
+              border: '1.5px solid rgba(0, 200, 83, 0.3)',
             }}
           >
             <PhoneCall size={28} />
@@ -221,7 +221,7 @@ export const HelpSupportScreen: React.FC = () => {
           <a
             href="tel:80012378729"
             className="interactive-tap"
-            style={{ display: 'inline-block', padding: '12px 28px', backgroundColor: '#7FE87F', color: '#080C14', borderRadius: '12px', fontWeight: 800, fontSize: '13px', textDecoration: 'none', boxShadow: 'none' }}
+            style={{ display: 'inline-block', padding: '12px 28px', backgroundColor: '#00C853', color: '#080C14', borderRadius: '14px', fontWeight: 800, fontSize: '14px', textDecoration: 'none', boxShadow: '0 4px 16px rgba(0, 200, 83, 0.35)' }}
           >
             Call Now
           </a>
@@ -237,8 +237,8 @@ export const HelpSupportScreen: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                color: '#7FE87F',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                color: '#00C853',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -286,14 +286,14 @@ export const HelpSupportScreen: React.FC = () => {
               style={{
                 marginTop: '8px',
                 padding: '14px',
-                borderRadius: '12px',
-                backgroundColor: '#7FE87F',
+                borderRadius: '14px',
+                backgroundColor: '#00C853',
                 color: '#080C14',
                 border: 'none',
                 fontWeight: 800,
-                fontSize: '13.5px',
+                fontSize: '14px',
                 cursor: 'pointer',
-                boxShadow: 'none',
+                boxShadow: '0 4px 16px rgba(0, 200, 83, 0.35)',
               }}
             >
               Submit Dispute

@@ -103,12 +103,12 @@ export const TapCardScreen: React.FC = () => {
               width: '38px',
               height: '38px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(127, 232, 127, 0.12)',
-              border: '1px solid rgba(127, 232, 127, 0.25)',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#7FE87F',
+              color: '#00C853',
             }}
           >
             <Wifi size={18} />
@@ -125,7 +125,7 @@ export const TapCardScreen: React.FC = () => {
               width: '200px',
               height: '200px',
               borderRadius: '50%',
-              border: '2px solid rgba(127, 232, 127, 0.25)',
+              border: '2px solid rgba(0, 200, 83, 0.25)',
               animation: 'nfcPulse 2.4s infinite ease-out',
             }}
           />
@@ -135,7 +135,7 @@ export const TapCardScreen: React.FC = () => {
               width: '150px',
               height: '150px',
               borderRadius: '50%',
-              border: '2px solid rgba(127, 232, 127, 0.45)',
+              border: '2px solid rgba(0, 200, 83, 0.45)',
               animation: 'nfcPulse 2.4s infinite ease-out 0.6s',
             }}
           />
@@ -147,17 +147,17 @@ export const TapCardScreen: React.FC = () => {
               height: '90px',
               borderRadius: '26px',
               backgroundColor: '#111726',
-              border: '2px solid #7FE87F',
+              border: '2px solid #00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#7FE87F',
+              color: '#00C853',
               zIndex: 2,
-              boxShadow: '0 0 30px rgba(127, 232, 127, 0.25)',
+              boxShadow: '0 0 30px rgba(0, 200, 83, 0.25)',
             }}
           >
             {step === 'success' ? (
-              <CheckCircle2 size={44} color="#7FE87F" />
+              <CheckCircle2 size={44} color="#00C853" />
             ) : (
               <Wifi size={44} style={{ transform: 'rotate(90deg)' }} />
             )}
@@ -197,7 +197,7 @@ export const TapCardScreen: React.FC = () => {
           padding: '12px 18px',
         }}
       >
-        <span style={{ fontSize: '11px', fontWeight: 800, color: '#7FE87F' }}>💳 Debit Card</span>
+        <span style={{ fontSize: '11px', fontWeight: 800, color: '#00C853' }}>💳 Debit Card</span>
         <span style={{ color: '#444' }}>•</span>
         <span style={{ fontSize: '11px', fontWeight: 800, color: '#FFFFFF' }}> Apple Pay</span>
         <span style={{ color: '#444' }}>•</span>

@@ -104,7 +104,7 @@ export const AppLinksModal: React.FC = () => {
               padding: '16px',
               borderRadius: '16px',
               backgroundColor: '#1A2234',
-              border: '1.5px solid #7FE87F',
+              border: '1.5px solid #00C853',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
@@ -118,8 +118,8 @@ export const AppLinksModal: React.FC = () => {
                     width: '40px',
                     height: '40px',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                    color: '#7FE87F',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                    color: '#00C853',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -129,7 +129,7 @@ export const AppLinksModal: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontWeight: '800', fontSize: '15px', color: '#ffffff' }}>Web Application</div>
-                  <div style={{ fontSize: '11px', color: '#7FE87F', fontWeight: '700' }}>
+                  <div style={{ fontSize: '11px', color: '#00C853', fontWeight: '700' }}>
                     Live Web Version (Active)
                   </div>
                 </div>
@@ -138,8 +138,8 @@ export const AppLinksModal: React.FC = () => {
                 style={{
                   fontSize: '10px',
                   fontWeight: '800',
-                  backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                  color: '#7FE87F',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  color: '#00C853',
                   padding: '4px 8px',
                   borderRadius: '10px',
                 }}
@@ -148,7 +148,7 @@ export const AppLinksModal: React.FC = () => {
               </span>
             </div>
             <p style={{ fontSize: '12px', color: '#94A3B8', margin: '4px 0 0 0' }}>
-              URL: <code style={{ color: '#7FE87F', fontWeight: '700' }}>{webUrl}</code>
+              URL: <code style={{ color: '#00C853', fontWeight: '700' }}>{webUrl}</code>
             </p>
           </div>
 
@@ -205,7 +205,7 @@ export const AppLinksModal: React.FC = () => {
                 width: '100%',
                 padding: '12px',
                 borderRadius: '8px',
-                backgroundColor: '#7FE87F',
+                backgroundColor: '#00C853',
                 color: '#080C14',
                 border: 'none',
                 fontWeight: '800',
@@ -224,7 +224,7 @@ export const AppLinksModal: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94A3B8', justifyContent: 'center' }}>
-          <CheckCircle2 size={14} color="#7FE87F" /> All links are secured and verified for QTPay
+          <CheckCircle2 size={14} color="#00C853" /> All links are secured and verified for QTPay
         </div>
       </div>
     </div>

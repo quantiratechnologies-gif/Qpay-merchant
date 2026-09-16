@@ -9,9 +9,9 @@ interface EditProfileModalProps {
 }
 
 const COLOR_PRESETS = [
-  { name: 'Emerald Green', color: '#7FE87F' },
-  { name: 'Light Mint', color: '#9FEE9F' },
-  { name: 'Forest Green', color: '#3F963F' },
+  { name: 'Emerald Green', color: '#00C853' },
+  { name: 'Light Mint', color: '#69F0AE' },
+  { name: 'Forest Green', color: '#007A33' },
   { name: 'Deep Navy', color: '#1A1A2E' },
   { name: 'Card Surface', color: '#2A2A3E' },
   { name: 'Slate Accent', color: '#3A3A52' },
@@ -32,7 +32,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
   const [upiId, setUpiId] = useState(user.upiId);
   const [email, setEmail] = useState(user.email);
   const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl || '');
-  const [avatarBgColor, setAvatarBgColor] = useState(user.avatarBgColor || '#7FE87F');
+  const [avatarBgColor, setAvatarBgColor] = useState(user.avatarBgColor || '#00C853');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState(false);
 
@@ -43,7 +43,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
       setUpiId(user.upiId);
       setEmail(user.email);
       setAvatarUrl(user.avatarUrl || '');
-      setAvatarBgColor(user.avatarBgColor || '#7FE87F');
+      setAvatarBgColor(user.avatarBgColor || '#00C853');
       setErrorMsg('');
       setSuccessMsg(false);
     }
@@ -224,7 +224,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 width: '24px',
                 height: '24px',
                 borderRadius: designSystem.radii.full,
-                backgroundColor: '#7FE87F',
+                backgroundColor: '#00C853',
                 color: '#080C14',
                 border: '2px solid #111726',
                 display: 'flex',
@@ -249,7 +249,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
             <div style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {name || (language === 'العربية' ? 'اسمك الكامل' : 'Your Name')}
             </div>
-            <div style={{ fontSize: '12px', color: '#7FE87F', fontWeight: 700, marginTop: '2px' }} dir="ltr">
+            <div style={{ fontSize: '12px', color: '#00C853', fontWeight: 700, marginTop: '2px' }} dir="ltr">
               {upiId || 'name@sarie'} &bull; {mobile || '+966...'}
             </div>
           </div>
@@ -317,8 +317,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                color: '#7FE87F',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                color: '#00C853',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -339,7 +339,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 {t('auth.full_name', 'Full Name')}
               </label>
               <div style={{ position: 'relative' }}>
-                <UserIcon size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7FE87F' }} />
+                <UserIcon size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#00C853' }} />
                 <input
                   id="edit-name-input"
                   type="text"
@@ -370,7 +370,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 {t('auth.mobile_number', 'Mobile Number')}
               </label>
               <div style={{ position: 'relative' }}>
-                <Phone size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7FE87F' }} />
+                <Phone size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#00C853' }} />
                 <input
                   id="edit-mobile-input"
                   type="tel"
@@ -402,7 +402,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 {t('pay.sarie_id', 'Primary Sarie ID')}
               </label>
               <div style={{ position: 'relative' }}>
-                <AtSign size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7FE87F' }} />
+                <AtSign size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#00C853' }} />
                 <input
                   id="edit-upi-input"
                   type="text"
@@ -434,7 +434,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 {language === 'العربية' ? 'البريد الإلكتروني' : 'Email Address'}
               </label>
               <div style={{ position: 'relative' }}>
-                <Mail size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#7FE87F' }} />
+                <Mail size={18} style={{ position: 'absolute', [isRtl ? 'right' : 'left']: '14px', top: '50%', transform: 'translateY(-50%)', color: '#00C853' }} />
                 <input
                   id="edit-email-input"
                   type="email"
@@ -463,9 +463,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
             {/* Save Action Button */}
             <button
               type="submit"
+              className="interactive-tap"
               style={{
                 width: '100%',
-                backgroundColor: '#7FE87F',
+                backgroundColor: '#00C853',
                 color: '#080C14',
                 border: 'none',
                 borderRadius: designSystem.radii.md,
@@ -474,6 +475,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 fontSize: '15px',
                 cursor: 'pointer',
                 marginTop: '10px',
+                boxShadow: '0 4px 16px rgba(0, 200, 83, 0.35)',
               }}
             >
               {t('btn.save', 'Save Changes')}

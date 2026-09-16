@@ -67,7 +67,7 @@ export const SecurityIllustration: React.FC = () => {
           {/* Security Radiant Ambient Glow */}
           <radialGradient id="secGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#00D2FF" stopOpacity="0.22" />
-            <stop offset="60%" stopColor="#7FE87F" stopOpacity="0.1" />
+            <stop offset="60%" stopColor="#00C853" stopOpacity="0.1" />
             <stop offset="100%" stopColor="#0B0B14" stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -150,14 +150,14 @@ export const SecurityIllustration: React.FC = () => {
           {/* Header bar */}
           <rect x="8" y="8" width="20" height="6" rx="2" fill="#00D2FF" />
           {/* Password Asterisk Dots */}
-          <circle cx="14" cy="24" r="2.5" fill="#7FE87F" />
-          <circle cx="24" cy="24" r="2.5" fill="#7FE87F" />
-          <circle cx="34" cy="24" r="2.5" fill="#7FE87F" />
-          <circle cx="44" cy="24" r="2.5" fill="#7FE87F" />
-          <circle cx="54" cy="24" r="2.5" fill="#7FE87F" />
+          <circle cx="14" cy="24" r="2.5" fill="#00C853" />
+          <circle cx="24" cy="24" r="2.5" fill="#00C853" />
+          <circle cx="34" cy="24" r="2.5" fill="#00C853" />
+          <circle cx="44" cy="24" r="2.5" fill="#00C853" />
+          <circle cx="54" cy="24" r="2.5" fill="#00C853" />
           {/* Progress bar line */}
           <rect x="8" y="36" width="66" height="4" rx="2" fill="rgba(255,255,255,0.15)" />
-          <rect x="8" y="36" width="48" height="4" rx="2" fill="#7FE87F" />
+          <rect x="8" y="36" width="48" height="4" rx="2" fill="#00C853" />
         </g>
 
         {/* CENTER 3D SHIELD WITH GLOWING KEYHOLE */}
@@ -202,7 +202,7 @@ export const SecurityIllustration: React.FC = () => {
 
         {/* Sparkle Stars & Data Particles */}
         <circle cx="40" cy="50" r="3" fill="#00D2FF" />
-        <circle cx="310" cy="110" r="3" fill="#7FE87F" />
+        <circle cx="310" cy="110" r="3" fill="#00C853" />
         <circle cx="330" cy="160" r="2" fill="#00D2FF" />
         <circle cx="50" cy="240" r="2.5" fill="#FFE27A" />
       </svg>

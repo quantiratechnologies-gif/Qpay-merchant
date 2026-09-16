@@ -64,10 +64,10 @@ export const PinPad: React.FC<PinPadProps> = ({ length = 4, onComplete, error })
                 width: '18px',
                 height: '18px',
                 borderRadius: '50%',
-                backgroundColor: isFilled ? '#7FE87F' : '#1A1A2E',
-                border: isFilled ? '2px solid #7FE87F' : '2px solid #4D4D6B',
+                backgroundColor: isFilled ? '#00C853' : '#1A1A2E',
+                border: isFilled ? '2px solid #00C853' : '2px solid #4D4D6B',
                 transform: isFilled ? 'scale(1.15)' : 'scale(1)',
-                boxShadow: isFilled ? '0 0 10px rgba(127, 232, 127, 0.4)' : 'none',
+                boxShadow: isFilled ? '0 0 10px rgba(0, 200, 83, 0.4)' : 'none',
                 transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             />

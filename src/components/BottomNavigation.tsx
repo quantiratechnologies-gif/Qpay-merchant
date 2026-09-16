@@ -108,14 +108,14 @@ export const BottomNavigation: React.FC = () => {
                   width: '56px',
                   height: '56px',
                   borderRadius: '50%',
-                  backgroundColor: '#7FE87F',
-                  color: '#000000',
+                  backgroundColor: '#00C853',
+                  color: '#080C14',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   border: '3.5px solid #080C14',
-                  outline: '1.5px solid #7FE87F',
-                  boxShadow: 'none',
+                  outline: '1.5px solid #00C853',
+                  boxShadow: '0 4px 16px rgba(0, 200, 83, 0.35)',
                   transition: 'transform 0.15s ease',
                 }}
               >
@@ -125,7 +125,7 @@ export const BottomNavigation: React.FC = () => {
                 style={{
                   fontSize: '10px',
                   fontWeight: 800,
-                  color: '#7FE87F',
+                  color: '#00C853',
                   marginTop: '2px',
                   textTransform: 'uppercase',
                   letterSpacing: '0.04em',
@@ -157,7 +157,7 @@ export const BottomNavigation: React.FC = () => {
               flex: 1,
               height: '100%',
               cursor: 'pointer',
-              color: isActive ? '#7FE87F' : '#64748B',
+              color: isActive ? '#00C853' : '#64748B',
               transition: 'color 0.15s ease',
               position: 'relative',
             }}
@@ -174,7 +174,7 @@ export const BottomNavigation: React.FC = () => {
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    backgroundColor: '#7FE87F',
+                    backgroundColor: '#00C853',
                     border: '1.5px solid #080C14',
                   }}
                 />
@@ -201,7 +201,7 @@ export const BottomNavigation: React.FC = () => {
                   width: '14px',
                   height: '2.5px',
                   borderRadius: '2px',
-                  backgroundColor: '#7FE87F',
+                  backgroundColor: '#00C853',
                 }}
               />
             )}

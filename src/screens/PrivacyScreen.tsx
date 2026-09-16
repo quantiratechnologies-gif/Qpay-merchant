@@ -31,7 +31,7 @@ export const PrivacyScreen: React.FC = () => {
         <div
           style={{
             backgroundColor: '#111726',
-            border: '1.5px solid rgba(127, 232, 127, 0.35)',
+            border: '1.5px solid rgba(0, 200, 83, 0.35)',
             borderRadius: '20px',
             padding: '22px 20px',
             marginBottom: '24px',
@@ -47,12 +47,12 @@ export const PrivacyScreen: React.FC = () => {
                 width: '46px',
                 height: '46px',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                border: '1px solid rgba(127, 232, 127, 0.3)',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#7FE87F',
+                color: '#00C853',
                 flexShrink: 0,
               }}
             >
@@ -80,19 +80,19 @@ export const PrivacyScreen: React.FC = () => {
           }}
         >
           <ListRow
-            icon={<Eye size={20} color="#7FE87F" />}
+            icon={<Eye size={20} color="#00C853" />}
             label={translateText('Data Sharing Preferences', language)}
             onClick={() => setActiveModal('preferences')}
           />
           <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
-            icon={<Database size={20} color="#7FE87F" />}
+            icon={<Database size={20} color="#00C853" />}
             label={translateText('Download Account Data', language)}
             onClick={() => setActiveModal('export')}
           />
           <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
-            icon={<ShieldCheck size={20} color="#7FE87F" />}
+            icon={<ShieldCheck size={20} color="#00C853" />}
             label={translateText('Terms of Service & Privacy Statement', language)}
             onClick={() => setActiveModal('terms')}
           />
@@ -107,7 +107,7 @@ export const PrivacyScreen: React.FC = () => {
               <div style={{ fontSize: '14px', fontWeight: 700, color: '#FFFFFF' }}>{translateText('Personalized Offers', language)}</div>
               <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>{translateText('Allow curated cashback & reward recommendations', language)}</div>
             </div>
-            <input type="checkbox" checked={marketingConsent} onChange={(e) => setMarketingConsent(e.target.checked)} style={{ width: '20px', height: '20px', accentColor: '#7FE87F', cursor: 'pointer' }} />
+            <input type="checkbox" checked={marketingConsent} onChange={(e) => setMarketingConsent(e.target.checked)} style={{ width: '20px', height: '20px', accentColor: '#00C853', cursor: 'pointer' }} />
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px', backgroundColor: '#1A2234', borderRadius: '14px', border: '1px solid #1E293B' }}>
@@ -115,7 +115,7 @@ export const PrivacyScreen: React.FC = () => {
               <div style={{ fontSize: '14px', fontWeight: 700, color: '#FFFFFF' }}>{translateText('Merchant Analytics', language)}</div>
               <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>{translateText('Share anonymized spending statistics', language)}</div>
             </div>
-            <input type="checkbox" checked={shareData} onChange={(e) => setShareData(e.target.checked)} style={{ width: '20px', height: '20px', accentColor: '#7FE87F', cursor: 'pointer' }} />
+            <input type="checkbox" checked={shareData} onChange={(e) => setShareData(e.target.checked)} style={{ width: '20px', height: '20px', accentColor: '#00C853', cursor: 'pointer' }} />
           </div>
 
           <PrimaryButton onClick={() => setActiveModal(null)}>
@@ -133,8 +133,8 @@ export const PrivacyScreen: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                color: '#7FE87F',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                color: '#00C853',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

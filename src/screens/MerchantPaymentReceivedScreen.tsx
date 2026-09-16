@@ -77,20 +77,20 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
             width: '68px',
             height: '68px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(127, 232, 127, 0.15)',
-            border: '2px solid #7FE87F',
+            backgroundColor: 'rgba(0, 200, 83, 0.15)',
+            border: '2px solid #00C853',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 12px auto',
           }}
         >
-          <CheckCircle2 size={38} color="#7FE87F" />
+          <CheckCircle2 size={38} color="#00C853" />
         </div>
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px 0', color: '#FFFFFF' }}>
           {t('merchant.payment_approved', 'Payment Approved')}
         </h2>
-        <div className="tabular-nums" style={{ fontSize: '32px', fontWeight: 900, color: '#7FE87F', letterSpacing: '-0.02em', margin: '4px 0' }}>
+        <div className="tabular-nums" style={{ fontSize: '32px', fontWeight: 900, color: '#00C853', letterSpacing: '-0.02em', margin: '4px 0' }}>
           +{formatCurrency(collection.amount, language)}
         </div>
         <p style={{ fontSize: '12px', color: '#A2A2BA', margin: 0 }}>
@@ -119,7 +119,7 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
                 {t('zatca.title', 'ZATCA Phase 2 E-Invoice')}
               </span>
             </div>
-            <span style={{ fontSize: '11px', color: '#7FE87F', fontWeight: 700, backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '2px 6px', borderRadius: '6px' }}>
+            <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700, backgroundColor: 'rgba(0, 200, 83, 0.12)', padding: '2px 6px', borderRadius: '6px' }}>
               {isAr ? 'مكتملة' : 'Settled'}
             </span>
           </div>
@@ -149,8 +149,8 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
               <span style={{ fontWeight: 700, color: '#FFFFFF' }}>{formatSaudiCurrency(collection.netAmount, language)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#7FE87F', fontWeight: 700 }}>{t('zatca.vat_amount', '15% ZATCA VAT')}</span>
-              <span style={{ fontWeight: 800, color: '#7FE87F' }}>{formatSaudiCurrency(collection.vatAmount, language)}</span>
+              <span style={{ color: '#00C853', fontWeight: 700 }}>{t('zatca.vat_amount', '15% ZATCA VAT')}</span>
+              <span style={{ fontWeight: 800, color: '#00C853' }}>{formatSaudiCurrency(collection.vatAmount, language)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #2C2C44', paddingTop: '8px', marginTop: '2px' }}>
               <span style={{ fontWeight: 800, color: '#FFFFFF', fontSize: '13px' }}>{t('zatca.gross_total', 'Gross Total')}</span>
@@ -167,7 +167,7 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
                 flex: 1,
                 backgroundColor: '#1E1E32',
                 border: '1px solid #2C2C44',
-                color: '#7FE87F',
+                color: '#00C853',
                 borderRadius: '10px',
                 padding: '9px 12px',
                 fontSize: '11.5px',
@@ -201,7 +201,7 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
                 cursor: 'pointer',
               }}
             >
-              {copied ? <Check size={15} color="#7FE87F" /> : <Share2 size={15} color="#7FE87F" />}
+              {copied ? <Check size={15} color="#00C853" /> : <Share2 size={15} color="#00C853" />}
               {copied ? (isAr ? 'تم نسخ الإيصال' : 'Copied Receipt') : (isAr ? 'مشاركة الإيصال' : 'Share Receipt')}
             </button>
           </div>

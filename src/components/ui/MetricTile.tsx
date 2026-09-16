@@ -84,7 +84,7 @@ export const MetricTile: React.FC<MetricTileProps> = ({
           fontSize: '16px',
           fontWeight: 800,
           color: highlightGreen
-            ? 'var(--accent-green-bright, #7FE87F)'
+            ? 'var(--accent-green-bright, #00C853)'
             : 'var(--text-primary, #FFFFFF)',
           lineHeight: '1.2',
           letterSpacing: '-0.02em',

@@ -2,11 +2,11 @@
 
 :root {
   /* alph pay — Brand Theme Tokens */
-  --color-primary: #7FE87F;
+  --color-primary: #00C853;
   --color-primary-hover: #5FBF5F;
   --color-primary-active: #3F963F;
-  --color-primary-light: rgba(127, 232, 127, 0.12);
-  --color-primary-border: #7FE87F;
+  --color-primary-light: rgba(0, 200, 83, 0.12);
+  --color-primary-border: #00C853;
   --color-primary-dark: #1F6D1F;
   --color-text-on-primary: #000000;
 
@@ -24,19 +24,19 @@
   --color-border: #2C2C44;
   --color-border-hairline: #2C2C44;
   --color-border-strong: #4A4A68;
-  --color-border-focus: #7FE87F;
+  --color-border-focus: #00C853;
 
-  --color-success: #7FE87F;
+  --color-success: #00C853;
   --color-warning: #F59E0B;
   --color-danger: #FF4757;
 
   /* Aliases for backwards compatibility */
-  --primary: #7FE87F;
+  --primary: #00C853;
   --primary-hover: #5FBF5F;
-  --accent: #7FE87F;
-  --blue-base: #7FE87F;
+  --accent: #00C853;
+  --blue-base: #00C853;
   --blue-hover: #5FBF5F;
-  --blue-light: rgba(127, 232, 127, 0.12);
+  --blue-light: rgba(0, 200, 83, 0.12);
   --blue-tint: #9FEE9F;
 
   --bg-page: #0B0B14;
@@ -79,7 +79,7 @@
 
 /* WCAG 2.1 AA Keyboard Focus Rings */
 :focus-visible {
-  outline: 2.5px solid #7FE87F !important;
+  outline: 2.5px solid #00C853 !important;
   outline-offset: 2px !important;
   border-radius: 4px;
 }
@@ -89,7 +89,7 @@ a:focus-visible,
 input:focus-visible,
 [role="button"]:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2.5px solid #7FE87F !important;
+  outline: 2.5px solid #00C853 !important;
   outline-offset: 2px !important;
 }
 
@@ -266,7 +266,7 @@ textarea::placeholder {
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: #7FE87F !important;
+  border-color: #00C853 !important;
   background-color: #2A2A3E !important;
 }
 
@@ -330,7 +330,7 @@ button:disabled {
   position: absolute;
   width: 64px;
   height: 64px;
-  background: #7FE87F;
+  background: #00C853;
   transform: rotate(45deg);
   border-radius: 8px;
 }

@@ -1,6 +1,6 @@
 /**
  * alph pay — Official Mobile App Design System Tokens
- * Primary: Vibrant Lime Green (#7FE87F)
+ * Primary: Vibrant Lime Green (#00C853)
  * UI Base: Deep Navy Charcoal (#1A1A2E) & Dark Card Surfaces (#2A2A3E)
  * Secondary: Pure Black (#000000) & Pure White (#FFFFFF)
  * Typography: Inter / SF Pro / Google Sans Flex Scale
@@ -10,7 +10,7 @@
 
 export const colors = {
   // 1. Primary Color — Vibrant Lime Green & Tiers
-  primary: '#7FE87F',
+  primary: '#00C853',
   primaryHover: '#5FBF5F',
   primaryActive: '#3F963F',
   primaryLight: '#EFFDEF',
@@ -59,10 +59,10 @@ export const colors = {
   // Borders & Dividers
   borderHairline: '#4D4D6B',
   borderStrong: '#808099',
-  borderFocus: '#7FE87F',
+  borderFocus: '#00C853',
 
   // Semantic & Feedback Colors
-  success: '#7FE87F',
+  success: '#00C853',
   successLight: '#EFFDEF',
   successText: '#0C440C',
 
@@ -74,7 +74,7 @@ export const colors = {
   dangerLight: '#FFE8EA',
   dangerText: '#FF6B7A',
 
-  info: '#7FE87F',
+  info: '#00C853',
   infoLight: '#EFFDEF',
   infoText: '#000000',
 } as const;
@@ -130,7 +130,7 @@ export const spacing = {
 } as const;
 
 export const focus = {
-  ring: '2.5px solid #7FE87F',
+  ring: '2.5px solid #00C853',
   offset: '2px',
   outline: 'none',
 } as const;

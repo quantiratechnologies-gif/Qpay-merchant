@@ -19,7 +19,7 @@ export const SplashScreen: React.FC = () => {
       style={{
         minHeight: '100vh',
         backgroundColor: '#080C14',
-        backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(127, 232, 127, 0.12) 0%, rgba(8, 12, 20, 0.98) 70%)',
+        backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(0, 200, 83, 0.12) 0%, rgba(8, 12, 20, 0.98) 70%)',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -51,7 +51,7 @@ export const SplashScreen: React.FC = () => {
             width: '140px',
             height: '140px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(127, 232, 127, 0.18)',
+            backgroundColor: 'rgba(0, 200, 83, 0.18)',
             filter: 'blur(40px)',
             pointerEvents: 'none',
           }}
@@ -63,7 +63,7 @@ export const SplashScreen: React.FC = () => {
             fontSize: '11px',
             fontWeight: 800,
             letterSpacing: '0.18em',
-            color: '#7FE87F',
+            color: '#00C853',
             textTransform: 'uppercase',
           }}
         >
@@ -92,7 +92,7 @@ export const SplashScreen: React.FC = () => {
         >
           powered by
         </span>
-        <QuantiraLogo size={24} color="#7FE87F" textColor="#FFFFFF" />
+        <QuantiraLogo size={24} color="#00C853" textColor="#FFFFFF" />
       </div>
     </div>
   );

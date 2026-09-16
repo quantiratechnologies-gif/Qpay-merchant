@@ -4,7 +4,7 @@
 :root,
 :root[data-theme="alph-pay"],
 :root[data-theme="dark"] {
-  --color-primary: #7FE87F;
+  --color-primary: #00C853;
   --color-primary-hover: #5FBF5F;
   --color-primary-active: #3F963F;
   --color-primary-light: #EFFDEF;
@@ -26,9 +26,9 @@
   --color-border: #4D4D6B;
   --color-border-hairline: #4D4D6B;
   --color-border-strong: #808099;
-  --color-border-focus: #7FE87F;
+  --color-border-focus: #00C853;
 
-  --color-success: #7FE87F;
+  --color-success: #00C853;
   --color-warning: #F59E0B;
   --color-danger: #FF4757;
 
@@ -47,7 +47,7 @@
 }
 
 :root[data-theme="light"] {
-  --color-primary: #7FE87F;
+  --color-primary: #00C853;
   --color-primary-hover: #5FBF5F;
   --color-text-on-primary: #000000;
 
@@ -65,7 +65,7 @@
   --color-border: #E6E6E6;
   --color-border-hairline: #E6E6E6;
   --color-border-strong: #BFBFBF;
-  --color-border-focus: #7FE87F;
+  --color-border-focus: #00C853;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);

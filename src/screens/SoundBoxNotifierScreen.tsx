@@ -54,12 +54,12 @@ export const SoundBoxNotifierScreen: React.FC = () => {
                 width: '38px',
                 height: '38px',
                 borderRadius: '12px',
-                backgroundColor: 'rgba(127, 232, 127, 0.12)',
-                border: '1px solid rgba(127, 232, 127, 0.25)',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                border: '1px solid rgba(0, 200, 83, 0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#7FE87F',
+                color: '#00C853',
               }}
             >
               <Radio size={18} />
@@ -82,7 +82,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             position: 'relative',
-            boxShadow: '0 0 35px rgba(127, 232, 127, 0.15)',
+            boxShadow: '0 0 35px rgba(0, 200, 83, 0.15)',
           }}
         >
           {/* Status Indicator LED */}
@@ -93,8 +93,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              backgroundColor: '#7FE87F',
-              boxShadow: '0 0 8px #7FE87F',
+              backgroundColor: '#00C853',
+              boxShadow: '0 0 8px #00C853',
             }}
           />
 
@@ -112,7 +112,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               position: 'relative',
             }}
           >
-            <Volume2 size={44} color="#7FE87F" />
+            <Volume2 size={44} color="#00C853" />
           </div>
 
           <span style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', marginTop: '10px' }}>
@@ -129,7 +129,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             borderRadius: '12px',
             padding: '8px 16px',
             fontSize: '11.5px',
-            color: '#7FE87F',
+            color: '#00C853',
             fontWeight: 700,
             maxWidth: '320px',
             textAlign: 'center',
@@ -158,7 +158,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
                 {isAr ? 'مستوى الصوت' : 'Announcement Volume'}
               </span>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: '#00C853' }}>
                 {formatLocalizedNumber(soundBoxVolume, language)}%
               </span>
             </div>
@@ -170,7 +170,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               onChange={(e) => setSoundBoxVolume(Number(e.target.value))}
               style={{
                 width: '100%',
-                accentColor: '#7FE87F',
+                accentColor: '#00C853',
                 cursor: 'pointer',
               }}
             />
@@ -188,7 +188,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
                 className="interactive-tap"
                 style={{
                   backgroundColor: soundBoxLanguage === 'ar' ? '#161F30' : '#080C14',
-                  border: soundBoxLanguage === 'ar' ? '1.5px solid #7FE87F' : '1px solid #1E293B',
+                  border: soundBoxLanguage === 'ar' ? '1.5px solid #00C853' : '1px solid #1E293B',
                   borderRadius: '12px',
                   padding: '10px',
                   color: '#FFFFFF',
@@ -205,7 +205,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
                 className="interactive-tap"
                 style={{
                   backgroundColor: soundBoxLanguage === 'en' ? '#161F30' : '#080C14',
-                  border: soundBoxLanguage === 'en' ? '1.5px solid #7FE87F' : '1px solid #1E293B',
+                  border: soundBoxLanguage === 'en' ? '1.5px solid #00C853' : '1px solid #1E293B',
                   borderRadius: '12px',
                   padding: '10px',
                   color: '#FFFFFF',
@@ -246,7 +246,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
                     gap: '4px',
                   }}
                 >
-                  <Play size={13} color="#7FE87F" /> {formatSaudiCurrency(amt, language)}
+                  <Play size={13} color="#00C853" /> {formatSaudiCurrency(amt, language)}
                 </button>
               ))}
             </div>

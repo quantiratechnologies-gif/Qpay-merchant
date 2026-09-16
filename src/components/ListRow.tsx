@@ -56,7 +56,7 @@ export const ListRow: React.FC<ListRowProps> = ({
               height: '38px',
               borderRadius: '10px',
               backgroundColor: danger ? 'rgba(255, 71, 87, 0.12)' : '#3A3A52',
-              color: danger ? '#FF4757' : '#7FE87F',
+              color: danger ? '#FF4757' : '#00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

@@ -21,7 +21,7 @@ export const colors = {
 
   // Accents
   accentGreen: '#00C853',
-  accentGreenBright: '#7FE87F',
+  accentGreenBright: '#00C853',
   accentBlue: '#38BDF8',
   accentPurple: '#A855F7',
   accentAmber: '#F59E0B',
@@ -60,7 +60,7 @@ export const colors = {
 
   // Semantic Status Colors
   success: '#00C853',
-  successBright: '#7FE87F',
+  successBright: '#00C853',
   successLight: 'rgba(0, 200, 83, 0.12)',
   successText: '#00C853',
 

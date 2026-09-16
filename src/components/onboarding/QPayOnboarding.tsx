@@ -295,7 +295,7 @@ export const QPayOnboarding: React.FC<QPayOnboardingProps> = ({ onComplete }) =>
             maxWidth: '320px',
             height: '48px',
             borderRadius: '12px',
-            backgroundColor: '#7FE87F',
+            backgroundColor: '#00C853',
             color: '#080C14',
             border: 'none',
             fontSize: '14px',

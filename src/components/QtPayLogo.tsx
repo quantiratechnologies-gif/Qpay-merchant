@@ -18,7 +18,7 @@ export const QtPayLogo: React.FC<QtPayLogoProps> = ({
   style = {},
 }) => {
   const isDark = themeMode === 'dark';
-  const primaryGreen = themeMode === 'green' ? '#86C552' : '#7FE87F';
+  const primaryGreen = themeMode === 'green' ? '#00C853' : '#00C853';
   const textColor = isDark ? '#FFFFFF' : '#0B0B14';
 
   if (variant === 'icon') {
