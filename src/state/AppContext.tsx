@@ -132,8 +132,9 @@ const INITIAL_SESSIONS: DeviceSession[] = [
 
 const INITIAL_MERCHANT_INFO: MerchantInfo = {
   businessName: 'Starmart Supermarket',
-  category: 'Groceries & Gourmet',
+  category: 'Grocery & Daily Essentials',
   city: 'Riyadh',
+  postalCode: '12211',
   crNumber: 'CR-1010849201',
   vatNumber: '310948201900003',
   nationalId: '1098472910',

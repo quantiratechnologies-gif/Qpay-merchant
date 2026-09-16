@@ -65,6 +65,7 @@ export interface MerchantInfo {
   businessName: string;
   category: string;
   city: string;
+  postalCode?: string;
   crNumber: string;
   vatNumber: string;
   nationalId: string;

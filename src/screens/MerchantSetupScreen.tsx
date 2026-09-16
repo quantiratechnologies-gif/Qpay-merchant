@@ -1,42 +1,49 @@
 import React, { useState } from 'react';
-import { Store, MapPin, Hash, ArrowRight } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Camera,
+  Edit2,
+  ChevronDown,
+  CheckCircle2,
+} from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
-import { AlphPayLogo } from '../components/AlphPayLogo';
-import { AppHeader } from '../components/AppHeader';
-import { formatLocalizedNumber } from '../utils/i18n';
+import { QuantiraLogo } from '../components/QuantiraLogo';
 
 const CATEGORIES = [
-  { en: 'Groceries & Gourmet', ar: 'بقالة وتموينات' },
-  { en: 'Food & Drink', ar: 'مطاعم ومقاهي' },
-  { en: 'Retail & Fashion', ar: 'تجارة تجزئة وأزياء' },
-  { en: 'Electronics & Tech', ar: 'إلكترونيات وتقنية' },
-  { en: 'Fuel & Auto', ar: 'محطات وقود وسيارات' },
-  { en: 'Services', ar: 'خدمات مهنية' },
-  { en: 'Pharmacy & Health', ar: 'صيدليات ورعاية صحية' },
-  { en: 'Other Business', ar: 'أنشطة أخرى' },
+  { en: 'Grocery & Daily Essentials', ar: 'بقالة وتموينات واحتياجات يومية' },
+  { en: 'Food & Beverage / Cafes', ar: 'مطاعم ومقاهي ومشروبات' },
+  { en: 'Retail & Fashion Boutique', ar: 'تجارة تجزئة وملابس وأزياء' },
+  { en: 'Electronics & Smart Devices', ar: 'إلكترونيات وأجهزة ذكية' },
+  { en: 'Pharmacy & Wellness', ar: 'صيدليات ورعاية صحية' },
+  { en: 'Automotive & Fuel Stations', ar: 'محطات وقود وخدمات سيارات' },
+  { en: 'Professional Services', ar: 'خدمات مهنية واستشارية' },
+  { en: 'General Wholesale Trade', ar: 'تجارة جملة وتوريدات' },
 ];
 
 const CITIES = [
   { en: 'Riyadh', ar: 'الرياض' },
   { en: 'Jeddah', ar: 'جدة' },
   { en: 'Dammam', ar: 'الدمام' },
+  { en: 'Khobar', ar: 'الخبر' },
   { en: 'Mecca', ar: 'مكة المكرمة' },
   { en: 'Medina', ar: 'المدينة المنورة' },
-  { en: 'Khobar', ar: 'الخبر' },
   { en: 'Tabuk', ar: 'تبوك' },
   { en: 'Abha', ar: 'أبها' },
 ];
 
 export const MerchantSetupScreen: React.FC = () => {
-  const { merchantInfo, updateMerchantInfo, navigateTo, language, isRtl, t } = useApp();
+  const { merchantInfo, updateMerchantInfo, navigateTo, goBack, language, isRtl } = useApp();
   const isAr = language === 'العربية';
-  const [businessName, setBusinessName] = useState(merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket'));
-  const [category, setCategory] = useState(merchantInfo.category || 'Groceries & Gourmet');
+
+  const [businessName, setBusinessName] = useState(
+    merchantInfo.businessName || (isAr ? 'تموينات القمة للتجارة' : 'GreenLeaf Markets LLC')
+  );
+  const [category, setCategory] = useState(merchantInfo.category || 'Grocery & Daily Essentials');
   const [city, setCity] = useState(merchantInfo.city || 'Riyadh');
-  const storePhone = merchantInfo.storePhone || '0501234567';
+  const [postalCode, setPostalCode] = useState(merchantInfo.postalCode || '12211');
   const [vatNumber] = useState(merchantInfo.vatNumber || '310948201900003');
+  const [hasLogo, setHasLogo] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +51,7 @@ export const MerchantSetupScreen: React.FC = () => {
       businessName,
       category,
       city,
-      storePhone,
+      postalCode,
       vatNumber,
     });
     navigateTo('MERCHANT_BANK_LINK');
@@ -60,84 +67,159 @@ export const MerchantSetupScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        paddingBottom: '30px',
+        padding: '24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      <AppHeader
-        title={isAr ? 'بيانات المتجر والسجل التجاري' : 'Business & CR Profile'}
-        showBack={true}
-        showSettings={false}
-      />
-      {/* Top Header */}
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-        <div
+      {/* Top Bar with Back Button */}
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginBottom: '16px' }}>
+        <button
+          onClick={goBack}
+          aria-label="Go Back"
+          className="interactive-tap"
           style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '18px',
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#161F30',
+            border: '1px solid #2A364F',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 12px auto',
+            color: '#FFFFFF',
+            cursor: 'pointer',
           }}
         >
-          <AlphPayLogo variant="icon" size={36} themeMode="dark" />
-        </div>
-        <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
-          {t('merchant.setup_title', 'Business Profile Setup')}
-        </h2>
-        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
-          {isAr ? 'إعداد الملف التجاري للمنشأة للتوافق مع منظومة الفوترة الإلكترونية زاتكا' : 'Configure your merchant trading identity for ZATCA e-invoicing'}
-        </p>
+          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+        </button>
       </div>
 
-      {/* Main Form */}
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto' }}>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {/* Business Name */}
+      {/* Main Container */}
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto', flex: 1 }}>
+        <h1
+          style={{
+            fontSize: '24px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            margin: '0 0 20px 0',
+            textAlign: isRtl ? 'right' : 'left',
+          }}
+        >
+          {isAr ? 'ملف المنشأة التجارية' : 'Business Profile'}
+        </h1>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* 1. Storefront & Brand Logo Card */}
+          <div
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '16px',
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              {/* Dotted Upload Tile */}
+              <div
+                onClick={() => setHasLogo(!hasLogo)}
+                className="interactive-tap"
+                style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '12px',
+                  border: '1.5px dashed rgba(0, 200, 83, 0.6)',
+                  backgroundColor: 'rgba(0, 200, 83, 0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '3px',
+                  cursor: 'pointer',
+                  color: '#00C853',
+                }}
+              >
+                <Camera size={20} strokeWidth={2} />
+                <span style={{ fontSize: '8.5px', fontWeight: 800, letterSpacing: '0.04em' }}>
+                  {isAr ? 'رفع' : 'UPLOAD'}
+                </span>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#FFFFFF' }}>
+                  {isAr ? 'شعار وهوية المتجر' : 'Storefront & Brand Logo'}
+                </div>
+                <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>
+                  {hasLogo
+                    ? isAr
+                      ? '✓ تم تحميل الشعار بنجاح'
+                      : '✓ Logo uploaded & active'
+                    : isAr
+                    ? 'PNG أو JPG بحد أقصى ٥ ميجابايت'
+                    : 'PNG, JPG up to 5MB'}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setHasLogo(!hasLogo)}
+              className="interactive-tap"
+              style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '10px',
+                backgroundColor: '#161F30',
+                border: '1px solid #2A364F',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#94A3B8',
+                cursor: 'pointer',
+              }}
+            >
+              <Edit2 size={14} />
+            </button>
+          </div>
+
+          {/* 2. Registered Business Name */}
           <div>
             <label
               style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                fontSize: '11.5px',
+                fontWeight: 700,
+                color: '#CBD5E1',
                 marginBottom: '6px',
                 display: 'block',
                 textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              {t('merchant.business_name', 'Business / Store Trade Name')}
+              {isAr ? 'اسم المنشأة المسجل' : 'Registered Business Name'} <span style={{ color: '#00C853' }}>*</span>
             </label>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
                 backgroundColor: '#111726',
                 border: '1px solid #1E293B',
-                borderRadius: '14px',
-                padding: '12px 16px',
+                borderRadius: '12px',
+                padding: '12px 14px',
               }}
             >
-              <Store size={18} color="#7FE87F" style={{ marginRight: isRtl ? 0 : '12px', marginLeft: isRtl ? '12px' : 0, flexShrink: 0 }} />
               <input
                 type="text"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
-                placeholder={isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket'}
+                placeholder={isAr ? 'أدخل اسم المنشأة' : 'Enter registered business name'}
                 required
                 style={{
                   background: 'none',
                   border: 'none',
                   outline: 'none',
-                  fontSize: '15px',
-                  fontWeight: 700,
+                  fontSize: '14px',
+                  fontWeight: 600,
                   color: '#FFFFFF',
                   width: '100%',
                   textAlign: isRtl ? 'right' : 'left',
@@ -146,130 +228,113 @@ export const MerchantSetupScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Business Category Selection Pills */}
+          {/* 3. Business Category Selector */}
           <div>
             <label
               style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                marginBottom: '8px',
-                display: 'block',
-                textAlign: isRtl ? 'right' : 'left',
-              }}
-            >
-              {t('merchant.category', 'Business Category')}
-            </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: isRtl ? 'flex-end' : 'flex-start' }}>
-              {CATEGORIES.map((cat) => {
-                const isSelected = category === cat.en;
-                return (
-                  <button
-                    key={cat.en}
-                    type="button"
-                    onClick={() => setCategory(cat.en)}
-                    className="interactive-tap"
-                    style={{
-                      backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.2)' : '#111726',
-                      border: isSelected ? '1.5px solid #7FE87F' : '1px solid #1E293B',
-                      color: isSelected ? '#FFFFFF' : '#94A3B8',
-                      borderRadius: '12px',
-                      padding: '7px 12px',
-                      fontSize: '11.5px',
-                      fontWeight: isSelected ? 800 : 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {isAr ? cat.ar : cat.en}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Operating City */}
-          <div>
-            <label
-              style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                fontSize: '11.5px',
+                fontWeight: 700,
+                color: '#CBD5E1',
                 marginBottom: '6px',
                 display: 'block',
                 textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              {t('merchant.city', 'Operating City')}
+              {isAr ? 'تصنيف النشاط التجاري' : 'Business Category'} <span style={{ color: '#00C853' }}>*</span>
             </label>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
+                position: 'relative',
                 backgroundColor: '#111726',
                 border: '1px solid #1E293B',
-                borderRadius: '14px',
-                padding: '12px 16px',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <MapPin size={18} color="#7FE87F" style={{ marginRight: isRtl ? 0 : '12px', marginLeft: isRtl ? '12px' : 0, flexShrink: 0 }} />
               <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 style={{
                   background: 'none',
                   border: 'none',
                   outline: 'none',
-                  fontSize: '14.5px',
-                  fontWeight: 700,
+                  fontSize: '13.5px',
+                  fontWeight: 600,
                   color: '#FFFFFF',
                   width: '100%',
                   cursor: 'pointer',
+                  appearance: 'none',
+                  paddingRight: isRtl ? '0' : '24px',
+                  paddingLeft: isRtl ? '24px' : '0',
                   textAlign: isRtl ? 'right' : 'left',
                 }}
               >
-                {CITIES.map((c) => (
-                  <option key={c.en} value={c.en} style={{ backgroundColor: '#111726', color: '#FFFFFF' }}>
-                    {isAr ? c.ar : c.en}
+                {CATEGORIES.map((cat) => (
+                  <option key={cat.en} value={cat.en} style={{ backgroundColor: '#111726', color: '#FFFFFF' }}>
+                    {isAr ? cat.ar : cat.en}
                   </option>
                 ))}
               </select>
+              <ChevronDown
+                size={16}
+                color="#94A3B8"
+                style={{
+                  position: 'absolute',
+                  right: isRtl ? 'auto' : '14px',
+                  left: isRtl ? '14px' : 'auto',
+                  pointerEvents: 'none',
+                }}
+              />
             </div>
           </div>
 
-          {/* ZATCA VAT ID (Pre-filled from e-KYC) */}
+          {/* 4. ZATCA VAT ID with Verified Badge */}
           <div>
-            <label
-              style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                marginBottom: '6px',
-                display: 'block',
-                textAlign: isRtl ? 'right' : 'left',
-              }}
-            >
-              {t('zatca.vat_id', 'ZATCA VAT ID (15-Digit)')}
-            </label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <label
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: '#CBD5E1',
+                  textAlign: isRtl ? 'right' : 'left',
+                }}
+              >
+                {isAr ? 'الرقم الضريبي زاتكا' : 'ZATCA VAT ID'} <span style={{ color: '#00C853' }}>*</span>
+              </label>
+
+              {/* SAMA & Absher Verified Tag */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  borderRadius: '6px',
+                  padding: '2px 7px',
+                }}
+              >
+                <CheckCircle2 size={11} color="#00C853" />
+                <span style={{ fontSize: '9.5px', fontWeight: 800, color: '#00C853' }}>
+                  {isAr ? 'موثق عبر نفاذ وأبشر' : 'SAMA & Absher Verified'}
+                </span>
+              </div>
+            </div>
+
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
                 backgroundColor: '#111726',
                 border: '1px solid #1E293B',
-                borderRadius: '14px',
-                padding: '12px 16px',
+                borderRadius: '12px',
+                padding: '12px 14px',
               }}
             >
-              <Hash size={18} color="#7FE87F" style={{ marginRight: isRtl ? 0 : '12px', marginLeft: isRtl ? '12px' : 0, flexShrink: 0 }} />
               <input
                 type="text"
-                value={isAr ? formatLocalizedNumber(vatNumber, language) : vatNumber}
+                value={vatNumber}
                 readOnly
                 disabled
                 style={{
@@ -278,7 +343,7 @@ export const MerchantSetupScreen: React.FC = () => {
                   outline: 'none',
                   fontSize: '14px',
                   fontWeight: 700,
-                  color: '#7FE87F',
+                  color: '#FFFFFF',
                   fontFamily: 'monospace',
                   width: '100%',
                   direction: 'ltr',
@@ -288,22 +353,169 @@ export const MerchantSetupScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Action Button */}
-          <div style={{ marginTop: '10px' }}>
-            <PrimaryButton type="submit">
-              {t('btn.continue', 'Continue')} <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </PrimaryButton>
+          {/* 5. 2-Column Row: City & Postal Code */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {/* City */}
+            <div>
+              <label
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: '#CBD5E1',
+                  marginBottom: '6px',
+                  display: 'block',
+                  textAlign: isRtl ? 'right' : 'left',
+                }}
+              >
+                {isAr ? 'المدينة' : 'City'} <span style={{ color: '#00C853' }}>*</span>
+              </label>
+              <div
+                style={{
+                  position: 'relative',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    color: '#FFFFFF',
+                    width: '100%',
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    textAlign: isRtl ? 'right' : 'left',
+                  }}
+                >
+                  {CITIES.map((c) => (
+                    <option key={c.en} value={c.en} style={{ backgroundColor: '#111726', color: '#FFFFFF' }}>
+                      {isAr ? c.ar : c.en}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={14}
+                  color="#94A3B8"
+                  style={{
+                    position: 'absolute',
+                    right: isRtl ? 'auto' : '12px',
+                    left: isRtl ? '12px' : 'auto',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Postal Code */}
+            <div>
+              <label
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: '#CBD5E1',
+                  marginBottom: '6px',
+                  display: 'block',
+                  textAlign: isRtl ? 'right' : 'left',
+                }}
+              >
+                {isAr ? 'الرمز البريدي' : 'Postal Code'} <span style={{ color: '#00C853' }}>*</span>
+              </label>
+              <div
+                style={{
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                }}
+              >
+                <input
+                  type="text"
+                  maxLength={5}
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                  placeholder="12211"
+                  required
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    fontVariantNumeric: 'tabular-nums',
+                    width: '100%',
+                    direction: 'ltr',
+                    textAlign: isRtl ? 'right' : 'left',
+                  }}
+                />
+              </div>
+            </div>
           </div>
+
+          {/* Primary Submit Button */}
+          <button
+            type="submit"
+            className="interactive-tap"
+            style={{
+              marginTop: '12px',
+              backgroundColor: '#00C853',
+              color: '#080C14',
+              border: 'none',
+              borderRadius: '14px',
+              padding: '14px 20px',
+              fontSize: '15px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>{isAr ? 'حفظ ومتابعة' : 'Save & Continue'}</span>
+            <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </button>
         </form>
       </div>
 
-      {/* SAMA Dock */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-          {isAr ? 'بيانات منشأة موثقة عبر منصة النفاذ الوطني وأبشر' : 'SAMA & Absher Verified Merchant Identity'}
+      {/* Powered by Quantira Technologies */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          width: '100%',
+          textAlign: 'center',
+          paddingTop: '16px',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '10px',
+            color: '#64748B',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+          }}
+        >
+          {isAr ? 'مشغل بواسطة' : 'POWERED BY QUANTIRA TECHNOLOGIES'}
         </span>
-        <SamaLogo height={14} themeMode="green" />
+        <QuantiraLogo size={18} color="#00C853" textColor="#CBD5E1" />
       </div>
     </div>
   );
 };
+

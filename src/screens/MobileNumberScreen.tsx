@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Store, ArrowRight } from 'lucide-react';
-import { AlphPayLogo } from '../components/AlphPayLogo';
-import { PrimaryButton } from '../components/PrimaryButton';
+import { MapPin, ArrowRight, ChevronDown } from 'lucide-react';
 import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
-  const { navigateTo, user, updateUser, setUserRole, t, isRtl, language } = useApp();
-  const [fullName, setFullName] = useState<string>(user.name || 'Fahad Al-Harbi');
+  const { navigateTo, user, updateUser, setUserRole, isRtl, language } = useApp();
+  const isAr = language === 'العربية';
+  const [fullName, setFullName] = useState<string>(user.name || (isAr ? 'فهد الحربي' : 'Fahad Al-Harbi'));
   const [mobileNumber, setMobileNumber] = useState<string>('501234567');
 
   const handleContinue = (e?: React.FormEvent) => {
@@ -25,136 +24,141 @@ export const MobileNumberScreen: React.FC = () => {
       style={{
         minHeight: '100vh',
         backgroundColor: '#080C14',
-        backgroundImage: 'radial-gradient(circle at 50% 15%, rgba(127, 232, 127, 0.08) 0%, rgba(8, 12, 20, 0.98) 60%)',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '50px 24px 36px 24px',
+        padding: '36px 20px 24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Center: App Brand Logo */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-          width: '100%',
-          position: 'relative',
-        }}
-      >
-        <AlphPayLogo variant="horizontal" size={32} themeMode="dark" />
+      {/* Top Header with Beacon Pin */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '16px' }}>
+        {/* Neon Green Location / Merchant Beacon */}
+        <div
+          style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(0, 200, 83, 0.12)',
+            border: '1.5px solid rgba(0, 200, 83, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#00C853',
+            boxShadow: '0 0 24px rgba(0, 200, 83, 0.25)',
+            marginBottom: '20px',
+          }}
+        >
+          <MapPin size={26} strokeWidth={2.4} />
+        </div>
+
+        <h1
+          style={{
+            fontSize: '24px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            margin: '0 0 6px 0',
+            textAlign: 'center',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          {isAr ? 'تسجيل دخول التاجر' : 'Merchant Login'}
+        </h1>
+        <p
+          style={{
+            fontSize: '13px',
+            color: '#94A3B8',
+            margin: 0,
+            textAlign: 'center',
+          }}
+        >
+          {isAr ? 'إدارة نقاط البيع وعمليات الفوترة والمدفوعات' : 'Access your POS terminal & business payment hub'}
+        </p>
       </div>
 
-      {/* Main Form */}
+      {/* Main Form Box */}
       <div
         style={{
           width: '100%',
           maxWidth: '380px',
-          margin: '0 auto',
+          margin: '24px auto',
           backgroundColor: '#111726',
           border: '1px solid #1E293B',
-          borderRadius: '24px',
+          borderRadius: '20px',
           padding: '24px 20px',
           boxSizing: 'border-box',
-          boxShadow: 'none',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         }}
       >
-        {/* Merchant Badge Banner */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            backgroundColor: '#080C14',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '10px 16px',
-            marginBottom: '18px',
-          }}
-        >
-          <Store size={16} color="#7FE87F" />
-          <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#7FE87F' }}>
-            {language === 'العربية' ? 'تسجيل الدخول لبوابة التاجر ونقاط البيع' : 'Merchant SoftPOS Login'}
-          </span>
-        </div>
-
-        <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Full Name Input */}
+        <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          {/* Merchant Owner Name Field */}
           <div>
             <label
-              htmlFor="fullname-input"
+              htmlFor="owner-name-input"
               style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                fontSize: '12px',
+                fontWeight: 700,
+                color: '#CBD5E1',
                 marginBottom: '8px',
                 display: 'block',
+                textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              {language === 'العربية' ? 'اسم مالك المنشأة أو المفوض' : 'Merchant Owner / Manager Name'}
+              {isAr ? 'اسم مالك المنشأة' : 'Merchant Owner Name'} <span style={{ color: '#00C853' }}>*</span>
             </label>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#1A2234',
-                border: '1px solid #1E293B',
-                borderRadius: '14px',
-                padding: '14px 16px',
+                backgroundColor: '#161F30',
+                border: '1px solid #2A364F',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                transition: 'border-color 0.2s ease',
               }}
             >
-              <Store size={18} color="#7FE87F" style={{ marginInlineEnd: '12px', flexShrink: 0 }} />
               <input
-                id="fullname-input"
+                id="owner-name-input"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder={language === 'العربية' ? 'فهد الحربي' : 'Fahad Al-Harbi'}
+                placeholder={isAr ? 'أدخل اسم المالك' : 'Enter owner name'}
                 required
                 style={{
                   background: 'none',
                   border: 'none',
                   outline: 'none',
-                  fontSize: '15px',
-                  fontWeight: 700,
+                  fontSize: '14.5px',
+                  fontWeight: 600,
                   color: '#FFFFFF',
                   width: '100%',
+                  textAlign: isRtl ? 'right' : 'left',
                 }}
               />
             </div>
           </div>
 
-          {/* Saudi Mobile Number Input */}
+          {/* Phone Number Field */}
           <div>
             <label
-              htmlFor="mobile-input"
+              htmlFor="merchant-phone-input"
               style={{
-                fontSize: '11px',
-                fontWeight: 800,
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
+                fontSize: '12px',
+                fontWeight: 700,
+                color: '#CBD5E1',
                 marginBottom: '8px',
                 display: 'block',
+                textAlign: isRtl ? 'right' : 'left',
               }}
             >
-              {t('auth.mobile_number', 'Saudi Mobile Number')}
+              {isAr ? 'رقم الجوال' : 'Phone Number'} <span style={{ color: '#00C853' }}>*</span>
             </label>
             <div
               style={{
                 display: 'flex',
+                gap: '8px',
                 alignItems: 'center',
-                backgroundColor: '#1A2234',
-                border: '1px solid #1E293B',
-                borderRadius: '14px',
-                padding: '14px 16px',
               }}
             >
               {/* Country Code Pill */}
@@ -163,54 +167,89 @@ export const MobileNumberScreen: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  paddingInlineEnd: '12px',
-                  marginInlineEnd: '12px',
-                  borderInlineEnd: '1px solid #1E293B',
-                  fontWeight: 800,
-                  fontSize: '14px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  borderRadius: '12px',
+                  padding: '12px 12px',
+                  fontWeight: 700,
+                  fontSize: '13.5px',
                   color: '#FFFFFF',
+                  flexShrink: 0,
+                  direction: 'ltr',
                 }}
               >
                 <span>🇸🇦</span>
-                <span dir="ltr">+966</span>
+                <span>+966</span>
+                <ChevronDown size={14} color="#94A3B8" />
               </div>
 
-              <input
-                id="mobile-input"
-                type="tel"
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, '').slice(0, 9))}
-                placeholder="50 123 4567"
-                maxLength={9}
-                required
+              {/* Number Input */}
+              <div
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '16px',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  width: '100%',
-                  fontVariantNumeric: 'tabular-nums',
-                  letterSpacing: '0.05em',
-                  direction: 'ltr',
-                  textAlign: isRtl ? 'right' : 'left',
+                  flex: 1,
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
                 }}
-              />
+              >
+                <input
+                  id="merchant-phone-input"
+                  type="tel"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, '').slice(0, 9))}
+                  placeholder="50 123 4567"
+                  maxLength={9}
+                  required
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '14.5px',
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    width: '100%',
+                    fontVariantNumeric: 'tabular-nums',
+                    letterSpacing: '0.04em',
+                    direction: 'ltr',
+                    textAlign: isRtl ? 'right' : 'left',
+                  }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Primary Submit Button */}
-          <div style={{ marginTop: '6px' }}>
-            <PrimaryButton type="submit" disabled={mobileNumber.length < 9 || fullName.trim().length === 0}>
-              {t('auth.get_otp', 'Get OTP & Verify')}{' '}
-              <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </PrimaryButton>
-          </div>
+          {/* Primary CTA: Get OTP & Verify */}
+          <button
+            type="submit"
+            disabled={mobileNumber.length < 9 || fullName.trim().length === 0}
+            className="interactive-tap"
+            style={{
+              marginTop: '8px',
+              backgroundColor: '#00C853',
+              color: '#080C14',
+              border: 'none',
+              borderRadius: '14px',
+              padding: '14px 20px',
+              fontSize: '15px',
+              fontWeight: 800,
+              cursor: mobileNumber.length < 9 || fullName.trim().length === 0 ? 'not-allowed' : 'pointer',
+              opacity: mobileNumber.length < 9 || fullName.trim().length === 0 ? 0.5 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 20px rgba(0, 200, 83, 0.35)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>{isAr ? 'الحصول على رمز التحقق' : 'Get OTP & Verify'}</span>
+            <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </button>
         </form>
       </div>
 
-      {/* Down in Center: Powered by Quantira Technologies */}
+      {/* Powered by Quantira Technologies */}
       <div
         style={{
           display: 'flex',
@@ -220,20 +259,21 @@ export const MobileNumberScreen: React.FC = () => {
           gap: '6px',
           width: '100%',
           textAlign: 'center',
+          paddingBottom: '8px',
         }}
       >
         <span
           style={{
-            fontSize: '10.5px',
+            fontSize: '10px',
             color: '#64748B',
-            fontWeight: 700,
+            fontWeight: 800,
             textTransform: 'uppercase',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.1em',
           }}
         >
-          {t('powered.by', 'powered by')}
+          {isAr ? 'مشغل بواسطة' : 'POWERED BY QUANTIRA TECHNOLOGIES'}
         </span>
-        <QuantiraLogo size={20} color="#7FE87F" textColor="#E2E2F0" />
+        <QuantiraLogo size={18} color="#00C853" textColor="#CBD5E1" />
       </div>
     </div>
   );

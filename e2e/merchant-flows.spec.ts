@@ -80,4 +80,39 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Manage QR')).toBeVisible();
     await expect(page.locator('text=Payment Settings')).toBeVisible();
   });
+
+  test('8. Redesigned Merchant Login Screen', async ({ page }) => {
+    await page.goto('/?screen=MOBILE_NUMBER');
+    await expect(page.locator('text=Merchant Login')).toBeVisible();
+    await expect(page.locator('text=Merchant Owner Name')).toBeVisible();
+    await expect(page.locator('text=Phone Number')).toBeVisible();
+    await expect(page.locator('text=+966')).toBeVisible();
+    await expect(page.locator('button:has-text("Get OTP & Verify")')).toBeVisible();
+  });
+
+  test('9. Redesigned Merchant OTP Verification Screen', async ({ page }) => {
+    await page.goto('/?screen=SMS_OTP');
+    await expect(page.locator('text=Verify OTP')).toBeVisible();
+    await expect(page.locator('text=Code sent via SMS to')).toBeVisible();
+    await expect(page.locator('button:has-text("Verify & Proceed")')).toBeVisible();
+    await expect(page.locator('button:has-text("Autofill")')).toBeVisible();
+
+    // Trigger autofill and verify CTA becomes enabled
+    await page.click('button:has-text("Autofill")');
+    const verifyBtn = page.locator('button:has-text("Verify & Proceed")');
+    await expect(verifyBtn).toBeEnabled();
+  });
+
+  test('10. Redesigned Merchant Business Profile Screen', async ({ page }) => {
+    await page.goto('/?screen=MERCHANT_SETUP');
+    await expect(page.locator('text=Business Profile')).toBeVisible();
+    await expect(page.locator('text=Storefront & Brand Logo')).toBeVisible();
+    await expect(page.locator('text=Registered Business Name')).toBeVisible();
+    await expect(page.locator('text=Business Category')).toBeVisible();
+    await expect(page.locator('text=ZATCA VAT ID')).toBeVisible();
+    await expect(page.locator('text=SAMA & Absher Verified')).toBeVisible();
+    await expect(page.locator('text=City')).toBeVisible();
+    await expect(page.locator('text=Postal Code')).toBeVisible();
+    await expect(page.locator('button:has-text("Save & Continue")')).toBeVisible();
+  });
 });
