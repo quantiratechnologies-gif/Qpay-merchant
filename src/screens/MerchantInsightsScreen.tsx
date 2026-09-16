@@ -6,6 +6,16 @@ import {
   Smartphone,
   Banknote,
   Building2,
+  TrendingUp,
+  Receipt,
+  ShieldCheck,
+  Zap,
+  Activity,
+  ShoppingBag,
+  Clock,
+  CalendarRange,
+  CalendarDays,
+  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AppHeader } from '../components/AppHeader';
@@ -95,9 +105,9 @@ export const MerchantInsightsScreen: React.FC = () => {
   };
 
   const filterTabs = [
-    { id: 'today', label: t('insights.tab_today', 'Today') },
-    { id: 'week', label: t('insights.tab_week', 'This Week') },
-    { id: 'month', label: t('insights.tab_month', 'This Month') },
+    { id: 'today', label: t('insights.tab_today', 'Today'), icon: <Clock size={13} /> },
+    { id: 'week', label: t('insights.tab_week', 'This Week'), icon: <CalendarRange size={13} /> },
+    { id: 'month', label: t('insights.tab_month', 'This Month'), icon: <CalendarDays size={13} /> },
   ];
 
   return (
@@ -125,7 +135,7 @@ export const MerchantInsightsScreen: React.FC = () => {
           onSelect={(id) => setSelectedPeriod(id)}
         />
 
-        {/* 1. Top KPI 3-Cards Row (Using MetricTile primitives) */}
+        {/* 1. Top KPI 3-Cards Row (Using MetricTile primitives with icons) */}
         <div
           style={{
             display: 'grid',
@@ -135,26 +145,44 @@ export const MerchantInsightsScreen: React.FC = () => {
         >
           {/* Card 1: TOTAL SALES */}
           <MetricTile
-            title={t('insights.total_sales', 'TOTAL SALES')}
+            title={t('insights.total_sales', 'SALES')}
+            icon={<TrendingUp size={14} color={colors.accentGreen} />}
             value={isAr ? `${formatLocalizedNumber(Math.round(totalVolume))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(totalVolume))}`}
-            subtitle={isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
+            subtitle={
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: colors.textSecondary }}>
+                <CheckCircle2 size={11} color={colors.accentGreen} />
+                {isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
+              </span>
+            }
             style={{ padding: '12px 10px', minWidth: 0 }}
           />
 
           {/* Card 2: AVG TICKET (Highlighted Green) */}
           <MetricTile
             title={t('insights.avg_ticket', 'AVG TICKET')}
+            icon={<Receipt size={14} color={colors.accentGreen} />}
             value={isAr ? `${formatLocalizedNumber(avgTicket.toFixed(1))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(1))}`}
-            subtitle={isAr ? 'لكل عميل' : 'per ticket'}
+            subtitle={
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: colors.accentGreenBright }}>
+                <Zap size={11} />
+                {isAr ? 'لكل عميل' : 'per ticket'}
+              </span>
+            }
             highlightGreen={true}
             style={{ padding: '12px 10px', minWidth: 0 }}
           />
 
           {/* Card 3: SETTLEMENT */}
           <MetricTile
-            title={t('insights.settlement', 'SETTLEMENT')}
+            title={t('insights.settlement', 'PAYOUT')}
+            icon={<ShieldCheck size={14} color={colors.accentGreen} />}
             value={isAr ? `${formatLocalizedNumber(Math.round(settlementReady))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(settlementReady))}`}
-            subtitle={<span style={{ color: colors.accentGreen, fontWeight: 600 }}>{isAr ? 'مستحق الصرف' : 'Auto Ready'}</span>}
+            subtitle={
+              <span style={{ color: colors.accentGreen, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                <CheckCircle2 size={11} />
+                {isAr ? 'جاهز للصرف' : 'Auto Ready'}
+              </span>
+            }
             style={{ padding: '12px 10px', minWidth: 0 }}
           />
         </div>
@@ -170,25 +198,15 @@ export const MerchantInsightsScreen: React.FC = () => {
           <SectionHeader
             title={
               <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                <span>{t('insights.rail_dist', 'Payment Rail Distribution')}</span>
-                <span
-                  style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: radii.full,
-                    backgroundColor: colors.accentGreen,
-                    display: 'inline-block',
-                    boxShadow: '0 0 8px rgba(0,200,83,0.8)',
-                  }}
-                />
+                <Activity size={15} color={colors.accentGreen} />
+                <span>{t('insights.rail_dist', 'Payment Rails')}</span>
               </div>
             }
-            subtitle={t('insights.volume_share', 'Volume share & net collection value')}
             badge={
               <StatusBadge
                 status="success"
                 size="sm"
-                label={t('insights.live_analytics', 'Live Analytics')}
+                label={t('insights.live_analytics', 'Live')}
               />
             }
             style={{ marginBottom: spacing.space3 }}
@@ -281,44 +299,54 @@ export const MerchantInsightsScreen: React.FC = () => {
 
             {/* Legend 3-Column Grid */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {railStats.map((rail, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(0, 1fr) auto auto',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '11.5px',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, overflow: 'hidden' }}>
-                    <span
-                      style={{
-                        width: '7px',
-                        height: '7px',
-                        borderRadius: radii.full,
-                        backgroundColor: rail.color,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span style={{ color: colors.textPrimary, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {rail.shortName}
+              {railStats.map((rail, idx) => {
+                const RailIcon = rail.icon;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'minmax(0, 1fr) auto auto',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '11.5px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: radii.xs,
+                          backgroundColor: colors.bgInset,
+                          border: `1px solid ${rail.color}40`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: rail.color,
+                          flexShrink: 0,
+                        }}
+                      >
+                        <RailIcon size={11} strokeWidth={2.4} />
+                      </div>
+                      <span style={{ color: colors.textPrimary, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '11.5px' }}>
+                        {rail.shortName}
+                      </span>
+                    </div>
+
+                    <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 600 }}>
+                      {formatLocalizedNumber(rail.percent)}%
                     </span>
-                  </div>
 
-                  <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 600 }}>
-                    {formatLocalizedNumber(rail.percent)}%
-                  </span>
-
-                  <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '11.5px', textAlign: isAr ? 'left' : 'right' }}>
-                    {isAr
-                      ? `${formatLocalizedNumber(Math.round(rail.amount))} ر.س`
-                      : `SAR ${formatLocalizedNumber(Math.round(rail.amount))}`}
+                    <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '11.5px', textAlign: isAr ? 'left' : 'right' }}>
+                      {isAr
+                        ? `${formatLocalizedNumber(Math.round(rail.amount))} ر.س`
+                        : `SAR ${formatLocalizedNumber(Math.round(rail.amount))}`}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Card>
@@ -334,22 +362,28 @@ export const MerchantInsightsScreen: React.FC = () => {
           <SectionHeader
             title={
               <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                <span>{t('insights.hourly_velocity', 'Hourly Transaction Velocity')}</span>
-                <span
-                  style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: radii.full,
-                    backgroundColor: colors.accentGreen,
-                    display: 'inline-block',
-                  }}
-                />
+                <Clock size={15} color={colors.accentGreen} />
+                <span>{t('insights.hourly_velocity', 'Activity Velocity')}</span>
               </div>
             }
             actionButton={
-              <span style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
-                {t('insights.peak', 'Peak: 11 AM - 1 PM')}
-              </span>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.25)',
+                  padding: '3px 8px',
+                  borderRadius: radii.full,
+                  color: colors.accentGreen,
+                  fontSize: '11px',
+                  fontWeight: 700,
+                }}
+              >
+                <Zap size={11} fill={colors.accentGreen} />
+                <span>{t('insights.peak', 'Peak: 11 AM - 1 PM')}</span>
+              </div>
             }
             style={{ marginBottom: spacing.space4 }}
           />
@@ -432,28 +466,30 @@ export const MerchantInsightsScreen: React.FC = () => {
           {/* Bottom Velocity KPI Stats */}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px',
               marginTop: spacing.space3,
               paddingTop: spacing.space3,
               borderTop: `1px solid ${colors.border}`,
             }}
           >
             <div>
-              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
-                {t('insights.busiest_vol', 'Busiest Hour Volume')}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+                <ShoppingBag size={12} color={colors.accentBlue} />
+                <span>{t('insights.busiest_vol', 'Busiest Hour')}</span>
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
-                {isAr ? '٦ عمليات • ٦٤٥.٠٠ ر.س' : '6 txns • SAR 645.00'}
+              <div style={{ fontSize: '12.5px', fontWeight: 800, color: colors.textPrimary, marginTop: '3px' }}>
+                {isAr ? '٦ عمليات • ٦٤٥ ر.س' : '6 txns • SAR 645'}
               </div>
             </div>
 
             <div style={{ textAlign: isAr ? 'left' : 'right' }}>
-              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
-                {t('insights.avg_tap_speed', 'Avg Tap-to-Pay Speed')}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: isAr ? 'flex-start' : 'flex-end', gap: '5px', fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+                <Zap size={12} color={colors.accentGreen} />
+                <span>{t('insights.avg_tap_speed', 'Tap Speed')}</span>
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.accentGreen, marginTop: '2px' }}>
+              <div style={{ fontSize: '12.5px', fontWeight: 800, color: colors.accentGreen, marginTop: '3px' }}>
                 {isAr ? '٣.٨ ثانية / عملية' : '3.8s / ticket'}
               </div>
             </div>
@@ -471,7 +507,8 @@ export const MerchantInsightsScreen: React.FC = () => {
           <SectionHeader
             title={
               <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                <span>{t('insights.todays_collections', "Today's Collections")}</span>
+                <Receipt size={15} color={colors.accentGreen} />
+                <span>{t('insights.todays_collections', 'Recent Sales')}</span>
                 <span
                   style={{
                     padding: '2px 7px',
@@ -482,7 +519,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                     color: colors.textSecondary,
                   }}
                 >
-                  {isAr ? `${formatLocalizedNumber(settledCount)} إجمالي` : `${settledCount} total`}
+                  {isAr ? `${formatLocalizedNumber(settledCount)}` : `${settledCount}`}
                 </span>
               </div>
             }
@@ -495,7 +532,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   background: 'none',
                   border: 'none',
                   color: colors.accentGreen,
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
@@ -504,8 +541,8 @@ export const MerchantInsightsScreen: React.FC = () => {
                   padding: '4px 6px',
                 }}
               >
-                <span>{t('insights.view_full', 'View Full')}</span>
-                <ArrowUpRight size={15} strokeWidth={2.5} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />
+                <span>{t('insights.view_full', 'View All')}</span>
+                <ArrowUpRight size={14} strokeWidth={2.5} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />
               </button>
             }
             style={{ marginBottom: spacing.space3 }}
@@ -551,13 +588,29 @@ export const MerchantInsightsScreen: React.FC = () => {
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-            <Building2 size={20} color={colors.accentBlue} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space3 }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: radii.md,
+                backgroundColor: colors.bgInset,
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: colors.accentBlue,
+                flexShrink: 0,
+              }}
+            >
+              <Building2 size={18} />
+            </div>
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: colors.textPrimary }}>
-                {merchantInfo.settlementBank || 'Al Rajhi Bank'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12.5px', fontWeight: 700, color: colors.textPrimary }}>
+                <span>{merchantInfo.settlementBank || 'Al Rajhi Bank'}</span>
+                <ShieldCheck size={13} color={colors.accentGreen} />
               </div>
-              <div style={{ fontSize: '10px', color: colors.textSecondary }}>
+              <div style={{ fontSize: '10.5px', color: colors.textSecondary, fontFamily: 'monospace', marginTop: '2px' }}>
                 {merchantInfo.settlementIban || 'SA55 8000 0000 6271 5005'}
               </div>
             </div>
@@ -581,7 +634,7 @@ export const MerchantInsightsScreen: React.FC = () => {
               cursor: 'pointer',
             }}
           >
-            {isAr ? 'إدارة الحساب' : 'Manage'}
+            {isAr ? 'إدارة' : 'Manage'}
           </button>
         </Card>
 

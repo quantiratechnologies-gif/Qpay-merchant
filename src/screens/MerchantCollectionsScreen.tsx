@@ -10,11 +10,14 @@ import {
   Lock,
   Zap,
   ArrowUpRight,
-  Download,
   Building2,
   Receipt,
   RotateCcw,
   Smartphone,
+  Layers,
+  ShieldCheck,
+  Clock,
+  FileText,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -279,12 +282,12 @@ export const MerchantCollectionsScreen: React.FC = () => {
   };
 
   const collectionFilterTabs = [
-    { id: 'all', label: isAr ? `الكل (${allCollections.length})` : `All (${allCollections.length})` },
-    { id: 'card', label: isAr ? 'بطاقات الدفع' : 'Cards' },
-    { id: 'applepay', label: 'Apple Pay' },
-    { id: 'zatca', label: 'ZATCA QR' },
-    { id: 'cash', label: isAr ? 'بيع نقدي' : 'Cash Sale' },
-    { id: 'link', label: isAr ? 'روابط الدفع' : 'Payment Link' },
+    { id: 'all', label: isAr ? `الكل (${allCollections.length})` : `All (${allCollections.length})`, icon: <Layers size={13} /> },
+    { id: 'card', label: isAr ? 'بطاقات' : 'Cards', icon: <CreditCard size={13} /> },
+    { id: 'applepay', label: 'Apple Pay', icon: <Smartphone size={13} /> },
+    { id: 'zatca', label: 'ZATCA QR', icon: <QrCode size={13} /> },
+    { id: 'cash', label: isAr ? 'نقدي' : 'Cash', icon: <Banknote size={13} /> },
+    { id: 'link', label: isAr ? 'روابط' : 'Links', icon: <Share2 size={13} /> },
   ];
 
   return (
@@ -570,21 +573,26 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Building2 size={14} color={colors.accentGreen} />
                   <span>
-                    {isAr ? 'الحساب البنكي المعتمد:' : 'Settlement IBAN:'} <strong style={{ color: colors.textPrimary }}>{merchantInfo.settlementBank}</strong>
+                    {isAr ? 'الحساب البنكي:' : 'IBAN:'} <strong style={{ color: colors.textPrimary }}>{merchantInfo.settlementBank}</strong>
                   </span>
+                  <ShieldCheck size={13} color={colors.accentGreen} />
                 </div>
-                <span style={{ color: colors.accentGreen, fontWeight: 700 }}>
-                  {t('settlenow.auto_schedule', 'Daily at 06:00 AM')}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: colors.accentGreen, fontWeight: 700 }}>
+                  <Clock size={12} />
+                  <span>{t('settlenow.auto_schedule', 'Daily 06:00 AM')}</span>
+                </div>
               </div>
             </Card>
 
             {/* Settlements History Ledger */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.space2 }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 800, color: colors.textPrimary, margin: 0 }}>
-                  {isAr ? 'سجل التسويات البنكية (سريع)' : 'Sarie Settlement History'}
-                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Landmark size={15} color={colors.accentGreen} />
+                  <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: colors.textPrimary, margin: 0 }}>
+                    {isAr ? 'سجل التسويات البنكية (سريع)' : 'Sarie Settlement History'}
+                  </h3>
+                </div>
                 <span style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
                   {formatLocalizedNumber(merchantSettlements.length, language)} {isAr ? 'تسويات' : 'Settlements'}
                 </span>
@@ -602,7 +610,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: spacing.space2 }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                          <span style={{ fontSize: '14px', fontWeight: 800, color: colors.textPrimary }}>
+                          <span style={{ fontSize: '13.5px', fontWeight: 800, color: colors.textPrimary }}>
                             {s.settlementRef}
                           </span>
                           <StatusBadge
@@ -612,7 +620,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                           />
                         </div>
                         <div style={{ fontSize: '11px', color: colors.textSecondary, marginTop: '3px' }}>
-                          {isAr ? 'مرجع سريع:' : 'Sarie UTR:'} <span style={{ color: colors.textPrimary, fontWeight: 600 }}>{s.utr}</span> &bull; {translateText(s.date, language)}
+                          {isAr ? 'مرجع سريع:' : 'Sarie UTR:'} <span style={{ color: colors.textPrimary, fontWeight: 600, fontFamily: 'monospace' }}>{s.utr}</span> &bull; {translateText(s.date, language)}
                         </div>
                       </div>
 
@@ -620,7 +628,8 @@ export const MerchantCollectionsScreen: React.FC = () => {
                         <div className="tabular-nums" style={{ fontSize: '15px', fontWeight: 900, color: colors.accentGreen }}>
                           +{formatCurrency(s.amount, language)}
                         </div>
-                        <span style={{ fontSize: '10px', color: colors.accentGreen, fontWeight: 700 }}>
+                        <span style={{ fontSize: '10px', color: colors.accentGreen, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                          <CheckCircle2 size={10} />
                           {isAr ? 'تم التحويل' : 'Settled'}
                         </span>
                       </div>
@@ -635,9 +644,10 @@ export const MerchantCollectionsScreen: React.FC = () => {
                         justifyContent: 'space-between',
                       }}
                     >
-                      <span style={{ fontSize: '11px', color: colors.textSecondary }}>
-                        {s.bankName} ({s.ibanMasked.slice(-8)})
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: colors.textSecondary }}>
+                        <Building2 size={13} color={colors.accentBlue} />
+                        <span>{s.bankName} ({s.ibanMasked.slice(-8)})</span>
+                      </div>
 
                       <button
                         type="button"
@@ -657,7 +667,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                           gap: '5px',
                         }}
                       >
-                        <Download size={12} color={colors.accentGreen} />
+                        <FileText size={12} color={colors.accentGreen} />
                         <span>{t('settlements.download_invoice', 'Download VAT Invoice')}</span>
                       </button>
                     </div>
