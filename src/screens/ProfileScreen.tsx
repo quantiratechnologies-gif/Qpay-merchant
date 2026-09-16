@@ -9,8 +9,8 @@ import {
   Languages,
   LogOut,
   Building2,
-  LayoutGrid,
-  Check,
+  ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { Card, StatusBadge, ListRow } from '../components/ui';
@@ -45,68 +45,41 @@ export const ProfileScreen: React.FC = () => {
       <div
         style={{
           padding: `${spacing.space5} ${spacing.space5} ${spacing.space3} ${spacing.space5}`,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-            <h1
-              style={{
-                fontSize: '22px',
-                fontWeight: 900,
-                margin: 0,
-                color: colors.textPrimary,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {isAr ? 'متجري' : 'My Store'}
-            </h1>
-            <span
-              style={{
-                width: '7px',
-                height: '7px',
-                borderRadius: radii.full,
-                backgroundColor: colors.accentGreen,
-                display: 'inline-block',
-                boxShadow: `0 0 8px ${colors.accentGreen}`,
-              }}
-            />
-          </div>
-          <p
+        <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+          <h1
             style={{
-              fontSize: '12.5px',
-              color: colors.textSecondary,
-              margin: '4px 0 0 0',
-              fontWeight: 500,
+              fontSize: '22px',
+              fontWeight: 900,
+              margin: 0,
+              color: colors.textPrimary,
+              letterSpacing: '-0.02em',
             }}
           >
-            {isAr ? 'إدارة ملف المتجر والأجهزة والامتثال' : 'Manage store profile, hardware & compliance'}
-          </p>
+            {isAr ? 'متجري' : 'My Store'}
+          </h1>
+          <span
+            style={{
+              width: '7px',
+              height: '7px',
+              borderRadius: radii.full,
+              backgroundColor: colors.accentGreen,
+              display: 'inline-block',
+              boxShadow: `0 0 8px ${colors.accentGreen}`,
+            }}
+          />
         </div>
-
-        {/* Quick Hub Grid Icon Button */}
-        <button
-          type="button"
-          onClick={() => navigateTo('MERCHANT_WEB')}
-          aria-label="App Hub"
-          className="interactive-tap"
+        <p
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: radii.md,
-            backgroundColor: colors.bgCard,
-            border: `1px solid ${colors.border}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            fontSize: '12.5px',
             color: colors.textSecondary,
-            cursor: 'pointer',
+            margin: '4px 0 0 0',
+            fontWeight: 500,
           }}
         >
-          <LayoutGrid size={18} />
-        </button>
+          {isAr ? 'إدارة ملف المتجر والأجهزة والامتثال' : 'Manage store profile, hardware & compliance'}
+        </p>
       </div>
 
       {/* Main Container */}
@@ -146,7 +119,7 @@ export const ProfileScreen: React.FC = () => {
             />
           </div>
 
-          {/* Account Details Row */}
+            {/* Account Details Row */}
           <div
             onClick={() => navigateTo('MERCHANT_BANK_LINK')}
             className="interactive-tap"
@@ -196,17 +169,7 @@ export const ProfileScreen: React.FC = () => {
               </div>
             </div>
 
-            {/* Bank Verified Tag */}
-            <StatusBadge
-              status="success"
-              size="sm"
-              label={
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Check size={12} color={colors.accentGreen} strokeWidth={3} />
-                  {isAr ? 'حساب موثق' : 'Bank Verified'}
-                </span>
-              }
-            />
+            {isRtl ? <ChevronLeft size={18} color={colors.textMuted} /> : <ChevronRight size={18} color={colors.textMuted} />}
           </div>
         </Card>
 
@@ -227,13 +190,6 @@ export const ProfileScreen: React.FC = () => {
             leftIcon={<ShieldCheck size={18} />}
             title={isAr ? 'التحقق والامتثال' : 'KYC Verification'}
             subtitle={isAr ? 'توثيق معتمد لرفع سقوف التحصيل' : 'Unlock exclusive tier benefits'}
-            rightBadge={
-              <StatusBadge
-                status="success"
-                size="sm"
-                label={isAr ? 'موثق' : 'Verified'}
-              />
-            }
             showChevron={true}
           />
 
@@ -268,7 +224,7 @@ export const ProfileScreen: React.FC = () => {
 
           {/* Row 2: Manage Staff */}
           <ListRow
-            onClick={() => navigateTo('MERCHANT_WEB')}
+            onClick={() => navigateTo('SECURITY')}
             leftIcon={<Users size={18} />}
             title={isAr ? 'إدارة طاقم العمل' : 'Manage Staff'}
             rightElement={

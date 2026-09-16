@@ -495,18 +495,15 @@ export const MerchantCollectionsScreen: React.FC = () => {
                     </div>
                   }
                   rightBadge={
-                    <StatusBadge
-                      status={c.status === 'refunded' ? 'warning' : c.paymentMethod === 'cash' ? 'neutral' : 'success'}
-                      size="sm"
-                      label={
-                        c.status === 'refunded'
-                          ? isAr ? 'مستردة' : 'Refunded'
-                          : c.paymentMethod === 'cash'
-                          ? isAr ? 'مسجل' : 'Logged'
-                          : isAr ? 'مدفوع' : 'Paid'
-                      }
-                    />
+                    c.status === 'refunded' ? (
+                      <StatusBadge
+                        status="warning"
+                        size="sm"
+                        label={isAr ? 'مستردة' : 'Refunded'}
+                      />
+                    ) : undefined
                   }
+                  showChevron={true}
                 />
               ))}
             </div>

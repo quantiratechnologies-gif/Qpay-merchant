@@ -149,8 +149,7 @@ export type ScreenId =
   | 'PAYMENT_LINK_GENERATOR'
   | 'SOUNDBOX_NOTIFIER'
   | 'MERCHANT_COLLECTIONS'
-  | 'MERCHANT_INSIGHTS'
-  | 'MERCHANT_WEB';
+  | 'MERCHANT_INSIGHTS';
 
 export type BottomTab = 'home' | 'account' | 'pay' | 'scan' | 'history' | 'profile';
 

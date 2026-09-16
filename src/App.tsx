@@ -22,7 +22,6 @@ import { PaymentLinkGeneratorScreen } from './screens/PaymentLinkGeneratorScreen
 import { SoundBoxNotifierScreen } from './screens/SoundBoxNotifierScreen';
 import { MerchantCollectionsScreen } from './screens/MerchantCollectionsScreen';
 import { MerchantInsightsScreen } from './screens/MerchantInsightsScreen';
-import { MerchantWebLayoutScreen } from './screens/MerchantWebLayoutScreen';
 
 // Merchant Settings Screens
 import { HistoryScreen } from './screens/HistoryScreen';
@@ -37,7 +36,6 @@ import { PrivacyScreen } from './screens/PrivacyScreen';
 import { LanguageModal } from './screens/LanguageModal';
 import { LogoutModal } from './screens/LogoutModal';
 import { AddBankModal } from './screens/AddBankModal';
-import { AppLinksModal } from './screens/AppLinksModal';
 import { EditProfileModal } from './screens/EditProfileModal';
 import { KycModal } from './screens/KycModal';
 
@@ -83,8 +81,6 @@ const AppContent: React.FC = () => {
         return <MerchantCollectionsScreen />;
       case 'MERCHANT_INSIGHTS':
         return <MerchantInsightsScreen />;
-      case 'MERCHANT_WEB':
-        return <MerchantWebLayoutScreen />;
 
       // Settings
       case 'HISTORY':
@@ -117,8 +113,7 @@ const AppContent: React.FC = () => {
     currentScreen !== 'MERCHANT_BANK_LINK' &&
     currentScreen !== 'MERCHANT_PIN_SETUP' &&
     currentScreen !== 'SOFTPOS_TAP' &&
-    currentScreen !== 'MERCHANT_PAYMENT_SUCCESS' &&
-    currentScreen !== 'MERCHANT_WEB';
+    currentScreen !== 'MERCHANT_PAYMENT_SUCCESS';
 
   return (
     <div className={`app-viewport ${isRtl ? 'rtl' : ''}`}>
@@ -132,7 +127,6 @@ const AppContent: React.FC = () => {
       <LanguageModal />
       <LogoutModal />
       <AddBankModal />
-      <AppLinksModal />
       <EditProfileModal />
       <KycModal />
     </div>

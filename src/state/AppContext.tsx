@@ -79,9 +79,6 @@ interface AppContextType {
   isScanModalOpen: boolean;
   setIsScanModalOpen: (open: boolean) => void;
 
-  isAppLinksModalOpen: boolean;
-  setIsAppLinksModalOpen: (open: boolean) => void;
-
   isEditProfileModalOpen: boolean;
   setIsEditProfileModalOpen: (open: boolean) => void;
 
@@ -339,7 +336,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState<boolean>(false);
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState<boolean>(false);
   const [isScanModalOpen, setIsScanModalOpen] = useState<boolean>(false);
-  const [isAppLinksModalOpen, setIsAppLinksModalOpen] = useState<boolean>(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -369,7 +365,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsLogoutModalOpen,
       setIsAddBankModalOpen,
       setIsScanModalOpen,
-      setIsAppLinksModalOpen,
       setIsEditProfileModalOpen,
       currentScreen,
     };
@@ -791,8 +786,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAddBankModalOpen,
         isScanModalOpen,
         setIsScanModalOpen,
-        isAppLinksModalOpen,
-        setIsAppLinksModalOpen,
         isEditProfileModalOpen,
         setIsEditProfileModalOpen,
         terminateSession,

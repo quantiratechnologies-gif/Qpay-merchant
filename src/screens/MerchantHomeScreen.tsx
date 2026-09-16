@@ -16,7 +16,6 @@ import {
   CreditCard,
   Smartphone,
   CheckCircle2,
-  Check,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
@@ -622,18 +621,7 @@ export const MerchantHomeScreen: React.FC = () => {
                   + SAR 245.00
                 </div>
               }
-              rightBadge={
-                <StatusBadge
-                  status="success"
-                  size="sm"
-                  label={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <Check size={11} strokeWidth={3} />
-                      {isAr ? 'مدفوع' : 'Paid'}
-                    </span>
-                  }
-                />
-              }
+              showChevron={true}
             />
 
             {/* Row 2: Apple Pay */}
@@ -647,18 +635,7 @@ export const MerchantHomeScreen: React.FC = () => {
                   + SAR 89.50
                 </div>
               }
-              rightBadge={
-                <StatusBadge
-                  status="info"
-                  size="sm"
-                  label={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <Check size={11} strokeWidth={3} />
-                      {isAr ? 'تم الإشعار' : 'Announced'}
-                    </span>
-                  }
-                />
-              }
+              showChevron={true}
             />
 
             {/* Row 3: Counter QR Code */}
@@ -672,18 +649,7 @@ export const MerchantHomeScreen: React.FC = () => {
                   + SAR 512.00
                 </div>
               }
-              rightBadge={
-                <StatusBadge
-                  status="purple"
-                  size="sm"
-                  label={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <Check size={11} strokeWidth={3} />
-                      {isAr ? 'مدفوع' : 'Paid'}
-                    </span>
-                  }
-                />
-              }
+              showChevron={true}
             />
 
             {/* Row 4: STC Pay Link */}
@@ -697,18 +663,7 @@ export const MerchantHomeScreen: React.FC = () => {
                   + SAR 130.00
                 </div>
               }
-              rightBadge={
-                <StatusBadge
-                  status="warning"
-                  size="sm"
-                  label={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <Check size={11} strokeWidth={3} />
-                      {isAr ? 'مدفوع' : 'Paid'}
-                    </span>
-                  }
-                />
-              }
+              showChevron={true}
             />
           </div>
         </div>
