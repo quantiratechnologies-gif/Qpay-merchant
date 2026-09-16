@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Store,
-  ChevronDown,
   Bell,
   Volume2,
   Megaphone,
@@ -24,7 +23,6 @@ import { colors, spacing, radii } from '../design-system/tokens';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
-    merchantInfo,
     merchantCollections,
     triggerSettleNow,
     navigateTo,
@@ -89,7 +87,6 @@ export const MerchantHomeScreen: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: `1px solid ${colors.border}`,
         }}
       >
         {/* Left: Store Icon Button */}
@@ -158,37 +155,7 @@ export const MerchantHomeScreen: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ padding: `${spacing.space4} ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space4 }}>
-        {/* Store Name & Speaker Online Row */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '2px 4px',
-          }}
-        >
-          <div
-            onClick={() => navigateTo('PROFILE')}
-            className="interactive-tap"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
-          >
-            <span style={{ fontSize: '15px', fontWeight: 700, color: colors.textPrimary, letterSpacing: '-0.01em' }}>
-              {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
-            </span>
-            <ChevronDown size={15} color={colors.textSecondary} />
-          </div>
-
-          <div onClick={() => navigateTo('SOUNDBOX_NOTIFIER')} className="interactive-tap" style={{ cursor: 'pointer' }}>
-            <StatusBadge
-              status="success"
-              dot={true}
-              size="sm"
-              label={isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
-            />
-          </div>
-        </div>
-
+      <div style={{ padding: `${spacing.space3} ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space4 }}>
         {/* 2. Smart Soundbox Pro Banner */}
         <Card
           variant="interactive"
