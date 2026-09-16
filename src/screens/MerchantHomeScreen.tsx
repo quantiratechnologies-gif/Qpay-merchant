@@ -8,7 +8,6 @@ import {
   Megaphone,
   Eye,
   EyeOff,
-  RefreshCw,
   Zap,
   ChevronRight,
   QrCode,
@@ -90,17 +89,27 @@ export const MerchantHomeScreen: React.FC = () => {
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* 1. Top Header (Store Selector, Soundbox Online, Notification & Profile) */}
+      {/* 1. Top Sticky Header (Store Selector, Soundbox Online, Notification & Profile) */}
       <div
         style={{
-          padding: '18px 20px 14px 20px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          backgroundColor: 'rgba(8, 12, 20, 0.94)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          padding: '16px 20px 14px 20px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          onClick={() => navigateTo('PROFILE')}
+          className="interactive-tap"
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+        >
           {/* Store Squircle Icon */}
           <div
             style={{
@@ -120,13 +129,19 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
 
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
                 {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
               </span>
               <ChevronDown size={15} color="#94A3B8" />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateTo('SOUNDBOX_NOTIFIER');
+              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', cursor: 'pointer' }}
+            >
               <span
                 style={{
                   width: '6px',
@@ -248,6 +263,8 @@ export const MerchantHomeScreen: React.FC = () => {
 
         {/* 2. Smart Soundbox Pro Banner */}
         <div
+          onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
+          className="interactive-tap"
           style={{
             backgroundColor: '#111726',
             border: '1px solid #1E293B',
@@ -257,6 +274,7 @@ export const MerchantHomeScreen: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'space-between',
             boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            cursor: 'pointer',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -277,17 +295,21 @@ export const MerchantHomeScreen: React.FC = () => {
             </div>
             <div>
               <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                Smart Soundbox Pro <span style={{ color: '#94A3B8', fontWeight: 500 }}>&bull; 98% {isAr ? 'البطارية' : 'Battery'}</span>
+                Smart Soundbox Pro
               </div>
-              <div style={{ fontSize: '11px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
-                {isAr ? 'تنبيهات صوتية فورية نشطة' : 'Instant Voice Alerts Active'}
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600, marginTop: '2px' }}>
+                98% {isAr ? 'البطارية' : 'Battery'} &bull; {isAr ? 'صوت عربي وإنجليزي' : 'Bilingual Voice'}
               </div>
             </div>
           </div>
 
           {/* Test Sound Button */}
           <button
-            onClick={handleTestSoundBox}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTestSoundBox();
+            }}
             className="interactive-tap"
             style={{
               backgroundColor: '#161F30',
@@ -371,7 +393,7 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
 
           {/* Large Hero Amount */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
             <span style={{ fontSize: '18px', fontWeight: 800, color: '#00C853' }}>SAR</span>
             <span
               className="tabular-nums"
@@ -388,18 +410,10 @@ export const MerchantHomeScreen: React.FC = () => {
             </span>
           </div>
 
-          {/* Auto-Settle Schedule Row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94A3B8', fontSize: '11.5px', marginBottom: '16px' }}>
-            <RefreshCw size={13} color="#00C853" />
-            <span>
-              {isAr
-                ? `تسوية تلقائية الليلة الساعة ١١:٥٩ م إلى ${merchantInfo.settlementBank || 'مصرف الراجحي'}`
-                : `Auto-settles tonight at 11:59 PM to ${merchantInfo.settlementBank || 'Al Rajhi'}`}
-            </span>
-          </div>
-
           {/* Inset Sub-Card: Payments Count & Avg Ticket */}
           <div
+            onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+            className="interactive-tap"
             style={{
               backgroundColor: '#161F30',
               border: '1px solid #2A364F',
@@ -409,6 +423,7 @@ export const MerchantHomeScreen: React.FC = () => {
               gridTemplateColumns: 'repeat(2, 1fr)',
               gap: '12px',
               marginBottom: '16px',
+              cursor: 'pointer',
             }}
           >
             <div>
