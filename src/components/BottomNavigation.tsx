@@ -60,9 +60,9 @@ export const BottomNavigation: React.FC = () => {
         maxWidth: '600px',
         margin: '0 auto',
         height: '68px',
-        backgroundColor: 'rgba(11, 11, 20, 0.96)',
+        backgroundColor: 'rgba(8, 12, 20, 0.96)',
         backdropFilter: 'blur(16px)',
-        borderTop: '1px solid #2C2C44',
+        borderTop: '1px solid #1E293B',
         display: isKeyboardOpen ? 'none' : 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
@@ -113,7 +113,7 @@ export const BottomNavigation: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: '3.5px solid #0B0B14',
+                  border: '3.5px solid #080C14',
                   outline: '1.5px solid #7FE87F',
                   boxShadow: 'none',
                   transition: 'transform 0.15s ease',
@@ -157,7 +157,7 @@ export const BottomNavigation: React.FC = () => {
               flex: 1,
               height: '100%',
               cursor: 'pointer',
-              color: isActive ? '#7FE87F' : '#808099',
+              color: isActive ? '#7FE87F' : '#64748B',
               transition: 'color 0.15s ease',
               position: 'relative',
             }}
@@ -175,7 +175,7 @@ export const BottomNavigation: React.FC = () => {
                     height: '7px',
                     borderRadius: '50%',
                     backgroundColor: '#7FE87F',
-                    border: '1.5px solid #0B0B14',
+                    border: '1.5px solid #080C14',
                   }}
                 />
               )}
@@ -184,7 +184,7 @@ export const BottomNavigation: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: isActive ? 800 : 600,
-                color: isActive ? '#FFFFFF' : '#808099',
+                color: isActive ? '#FFFFFF' : '#94A3B8',
                 marginTop: '3px',
                 letterSpacing: '-0.01em',
               }}

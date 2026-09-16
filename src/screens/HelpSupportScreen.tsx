@@ -52,14 +52,14 @@ export const HelpSupportScreen: React.FC = () => {
   };
 
   return (
-    <div className="fade-in" style={{ backgroundColor: '#0B0B14', minHeight: '100%', paddingBottom: '36px', color: '#FFFFFF' }}>
+    <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100%', paddingBottom: '36px', color: '#FFFFFF' }}>
       <AppHeader title="Help & Support" showBack showSettings={false} />
 
       <div style={{ padding: '20px' }}>
         {/* Priority Hero Banner */}
         <div
           style={{
-            backgroundColor: '#151524',
+            backgroundColor: '#111726',
             border: '1.5px solid rgba(127, 232, 127, 0.35)',
             borderRadius: '16px',
             padding: '24px 20px',
@@ -74,7 +74,7 @@ export const HelpSupportScreen: React.FC = () => {
               width: '54px',
               height: '54px',
               borderRadius: '16px',
-              backgroundColor: 'rgba(127, 232, 127, 0.15)',
+              backgroundColor: 'rgba(127, 232, 127, 0.12)',
               color: '#7FE87F',
               display: 'flex',
               alignItems: 'center',
@@ -88,30 +88,30 @@ export const HelpSupportScreen: React.FC = () => {
           <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '6px', color: '#FFFFFF', margin: 0 }}>
             24/7 Support
           </h3>
-          <p style={{ fontSize: '12.5px', color: '#A2A2BA', marginTop: '6px', marginBottom: 0 }}>
+          <p style={{ fontSize: '12.5px', color: '#94A3B8', marginTop: '6px', marginBottom: 0 }}>
             Instant dispute resolution and assistance
           </p>
         </div>
 
-        <div style={{ fontSize: '11px', fontWeight: 800, color: '#6E6E85', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginLeft: '4px' }}>
+        <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginLeft: '4px' }}>
           Contact Channels
         </div>
 
-        <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: 'none' }}>
+        <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: 'none' }}>
           <ListRow
             icon={<MessageSquare size={18} color="#7FE87F" />}
             label="Live Chat"
             subLabel="Avg response: ~1 min"
             onClick={() => setActiveModal('chat')}
           />
-          <div style={{ height: '1px', backgroundColor: '#2C2C44', margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
             icon={<PhoneCall size={18} color="#7FE87F" />}
             label="Toll-Free Hotline"
             subLabel="800-123-QTPAY"
             onClick={() => setActiveModal('call')}
           />
-          <div style={{ height: '1px', backgroundColor: '#2C2C44', margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />
           <ListRow
             icon={<ShieldAlert size={18} color="#7FE87F" />}
             label="Dispute & Fraud"
@@ -121,7 +121,7 @@ export const HelpSupportScreen: React.FC = () => {
         </div>
 
         {/* FAQs */}
-        <div style={{ fontSize: '11px', fontWeight: 800, color: '#6E6E85', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px', marginLeft: '4px' }}>
+        <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px', marginLeft: '4px' }}>
           Frequently Asked Questions
         </div>
 
@@ -133,8 +133,8 @@ export const HelpSupportScreen: React.FC = () => {
                 key={index}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: '#151524',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
                   borderRadius: '16px',
                   padding: '16px 18px',
                   cursor: 'pointer',
@@ -144,10 +144,10 @@ export const HelpSupportScreen: React.FC = () => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#FFFFFF' }}>{faq.q}</span>
-                  {isExpanded ? <ChevronUp size={16} color="#7FE87F" /> : <ChevronDown size={16} color="#A2A2BA" />}
+                  {isExpanded ? <ChevronUp size={16} color="#7FE87F" /> : <ChevronDown size={16} color="#94A3B8" />}
                 </div>
                 {isExpanded && (
-                  <p style={{ fontSize: '12.5px', color: '#A2A2BA', marginTop: '10px', marginBottom: 0, lineHeight: '1.5', borderTop: '1px solid #2C2C44', paddingTop: '10px' }}>
+                  <p style={{ fontSize: '12.5px', color: '#94A3B8', marginTop: '10px', marginBottom: 0, lineHeight: '1.5', borderTop: '1px solid #1E293B', paddingTop: '10px' }}>
                     {faq.a}
                   </p>
                 )}
@@ -165,9 +165,9 @@ export const HelpSupportScreen: React.FC = () => {
               key={i}
               style={{
                 alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                backgroundColor: msg.sender === 'user' ? '#7FE87F' : '#1E1E32',
-                color: msg.sender === 'user' ? '#0B0B14' : '#FFFFFF',
-                border: msg.sender === 'user' ? 'none' : '1px solid #2C2C44',
+                backgroundColor: msg.sender === 'user' ? '#7FE87F' : '#1A2234',
+                color: msg.sender === 'user' ? '#080C14' : '#FFFFFF',
+                border: msg.sender === 'user' ? 'none' : '1px solid #1E293B',
                 padding: '10px 14px',
                 borderRadius: '14px',
                 maxWidth: '80%',
@@ -185,12 +185,12 @@ export const HelpSupportScreen: React.FC = () => {
             value={inputMsg}
             onChange={(e) => setInputMsg(e.target.value)}
             placeholder="Type your message..."
-            style={{ flex: 1, padding: '12px 14px', borderRadius: '12px', border: '1px solid #2C2C44', backgroundColor: '#1E1E32', color: '#FFFFFF', fontSize: '13px', outline: 'none' }}
+            style={{ flex: 1, padding: '12px 14px', borderRadius: '12px', border: '1px solid #1E293B', backgroundColor: '#1A2234', color: '#FFFFFF', fontSize: '13px', outline: 'none' }}
           />
           <button
             type="submit"
             className="interactive-tap"
-            style={{ backgroundColor: '#7FE87F', border: 'none', color: '#0B0B14', padding: '0 16px', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', boxShadow: 'none' }}
+            style={{ backgroundColor: '#7FE87F', border: 'none', color: '#080C14', padding: '0 16px', borderRadius: '12px', fontWeight: 800, cursor: 'pointer', boxShadow: 'none' }}
           >
             <Send size={16} />
           </button>
@@ -205,7 +205,7 @@ export const HelpSupportScreen: React.FC = () => {
               width: '56px',
               height: '56px',
               borderRadius: '16px',
-              backgroundColor: 'rgba(127, 232, 127, 0.15)',
+              backgroundColor: 'rgba(127, 232, 127, 0.12)',
               color: '#7FE87F',
               display: 'flex',
               alignItems: 'center',
@@ -217,11 +217,11 @@ export const HelpSupportScreen: React.FC = () => {
             <PhoneCall size={28} />
           </div>
           <h4 style={{ fontSize: '20px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0' }}>800-123-QTPAY</h4>
-          <p style={{ fontSize: '12.5px', color: '#A2A2BA', margin: '0 0 20px 0' }}>Available 24x7 in Arabic and English (Toll-Free in KSA)</p>
+          <p style={{ fontSize: '12.5px', color: '#94A3B8', margin: '0 0 20px 0' }}>Available 24x7 in Arabic and English (Toll-Free in KSA)</p>
           <a
             href="tel:80012378729"
             className="interactive-tap"
-            style={{ display: 'inline-block', padding: '12px 28px', backgroundColor: '#7FE87F', color: '#0B0B14', borderRadius: '12px', fontWeight: 800, fontSize: '13px', textDecoration: 'none', boxShadow: 'none' }}
+            style={{ display: 'inline-block', padding: '12px 28px', backgroundColor: '#7FE87F', color: '#080C14', borderRadius: '12px', fontWeight: 800, fontSize: '13px', textDecoration: 'none', boxShadow: 'none' }}
           >
             Call Now
           </a>
@@ -237,7 +237,7 @@ export const HelpSupportScreen: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.15)',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
                 color: '#7FE87F',
                 display: 'flex',
                 alignItems: 'center',
@@ -248,12 +248,12 @@ export const HelpSupportScreen: React.FC = () => {
               <Check size={28} />
             </div>
             <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF' }}>Dispute Filed</h4>
-            <p style={{ fontSize: '12px', color: '#A2A2BA', marginTop: '4px' }}>Ticket #AP-DISP-{Math.floor(100000 + Math.random() * 900000)}</p>
+            <p style={{ fontSize: '12px', color: '#94A3B8', marginTop: '4px' }}>Ticket #AP-DISP-{Math.floor(100000 + Math.random() * 900000)}</p>
           </div>
         ) : (
           <form onSubmit={handleDisputeSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '6px' }}>
                 Transaction UTR
               </label>
               <input
@@ -262,12 +262,12 @@ export const HelpSupportScreen: React.FC = () => {
                 onChange={(e) => setDisputeTxnId(e.target.value)}
                 placeholder="e.g. UTR984729104821"
                 required
-                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid #2C2C44', backgroundColor: '#1E1E32', color: '#FFFFFF', fontSize: '13px', outline: 'none' }}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid #1E293B', backgroundColor: '#1A2234', color: '#FFFFFF', fontSize: '13px', outline: 'none' }}
               />
             </div>
 
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '6px' }}>
                 Dispute Reason
               </label>
               <textarea
@@ -276,7 +276,7 @@ export const HelpSupportScreen: React.FC = () => {
                 placeholder="Describe what went wrong..."
                 rows={3}
                 required
-                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid #2C2C44', backgroundColor: '#1E1E32', color: '#FFFFFF', fontSize: '13px', outline: 'none', resize: 'none', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: '1px solid #1E293B', backgroundColor: '#1A2234', color: '#FFFFFF', fontSize: '13px', outline: 'none', resize: 'none', fontFamily: 'inherit' }}
               />
             </div>
 
@@ -288,7 +288,7 @@ export const HelpSupportScreen: React.FC = () => {
                 padding: '14px',
                 borderRadius: '12px',
                 backgroundColor: '#7FE87F',
-                color: '#0B0B14',
+                color: '#080C14',
                 border: 'none',
                 fontWeight: 800,
                 fontSize: '13.5px',

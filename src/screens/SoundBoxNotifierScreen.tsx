@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Volume2, Radio, Play } from 'lucide-react';
+import { Volume2, Radio, Play } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { SamaLogo } from '../components/SamaLogo';
+import { AppHeader } from '../components/AppHeader';
 import { formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
 
 export const SoundBoxNotifierScreen: React.FC = () => {
@@ -11,10 +12,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
     soundBoxVolume,
     setSoundBoxVolume,
     speakSoundBox,
-    goBack,
     language,
-    isRtl,
-    t,
   } = useApp();
 
   const isAr = language === 'العربية';
@@ -35,62 +33,40 @@ export const SoundBoxNotifierScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '16px 20px 24px 20px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
       }}
     >
       {/* Top Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button
-          onClick={goBack}
-          aria-label={t('btn.back', 'Back')}
-          className="interactive-tap"
-          style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
-            color: '#FFFFFF',
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-        >
-          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-        </button>
-
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
-            {t('merchant.soundbox_title', 'Smart SoundBox Notifier')}
-          </div>
-          <div style={{ fontSize: '11px', color: '#7FE87F', fontWeight: 700 }}>
-            {t('merchant.soundbox_live', 'Instant Voice Announcements')}
-          </div>
-        </div>
-
-        <div
-          style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
-            backgroundColor: 'rgba(127, 232, 127, 0.12)',
-            border: '1px solid rgba(127, 232, 127, 0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#7FE87F',
-          }}
-        >
-          <Radio size={18} />
-        </div>
+      <div>
+        <AppHeader
+          title={isAr ? 'مكبر الصوت الذكي للتحصيلات' : 'QTPay Smart SoundBox'}
+          showBack={true}
+          showSettings={false}
+          rightAction={
+            <div
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
+                border: '1px solid rgba(127, 232, 127, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#7FE87F',
+              }}
+            >
+              <Radio size={18} />
+            </div>
+          }
+        />
       </div>
 
       {/* Virtual 3D SoundBox Speaker Graphic */}
@@ -100,8 +76,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             width: '180px',
             height: '180px',
             borderRadius: '36px',
-            background: 'linear-gradient(145deg, #1C1C2E 0%, #151524 50%, #0D0D18 100%)',
-            border: '2px solid #2C2C44',
+            background: 'linear-gradient(145deg, #1C1C2E 0%, #111726 50%, #080C14 100%)',
+            border: '2px solid #1E293B',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -129,8 +105,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
               width: '90px',
               height: '90px',
               borderRadius: '50%',
-              backgroundColor: '#0B0B14',
-              border: '2px solid #2C2C44',
+              backgroundColor: '#080C14',
+              border: '2px solid #1E293B',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -140,7 +116,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             <Volume2 size={40} />
           </div>
 
-          <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#A2A2BA', marginTop: '12px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', marginTop: '12px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             QTPay SoundBox 5G
           </div>
         </div>
@@ -156,8 +132,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
         {/* Language Switcher */}
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '16px',
             padding: '14px 16px',
             display: 'flex',
@@ -173,7 +149,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             <button
               onClick={() => setSoundBoxLanguage('ar')}
               style={{
-                backgroundColor: soundBoxLanguage === 'ar' ? '#7FE87F' : '#1E1E32',
+                backgroundColor: soundBoxLanguage === 'ar' ? '#7FE87F' : '#1A2234',
                 color: soundBoxLanguage === 'ar' ? '#000000' : '#FFFFFF',
                 border: 'none',
                 borderRadius: '8px',
@@ -188,7 +164,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             <button
               onClick={() => setSoundBoxLanguage('en')}
               style={{
-                backgroundColor: soundBoxLanguage === 'en' ? '#7FE87F' : '#1E1E32',
+                backgroundColor: soundBoxLanguage === 'en' ? '#7FE87F' : '#1A2234',
                 color: soundBoxLanguage === 'en' ? '#000000' : '#FFFFFF',
                 border: 'none',
                 borderRadius: '8px',
@@ -206,8 +182,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
         {/* Volume Level Slider */}
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '16px',
             padding: '14px 16px',
           }}
@@ -238,7 +214,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
 
         {/* Quick Test Voice Triggers */}
         <div>
-          <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '8px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '8px' }}>
             {isAr ? 'تجربة سريعة للإشعارات الصوتية' : 'Quick Audio Triggers'}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
@@ -249,8 +225,8 @@ export const SoundBoxNotifierScreen: React.FC = () => {
                 onClick={() => handlePlayTest(amt)}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   borderRadius: '12px',
                   padding: '10px 8px',
                   color: '#FFFFFF',
@@ -272,7 +248,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
 
       {/* SAMA Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '10px' }}>
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
           {isAr ? 'عتاد ذكي معتمد ومتصل بشبكة البنك المركزي' : 'SAMA Certified IoT Hardware Integration'}
         </span>
         <SamaLogo height={14} themeMode="green" />

@@ -9,6 +9,7 @@ import {
   Monitor,
   ReceiptText,
   Radio,
+  PieChart,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -52,11 +53,19 @@ export const MerchantHomeScreen: React.FC = () => {
     }
   };
 
+  const paymentMixData = [
+    { name: isAr ? 'مدى Tap' : 'mada Tap', percentage: 38, color: '#7FE87F', amount: totalToday * 0.38 },
+    { name: isAr ? 'Apple Pay' : 'Apple Pay', percentage: 26, color: '#FFFFFF', amount: totalToday * 0.26 },
+    { name: isAr ? 'رمز زاتكا QR' : 'ZATCA QR', percentage: 18, color: '#EBB432', amount: totalToday * 0.18 },
+    { name: isAr ? 'روابط الدفع' : 'Payment Link', percentage: 12, color: '#B478FF', amount: totalToday * 0.12 },
+    { name: isAr ? 'سريع POS' : 'Sarie POS', percentage: 6, color: '#5CA3FF', amount: totalToday * 0.06 },
+  ];
+
   return (
     <div
       className="fade-in"
       style={{
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         minHeight: '100vh',
         paddingBottom: '96px',
         color: '#FFFFFF',
@@ -75,8 +84,8 @@ export const MerchantHomeScreen: React.FC = () => {
               width: '38px',
               height: '38px',
               borderRadius: '12px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -99,7 +108,7 @@ export const MerchantHomeScreen: React.FC = () => {
             {isAr ? `السجل التجاري: ${formatLocalizedNumber(merchantInfo.crNumber, language)}` : `CR: ${merchantInfo.crNumber}`}
           </div>
         </div>
-        <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#A2A2BA', backgroundColor: '#151524', border: '1px solid #2C2C44', padding: '4px 10px', borderRadius: '10px' }}>
+        <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', backgroundColor: '#111726', border: '1px solid #1E293B', padding: '4px 10px', borderRadius: '10px' }}>
           {isAr ? 'نقاط بيع معتمدة' : 'Verified SoftPOS'}
         </div>
       </div>
@@ -108,7 +117,7 @@ export const MerchantHomeScreen: React.FC = () => {
       <div style={{ padding: '12px 20px 0 20px' }}>
         <div
           style={{
-            background: 'linear-gradient(135deg, #052e16 0%, #064e3b 35%, #031c12 70%, #0e0e18 100%)',
+            background: 'linear-gradient(135deg, #052e16 0%, #064e3b 35%, #031c12 70%, #080c14 100%)',
             border: '1px solid rgba(127, 232, 127, 0.35)',
             borderRadius: '20px',
             padding: '22px 20px',
@@ -221,7 +230,7 @@ export const MerchantHomeScreen: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               fontSize: '11.5px',
-              color: '#A2A2BA',
+              color: '#94A3B8',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -237,8 +246,8 @@ export const MerchantHomeScreen: React.FC = () => {
       <div style={{ padding: '14px 20px 0 20px' }}>
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '18px',
             padding: '18px 16px',
             boxShadow: 'none',
@@ -265,8 +274,8 @@ export const MerchantHomeScreen: React.FC = () => {
                   width: '54px',
                   height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -292,8 +301,8 @@ export const MerchantHomeScreen: React.FC = () => {
                   width: '54px',
                   height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -319,8 +328,8 @@ export const MerchantHomeScreen: React.FC = () => {
                   width: '54px',
                   height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -346,8 +355,8 @@ export const MerchantHomeScreen: React.FC = () => {
                   width: '54px',
                   height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -365,7 +374,83 @@ export const MerchantHomeScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Recent Customer Collections Ledger */}
+      {/* 4. Payment Mix Analytics - Conic Donut Chart */}
+      <div style={{ padding: '14px 20px 0 20px' }}>
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '18px',
+            padding: '18px 16px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <PieChart size={16} color="#7FE87F" />
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF', margin: 0, letterSpacing: '-0.01em' }}>
+                {isAr ? 'توزيع قنوات الدفع اليومية' : 'Daily Payment Mix'}
+              </h3>
+            </div>
+            <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 700 }}>
+              {isAr ? '٥ قنوات نشطة' : '5 Rails Active'}
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            {/* Donut Chart Ring */}
+            <div
+              style={{
+                position: 'relative',
+                width: '104px',
+                height: '104px',
+                borderRadius: '50%',
+                background: 'conic-gradient(#7FE87F 0% 38%, #FFFFFF 38% 64%, #EBB432 64% 82%, #B478FF 82% 94%, #5CA3FF 94% 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              {/* Inner cutout */}
+              <div
+                style={{
+                  width: '68px',
+                  height: '68px',
+                  borderRadius: '50%',
+                  backgroundColor: '#111726',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 700 }}>{isAr ? 'الكل' : 'Total'}</span>
+                <span style={{ fontSize: '12px', color: '#7FE87F', fontWeight: 900 }}>100%</span>
+              </div>
+            </div>
+
+            {/* Legend & Percentages */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+              {paymentMixData.map((item, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color, display: 'inline-block' }} />
+                    <span style={{ color: '#FFFFFF', fontWeight: 700 }}>{item.name}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: '#94A3B8', fontSize: '10.5px' }}>{formatCurrency(item.amount, language)}</span>
+                    <span style={{ color: item.color, fontWeight: 800, minWidth: '28px', textAlign: isRtl ? 'left' : 'right' }}>
+                      {formatLocalizedNumber(item.percentage, language)}%
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Recent Customer Collections Ledger */}
       <div style={{ padding: '22px 20px 0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
           <h3 style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
@@ -401,8 +486,8 @@ export const MerchantHomeScreen: React.FC = () => {
                 onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: '#151524',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
                   borderRadius: '16px',
                   padding: '14px 16px',
                   display: 'flex',
@@ -433,7 +518,7 @@ export const MerchantHomeScreen: React.FC = () => {
                     <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
                       {col.orderRef} • {col.customerMasked}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#A2A2BA', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ color: badge.color, fontWeight: 700 }}>{badge.label}</span>
                       <span>&bull;</span>
                       <span>{translateText(col.date, language)}</span>
@@ -445,7 +530,7 @@ export const MerchantHomeScreen: React.FC = () => {
                   <div className="tabular-nums" style={{ fontSize: '15px', fontWeight: 900, color: col.status === 'refunded' ? '#FF6B6B' : '#7FE87F' }}>
                     {col.status === 'refunded' ? '- ' : '+ '}{formatCurrency(col.amount, language)}
                   </div>
-                  <div style={{ fontSize: '10px', color: '#6E6E85', marginTop: '2px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>
                     {isAr ? `الضريبة: ${formatSaudiCurrency(col.vatAmount, language)}` : `VAT: SAR ${col.vatAmount.toFixed(2)}`}
                   </div>
                 </div>
@@ -455,12 +540,12 @@ export const MerchantHomeScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* 5. Trust & SAMA Compliance Dock */}
+      {/* 6. Trust & SAMA Compliance Dock */}
       <div style={{ padding: '20px 20px 0 20px' }}>
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '18px',
             padding: '16px 18px',
             display: 'flex',
@@ -478,10 +563,10 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '10px', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
+            <div style={{ backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '10px', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
               <PaymentPartnerLogo size={20} width={64} height={32} themeMode="dark" />
             </div>
-            <div style={{ backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '10px', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
+            <div style={{ backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '10px', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
               <SamaLogo height={16} themeMode="green" />
             </div>
           </div>

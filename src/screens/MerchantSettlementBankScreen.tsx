@@ -3,6 +3,7 @@ import { Landmark, Check, ArrowRight, Clock } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SamaLogo } from '../components/SamaLogo';
+import { AppHeader } from '../components/AppHeader';
 
 const SAUDI_SETTLEMENT_BANKS = [
   {
@@ -61,18 +62,25 @@ export const MerchantSettlementBankScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '40px 24px 30px 24px',
+        paddingBottom: '30px',
         boxSizing: 'border-box',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
+      <AppHeader
+        title={isAr ? 'حساب التسوية البنكية والآيبان' : 'Settlement IBAN & Bank'}
+        showBack={true}
+        showSettings={false}
+      />
+
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '16px', padding: '0 24px' }}>
         <div
           style={{
             width: '60px',

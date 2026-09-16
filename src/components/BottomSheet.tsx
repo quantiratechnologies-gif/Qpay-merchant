@@ -32,8 +32,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 15, 26, 0.75)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(5, 8, 15, 0.82)',
+        backdropFilter: 'blur(10px)',
         zIndex: 50,
         display: 'flex',
         flexDirection: 'column',
@@ -45,11 +45,13 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         className="slide-up"
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: '#2A2A3E',
+          backgroundColor: '#111726',
           color: '#FFFFFF',
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          borderTop: '1px solid #4D4D6B',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
+          borderTop: '1px solid #1E293B',
+          borderLeft: '1px solid #1E293B',
+          borderRight: '1px solid #1E293B',
           padding: '24px 20px',
           maxHeight: '88vh',
           overflowY: 'auto',
@@ -63,7 +65,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           style={{
             width: '40px',
             height: '4px',
-            backgroundColor: '#4D4D6B',
+            backgroundColor: '#1E293B',
             borderRadius: '2px',
             margin: '0 auto 16px auto',
           }}
@@ -82,9 +84,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             aria-label="Close sheet"
             className="interactive-tap"
             style={{
-              backgroundColor: '#3A3A52',
-              border: '1px solid #4D4D6B',
-              color: '#B3B3C2',
+              backgroundColor: '#1A2234',
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
               width: '32px',
               height: '32px',
               borderRadius: '50%',

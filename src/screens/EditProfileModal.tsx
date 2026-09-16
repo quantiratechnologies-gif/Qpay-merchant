@@ -128,8 +128,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 15, 26, 0.75)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(5, 8, 15, 0.85)',
+        backdropFilter: 'blur(10px)',
         zIndex: 50,
         display: 'flex',
         alignItems: 'center',
@@ -146,9 +146,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
           maxWidth: '440px',
           maxHeight: '90vh',
           overflowY: 'auto',
-          backgroundColor: '#151524',
-          border: '1px solid #2C2C44',
-          borderRadius: '16px',
+          backgroundColor: '#111726',
+          border: '1px solid #1E293B',
+          borderRadius: '20px',
           padding: '24px',
           boxShadow: 'none',
         }}
@@ -161,9 +161,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
             onClick={handleClose}
             aria-label={t('btn.close', 'Close')}
             style={{
-              backgroundColor: '#3A3A52',
-              border: 'none',
-              color: '#B3B3C2',
+              backgroundColor: '#1A2234',
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
               width: '32px',
               height: '32px',
               borderRadius: designSystem.radii.full,
@@ -184,10 +184,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
             alignItems: 'center',
             gap: '14px',
             padding: '16px',
-            backgroundColor: '#1A1A2E',
+            backgroundColor: '#1A2234',
             borderRadius: designSystem.radii.md,
             marginBottom: '20px',
-            border: '1px solid #4D4D6B',
+            border: '1px solid #1E293B',
           }}
         >
           <div style={{ position: 'relative' }}>
@@ -197,14 +197,14 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 height: '56px',
                 borderRadius: designSystem.radii.full,
                 backgroundColor: avatarBgColor,
-                color: '#000000',
+                color: '#080C14',
                 fontWeight: 900,
                 fontSize: '20px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
-                border: '2px solid #2A2A3E',
+                border: '2px solid #1E293B',
               }}
             >
               {avatarUrl ? (
@@ -225,8 +225,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 height: '24px',
                 borderRadius: designSystem.radii.full,
                 backgroundColor: '#7FE87F',
-                color: '#000000',
-                border: '2px solid #2A2A3E',
+                color: '#080C14',
+                border: '2px solid #111726',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -257,7 +257,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
 
         {/* Color Presets */}
         <div style={{ marginBottom: '20px', textAlign: isRtl ? 'right' : 'left' }}>
-          <span style={{ fontSize: '12px', fontWeight: 700, color: '#B3B3C2', display: 'block', marginBottom: '8px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', display: 'block', marginBottom: '8px' }}>
             {language === 'العربية' ? 'اختر لون الملف الشخصي' : 'Choose Avatar Color Theme'}
           </span>
           <div role="radiogroup" aria-label="Avatar Color Presets" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -277,7 +277,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                   height: '28px',
                   borderRadius: designSystem.radii.full,
                   backgroundColor: preset.color,
-                  border: avatarBgColor === preset.color && !avatarUrl ? '3px solid #FFFFFF' : '2px solid #2A2A3E',
+                  border: avatarBgColor === preset.color && !avatarUrl ? '3px solid #FFFFFF' : '2px solid #1E293B',
                   cursor: 'pointer',
                   transition: 'transform 0.15s ease',
                   transform: avatarBgColor === preset.color && !avatarUrl ? 'scale(1.15)' : 'scale(1)',
@@ -317,7 +317,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.15)',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
                 color: '#7FE87F',
                 display: 'flex',
                 alignItems: 'center',
@@ -335,7 +335,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: isRtl ? 'right' : 'left' }}>
             {/* Name */}
             <div>
-              <label htmlFor="edit-name-input" style={{ fontSize: '12px', fontWeight: 700, color: '#B3B3C2', display: 'block', marginBottom: '6px' }}>
+              <label htmlFor="edit-name-input" style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', display: 'block', marginBottom: '6px' }}>
                 {t('auth.full_name', 'Full Name')}
               </label>
               <div style={{ position: 'relative' }}>
@@ -351,8 +351,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                     width: '100%',
                     padding: isRtl ? '12px 42px 12px 14px' : '12px 14px 12px 42px',
                     borderRadius: designSystem.radii.md,
-                    border: '1px solid #4D4D6B',
-                    backgroundColor: '#1A1A2E',
+                    border: '1px solid #1E293B',
+                    backgroundColor: '#1A2234',
                     fontSize: '14px',
                     fontWeight: 700,
                     color: '#FFFFFF',
@@ -366,7 +366,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
 
             {/* Mobile Number */}
             <div>
-              <label htmlFor="edit-mobile-input" style={{ fontSize: '12px', fontWeight: 700, color: '#B3B3C2', display: 'block', marginBottom: '6px' }}>
+              <label htmlFor="edit-mobile-input" style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', display: 'block', marginBottom: '6px' }}>
                 {t('auth.mobile_number', 'Mobile Number')}
               </label>
               <div style={{ position: 'relative' }}>
@@ -382,8 +382,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                     width: '100%',
                     padding: isRtl ? '12px 42px 12px 14px' : '12px 14px 12px 42px',
                     borderRadius: designSystem.radii.md,
-                    border: '1px solid #4D4D6B',
-                    backgroundColor: '#1A1A2E',
+                    border: '1px solid #1E293B',
+                    backgroundColor: '#1A2234',
                     fontSize: '14px',
                     fontWeight: 700,
                     color: '#FFFFFF',
@@ -398,7 +398,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
 
             {/* UPI ID */}
             <div>
-              <label htmlFor="edit-upi-input" style={{ fontSize: '12px', fontWeight: 700, color: '#B3B3C2', display: 'block', marginBottom: '6px' }}>
+              <label htmlFor="edit-upi-input" style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', display: 'block', marginBottom: '6px' }}>
                 {t('pay.sarie_id', 'Primary Sarie ID')}
               </label>
               <div style={{ position: 'relative' }}>
@@ -414,8 +414,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                     width: '100%',
                     padding: isRtl ? '12px 42px 12px 14px' : '12px 14px 12px 42px',
                     borderRadius: designSystem.radii.md,
-                    border: '1px solid #4D4D6B',
-                    backgroundColor: '#1A1A2E',
+                    border: '1px solid #1E293B',
+                    backgroundColor: '#1A2234',
                     fontSize: '14px',
                     fontWeight: 700,
                     color: '#FFFFFF',
@@ -430,7 +430,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
 
             {/* Email */}
             <div>
-              <label htmlFor="edit-email-input" style={{ fontSize: '12px', fontWeight: 700, color: '#B3B3C2', display: 'block', marginBottom: '6px' }}>
+              <label htmlFor="edit-email-input" style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', display: 'block', marginBottom: '6px' }}>
                 {language === 'العربية' ? 'البريد الإلكتروني' : 'Email Address'}
               </label>
               <div style={{ position: 'relative' }}>
@@ -446,8 +446,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
                     width: '100%',
                     padding: isRtl ? '12px 42px 12px 14px' : '12px 14px 12px 42px',
                     borderRadius: designSystem.radii.md,
-                    border: '1px solid #4D4D6B',
-                    backgroundColor: '#1A1A2E',
+                    border: '1px solid #1E293B',
+                    backgroundColor: '#1A2234',
                     fontSize: '14px',
                     fontWeight: 700,
                     color: '#FFFFFF',
@@ -466,7 +466,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
               style={{
                 width: '100%',
                 backgroundColor: '#7FE87F',
-                color: '#000000',
+                color: '#080C14',
                 border: 'none',
                 borderRadius: designSystem.radii.md,
                 padding: '14px',

@@ -8,7 +8,7 @@ export const NotificationsScreen: React.FC = () => {
   const { notifications, language, t } = useApp();
 
   return (
-    <div className="fade-in" style={{ backgroundColor: '#0B0B14', minHeight: '100%', paddingBottom: '36px' }}>
+    <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100%', paddingBottom: '36px' }}>
       <AppHeader title={t('notifications')} showBack showSettings={false} />
 
       <div style={{ padding: '20px' }}>
@@ -16,11 +16,11 @@ export const NotificationsScreen: React.FC = () => {
           <div
             style={{
               textAlign: 'center',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               borderRadius: '16px',
               padding: '48px 20px',
-              color: '#A2A2BA',
+              color: '#94A3B8',
               boxShadow: 'none',
             }}
           >
@@ -29,9 +29,9 @@ export const NotificationsScreen: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '14px',
-                backgroundColor: '#1E1E32',
+                backgroundColor: '#1A2234',
                 color: '#7FE87F',
-                border: '1px solid #2C2C44',
+                border: '1px solid #1E293B',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -41,7 +41,7 @@ export const NotificationsScreen: React.FC = () => {
               <BellRing size={22} />
             </div>
             <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF' }}>{translateText('No notifications', language)}</div>
-            <p style={{ fontSize: '12.5px', color: '#6E6E85', marginTop: '4px' }}>
+            <p style={{ fontSize: '12.5px', color: '#64748B', marginTop: '4px' }}>
               {translateText("You're all caught up.", language)}
             </p>
           </div>
@@ -56,8 +56,8 @@ export const NotificationsScreen: React.FC = () => {
                   alignItems: 'flex-start',
                   gap: '14px',
                   padding: '16px 18px',
-                  backgroundColor: '#151524',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
                   borderRadius: '16px',
                   boxShadow: 'none',
                 }}
@@ -67,13 +67,13 @@ export const NotificationsScreen: React.FC = () => {
                     width: '42px',
                     height: '42px',
                     borderRadius: '12px',
-                    backgroundColor: '#1E1E32',
+                    backgroundColor: '#1A2234',
                     color: '#7FE87F',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    border: '1px solid #2C2C44',
+                    border: '1px solid #1E293B',
                   }}
                 >
                   {notif.type === 'success' ? (
@@ -90,14 +90,14 @@ export const NotificationsScreen: React.FC = () => {
                     <span style={{ fontWeight: 800, fontSize: '14px', color: '#FFFFFF' }}>
                       {translateText(notif.title, language)}
                     </span>
-                    <span style={{ fontSize: '11px', color: '#6E6E85', fontWeight: 600 }}>
+                    <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
                       {translateText(notif.timestamp, language)}
                     </span>
                   </div>
                   <div
                     style={{
                       fontSize: '12px',
-                      color: '#A2A2BA',
+                      color: '#94A3B8',
                       marginTop: '4px',
                       lineHeight: '1.45',
                     }}

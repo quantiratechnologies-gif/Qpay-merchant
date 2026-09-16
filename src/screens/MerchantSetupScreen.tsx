@@ -4,6 +4,7 @@ import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SamaLogo } from '../components/SamaLogo';
 import { AlphPayLogo } from '../components/AlphPayLogo';
+import { AppHeader } from '../components/AppHeader';
 import { formatLocalizedNumber } from '../utils/i18n';
 
 const CATEGORIES = [
@@ -54,17 +55,22 @@ export const MerchantSetupScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '40px 24px 30px 24px',
+        paddingBottom: '30px',
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
+      <AppHeader
+        title={isAr ? 'بيانات المتجر والسجل التجاري' : 'Business & CR Profile'}
+        showBack={true}
+        showSettings={false}
+      />
       {/* Top Header */}
       <div style={{ textAlign: 'center', marginBottom: '16px' }}>
         <div
@@ -72,8 +78,8 @@ export const MerchantSetupScreen: React.FC = () => {
             width: '60px',
             height: '60px',
             borderRadius: '18px',
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -85,7 +91,7 @@ export const MerchantSetupScreen: React.FC = () => {
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
           {t('merchant.setup_title', 'Business Profile Setup')}
         </h2>
-        <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
           {isAr ? 'إعداد الملف التجاري للمنشأة للتوافق مع منظومة الفوترة الإلكترونية زاتكا' : 'Configure your merchant trading identity for ZATCA e-invoicing'}
         </p>
       </div>
@@ -99,7 +105,7 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '6px',
@@ -113,8 +119,8 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '12px 16px',
               }}
@@ -146,7 +152,7 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '8px',
@@ -166,9 +172,9 @@ export const MerchantSetupScreen: React.FC = () => {
                     onClick={() => setCategory(cat.en)}
                     className="interactive-tap"
                     style={{
-                      backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.2)' : '#151524',
-                      border: isSelected ? '1.5px solid #7FE87F' : '1px solid #2C2C44',
-                      color: isSelected ? '#FFFFFF' : '#A2A2BA',
+                      backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.2)' : '#111726',
+                      border: isSelected ? '1.5px solid #7FE87F' : '1px solid #1E293B',
+                      color: isSelected ? '#FFFFFF' : '#94A3B8',
                       borderRadius: '12px',
                       padding: '7px 12px',
                       fontSize: '11.5px',
@@ -189,7 +195,7 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '6px',
@@ -203,8 +209,8 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '12px 16px',
               }}
@@ -226,7 +232,7 @@ export const MerchantSetupScreen: React.FC = () => {
                 }}
               >
                 {CITIES.map((c) => (
-                  <option key={c.en} value={c.en} style={{ backgroundColor: '#151524', color: '#FFFFFF' }}>
+                  <option key={c.en} value={c.en} style={{ backgroundColor: '#111726', color: '#FFFFFF' }}>
                     {isAr ? c.ar : c.en}
                   </option>
                 ))}
@@ -240,7 +246,7 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '6px',
@@ -254,8 +260,8 @@ export const MerchantSetupScreen: React.FC = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '12px 16px',
               }}
@@ -293,7 +299,7 @@ export const MerchantSetupScreen: React.FC = () => {
 
       {/* SAMA Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
           {isAr ? 'بيانات منشأة موثقة عبر منصة النفاذ الوطني وأبشر' : 'SAMA & Absher Verified Merchant Identity'}
         </span>
         <SamaLogo height={14} themeMode="green" />

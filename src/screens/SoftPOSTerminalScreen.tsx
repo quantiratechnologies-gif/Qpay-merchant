@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Delete, ShieldCheck } from 'lucide-react';
+import { Delete, ShieldCheck } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
+import { AppHeader } from '../components/AppHeader';
 import { formatCurrency } from '../utils/formatters';
-import { translateText, formatSaudiCurrency, toArabicNumerals } from '../utils/i18n';
+import { formatSaudiCurrency, toArabicNumerals } from '../utils/i18n';
 
 const CARD_SCHEMES = [
   { id: 'mada', label: 'mada Debit', labelAr: 'مدى', icon: '🇸🇦' },
@@ -19,8 +20,6 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     softPosCardScheme,
     setSoftPosCardScheme,
     navigateTo,
-    goBack,
-    merchantInfo,
     language,
     isRtl,
     t,
@@ -62,65 +61,41 @@ export const SoftPOSTerminalScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '16px 20px 24px 20px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
       }}
     >
-      {/* Top Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button
-          onClick={goBack}
-          aria-label={t('btn.back', 'Back')}
-          className="interactive-tap"
-          style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
-            color: '#FFFFFF',
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-        >
-          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-        </button>
-
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
-            {t('merchant.softpos', 'SoftPOS Terminal')}
+      {/* Top Standardized Navigation */}
+      <AppHeader
+        title={t('merchant.softpos', 'SoftPOS Terminal')}
+        showBack={true}
+        showSettings={false}
+        rightAction={
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              backgroundColor: 'rgba(127, 232, 127, 0.12)',
+              border: '1px solid rgba(127, 232, 127, 0.25)',
+              borderRadius: '10px',
+              padding: '6px 10px',
+              fontSize: '11px',
+              fontWeight: 800,
+              color: '#7FE87F',
+            }}
+          >
+            <ShieldCheck size={14} />
+            <span>mada NFC</span>
           </div>
-          <div style={{ fontSize: '11px', color: '#7FE87F', fontWeight: 700 }}>
-            {translateText(merchantInfo.businessName, language)}
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            backgroundColor: 'rgba(127, 232, 127, 0.12)',
-            border: '1px solid rgba(127, 232, 127, 0.25)',
-            borderRadius: '8px',
-            padding: '4px 8px',
-            fontSize: '11px',
-            fontWeight: 800,
-            color: '#7FE87F',
-          }}
-        >
-          <ShieldCheck size={13} />
-          <span>mada NFC</span>
-        </div>
-      </div>
+        }
+      />
 
       {/* Center: Amount Display & Scheme Selector (Gradient Green-Black) */}
       <div
@@ -196,8 +171,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               style={{
                 height: '52px',
                 borderRadius: '14px',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 color: '#FFFFFF',
                 fontSize: '22px',
                 fontWeight: 800,
@@ -219,8 +194,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             style={{
               height: '52px',
               borderRadius: '14px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               color: '#FFFFFF',
               fontSize: '18px',
               fontWeight: 800,
@@ -241,8 +216,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             style={{
               height: '52px',
               borderRadius: '14px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               color: '#FFFFFF',
               fontSize: '22px',
               fontWeight: 800,
@@ -263,9 +238,9 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             style={{
               height: '52px',
               borderRadius: '14px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
-              color: '#A2A2BA',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',

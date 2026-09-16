@@ -88,7 +88,7 @@ export const PermissionsScreen: React.FC = () => {
   };
 
   return (
-    <div className="fade-in" style={{ backgroundColor: '#0B0B14', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingBottom: '32px', color: '#FFFFFF' }}>
+    <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingBottom: '32px', color: '#FFFFFF' }}>
       <div>
         <AppHeader title={t('auth.permissions_title', 'App Permissions')} showBack={true} onBack={goBack} showSettings={false} />
 
@@ -96,8 +96,8 @@ export const PermissionsScreen: React.FC = () => {
           {/* Header Card with SAMA Central Bank Logo */}
           <div
             style={{
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               borderRadius: '16px',
               padding: '16px 18px',
               marginBottom: '18px',
@@ -114,7 +114,7 @@ export const PermissionsScreen: React.FC = () => {
                   width: '44px',
                   height: '44px',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(127, 232, 127, 0.15)',
+                  backgroundColor: 'rgba(127, 232, 127, 0.12)',
                   color: '#7FE87F',
                   border: '1px solid rgba(127, 232, 127, 0.3)',
                   display: 'flex',
@@ -129,13 +129,13 @@ export const PermissionsScreen: React.FC = () => {
                 <div style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF' }}>
                   {language === 'العربية' ? 'معايير الأمان والتحقق المعتمدة من ساما' : 'SAMA Mandated Security & e-KYC'}
                 </div>
-                <div style={{ fontSize: '11px', color: '#A2A2BA', marginTop: '2px' }}>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
                   {language === 'العربية' ? 'المعايير التنظيمية للبنك المركزي السعودي' : 'Saudi Central Bank Regulatory Standard'}
                 </div>
               </div>
             </div>
 
-            <div style={{ paddingInlineStart: '8px', borderInlineStart: '1px solid #2C2C44' }}>
+            <div style={{ paddingInlineStart: '8px', borderInlineStart: '1px solid #1E293B' }}>
               <SamaLogo height={20} themeMode="dark" />
             </div>
           </div>
@@ -144,7 +144,7 @@ export const PermissionsScreen: React.FC = () => {
             style={{
               fontSize: '11.5px',
               fontWeight: 800,
-              color: '#6E6E85',
+              color: '#64748B',
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
               marginBottom: '10px',
@@ -159,9 +159,9 @@ export const PermissionsScreen: React.FC = () => {
           {/* Grouped Permissions Card */}
           <div
             style={{
-              backgroundColor: '#151524',
+              backgroundColor: '#111726',
               borderRadius: '16px',
-              border: '1px solid #2C2C44',
+              border: '1px solid #1E293B',
               overflow: 'hidden',
               boxShadow: 'none',
             }}
@@ -170,7 +170,7 @@ export const PermissionsScreen: React.FC = () => {
               const isOn = toggles[perm.key];
               return (
                 <React.Fragment key={perm.key}>
-                  {index > 0 && <div style={{ height: '1px', backgroundColor: '#2C2C44', margin: '0 16px' }} />}
+                  {index > 0 && <div style={{ height: '1px', backgroundColor: '#1E293B', margin: '0 16px' }} />}
                   <div
                     style={{
                       display: 'flex',
@@ -186,9 +186,9 @@ export const PermissionsScreen: React.FC = () => {
                           width: '38px',
                           height: '38px',
                           borderRadius: '10px',
-                          backgroundColor: isOn ? 'rgba(127, 232, 127, 0.15)' : '#1E1E32',
-                          color: isOn ? '#7FE87F' : '#A2A2BA',
-                          border: isOn ? '1px solid rgba(127, 232, 127, 0.35)' : '1px solid #2C2C44',
+                          backgroundColor: isOn ? 'rgba(127, 232, 127, 0.12)' : '#1A2234',
+                          color: isOn ? '#7FE87F' : '#94A3B8',
+                          border: isOn ? '1px solid rgba(127, 232, 127, 0.35)' : '1px solid #1E293B',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -203,7 +203,7 @@ export const PermissionsScreen: React.FC = () => {
                           {perm.name}
                         </span>
                         {perm.required && (
-                          <span style={{ fontSize: '9px', fontWeight: 800, backgroundColor: 'rgba(127, 232, 127, 0.15)', color: '#7FE87F', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(127, 232, 127, 0.3)' }}>
+                          <span style={{ fontSize: '9px', fontWeight: 800, backgroundColor: 'rgba(127, 232, 127, 0.12)', color: '#7FE87F', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(127, 232, 127, 0.3)' }}>
                             {language === 'العربية' ? 'إلزامي' : 'REQUIRED'}
                           </span>
                         )}
@@ -226,8 +226,8 @@ export const PermissionsScreen: React.FC = () => {
                         width: '46px',
                         height: '26px',
                         borderRadius: '9999px',
-                        backgroundColor: isOn ? '#7FE87F' : '#1E1E32',
-                        border: isOn ? 'none' : '1px solid #2C2C44',
+                        backgroundColor: isOn ? '#7FE87F' : '#1A2234',
+                        border: isOn ? 'none' : '1px solid #1E293B',
                         display: 'flex',
                         alignItems: 'center',
                         padding: '2px',
@@ -242,7 +242,7 @@ export const PermissionsScreen: React.FC = () => {
                           width: '22px',
                           height: '22px',
                           borderRadius: '50%',
-                          backgroundColor: isOn ? '#0B0B14' : '#A2A2BA',
+                          backgroundColor: isOn ? '#080C14' : '#94A3B8',
                           transform: isOn ? 'translateX(20px)' : 'translateX(0px)',
                           transition: 'transform 0.2s ease',
                           boxShadow: 'none',
@@ -268,8 +268,8 @@ export const PermissionsScreen: React.FC = () => {
         </SecondaryButton>
 
         <div style={{ textAlign: 'center', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-          <Lock size={12} color="#6E6E85" />
-          <span style={{ fontSize: '11px', color: '#6E6E85', fontWeight: 600 }}>
+          <Lock size={12} color="#64748B" />
+          <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
             {language === 'العربية' ? 'تشفير أجهزة متقدم بمستوى ٢٥٦ بت' : '256-Bit Hardware Encrypted'}
           </span>
         </div>
@@ -281,8 +281,8 @@ export const PermissionsScreen: React.FC = () => {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(11, 11, 20, 0.9)',
-            backdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(5, 8, 15, 0.85)',
+            backdropFilter: 'blur(10px)',
             zIndex: 100,
             display: 'flex',
             alignItems: 'center',
@@ -293,9 +293,9 @@ export const PermissionsScreen: React.FC = () => {
           <div
             className="fade-in"
             style={{
-              backgroundColor: '#151524',
+              backgroundColor: '#111726',
               borderRadius: '20px',
-              border: '1px solid #2C2C44',
+              border: '1px solid #1E293B',
               padding: '28px 24px',
               width: '100%',
               maxWidth: '380px',
@@ -309,7 +309,7 @@ export const PermissionsScreen: React.FC = () => {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.15)',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
                 color: '#7FE87F',
                 border: '1px solid rgba(127, 232, 127, 0.3)',
                 display: 'flex',
@@ -329,7 +329,7 @@ export const PermissionsScreen: React.FC = () => {
               {discoveryStep === 3 && (language === 'العربية' ? 'تم التحقق الإلكتروني (KYC)' : 'KYC Verified')}
             </h3>
 
-            <p style={{ fontSize: '13px', color: '#A2A2BA', margin: '0 0 20px 0', lineHeight: '1.4' }}>
+            <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 20px 0', lineHeight: '1.4' }}>
               {discoveryStep === 1 && (language === 'العربية' ? 'التحقق من تسجيل شبكة سريع على الرقم +966 50 123 4567' : 'Verifying SAMA Sarie registration on +966 50 123 4567')}
               {discoveryStep === 2 && (language === 'العربية' ? 'تم العثور على حسابات مصرف الراجحي والبنك الأهلي السعودي' : 'Discovered Al Rajhi Bank and SNB accounts')}
               {discoveryStep === 3 && (language === 'العربية' ? 'تم التحقق بنجاح من البنك المركزي السعودي. جاري الانتقال للرئيسية...' : 'SAMA e-KYC verified. Redirecting to home...')}
@@ -343,12 +343,12 @@ export const PermissionsScreen: React.FC = () => {
                   gap: '10px',
                   padding: '10px 12px',
                   borderRadius: '10px',
-                  backgroundColor: discoveryStep >= 1 ? 'rgba(127, 232, 127, 0.12)' : '#1E1E32',
-                  border: `1px solid ${discoveryStep >= 1 ? 'rgba(127, 232, 127, 0.35)' : '#2C2C44'}`,
+                  backgroundColor: discoveryStep >= 1 ? 'rgba(127, 232, 127, 0.12)' : '#1A2234',
+                  border: `1px solid ${discoveryStep >= 1 ? 'rgba(127, 232, 127, 0.35)' : '#1E293B'}`,
                 }}
               >
-                {discoveryStep >= 1 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#A2A2BA" />}
-                <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 1 ? '#FFFFFF' : '#A2A2BA' }}>
+                {discoveryStep >= 1 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#94A3B8" />}
+                <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 1 ? '#FFFFFF' : '#94A3B8' }}>
                   {language === 'العربية' ? 'ربط الجهاز والتحقق من الشريحة' : 'Device Binding & SIM Verification'}
                 </span>
               </div>
@@ -360,12 +360,12 @@ export const PermissionsScreen: React.FC = () => {
                   gap: '10px',
                   padding: '10px 12px',
                   borderRadius: '10px',
-                  backgroundColor: discoveryStep >= 2 ? 'rgba(127, 232, 127, 0.12)' : '#1E1E32',
-                  border: `1px solid ${discoveryStep >= 2 ? 'rgba(127, 232, 127, 0.35)' : '#2C2C44'}`,
+                  backgroundColor: discoveryStep >= 2 ? 'rgba(127, 232, 127, 0.12)' : '#1A2234',
+                  border: `1px solid ${discoveryStep >= 2 ? 'rgba(127, 232, 127, 0.35)' : '#1E293B'}`,
                 }}
               >
-                {discoveryStep >= 2 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#A2A2BA" />}
-                <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 2 ? '#FFFFFF' : '#A2A2BA' }}>
+                {discoveryStep >= 2 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Loader2 size={16} color="#94A3B8" />}
+                <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 2 ? '#FFFFFF' : '#94A3B8' }}>
                   {language === 'العربية' ? 'تم اكتشاف الحسابات (الراجحي، الأهلي SNB)' : 'Bank Accounts Discovered (Al Rajhi Bank, SNB)'}
                 </span>
               </div>
@@ -377,13 +377,13 @@ export const PermissionsScreen: React.FC = () => {
                   justifyContent: 'space-between',
                   padding: '10px 12px',
                   borderRadius: '10px',
-                  backgroundColor: discoveryStep >= 3 ? 'rgba(127, 232, 127, 0.2)' : '#1E1E32',
-                  border: `1px solid ${discoveryStep >= 3 ? '#7FE87F' : '#2C2C44'}`,
+                  backgroundColor: discoveryStep >= 3 ? 'rgba(127, 232, 127, 0.2)' : '#1A2234',
+                  border: `1px solid ${discoveryStep >= 3 ? '#7FE87F' : '#1E293B'}`,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {discoveryStep >= 3 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Sparkles size={16} color="#A2A2BA" />}
-                  <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 3 ? '#7FE87F' : '#A2A2BA' }}>
+                  {discoveryStep >= 3 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Sparkles size={16} color="#94A3B8" />}
+                  <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 3 ? '#7FE87F' : '#94A3B8' }}>
                     {language === 'العربية' ? 'التحقق الوطني الفوري عبر نفاذ' : 'SAMA Instant e-KYC (Nafath)'}
                   </span>
                 </div>

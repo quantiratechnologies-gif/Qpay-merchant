@@ -12,6 +12,7 @@ import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../ut
 import { PrimaryButton } from '../components/PrimaryButton';
 import { SamaLogo } from '../components/SamaLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
+import { AppHeader } from '../components/AppHeader';
 
 export const MerchantPaymentReceivedScreen: React.FC = () => {
   const {
@@ -54,16 +55,22 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '30px 24px 24px 24px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
       }}
     >
+      <AppHeader
+        title={isAr ? 'إيصال التحصيل والفوترة' : 'Payment Receipt & E-Invoice'}
+        showBack={true}
+        onBack={() => navigateTo('MERCHANT_HOME')}
+        showSettings={false}
+      />
       {/* Top Success Icon */}
       <div style={{ textAlign: 'center' }}>
         <div

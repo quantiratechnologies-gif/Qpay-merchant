@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Share2, Check, Sparkles } from 'lucide-react';
+import { Share2, Check, Sparkles } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
@@ -7,16 +7,14 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { SamaLogo } from '../components/SamaLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
 import { QRCodeView } from '../components/QRCodeView';
+import { AppHeader } from '../components/AppHeader';
 
 export const MerchantQrGeneratorScreen: React.FC = () => {
   const {
     merchantInfo,
     processMerchantCollection,
     navigateTo,
-    goBack,
     language,
-    isRtl,
-    t,
   } = useApp();
 
   const isAr = language === 'العربية';
@@ -57,62 +55,27 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '16px 20px 24px 20px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
       }}
     >
       {/* Top Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <button
-          onClick={goBack}
-          aria-label={t('btn.back', 'Back')}
-          className="interactive-tap"
-          style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
-            color: '#FFFFFF',
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-        >
-          <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-        </button>
-
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
-            {t('zatca.title', 'ZATCA Phase 2 E-Invoice')}
+      <AppHeader
+        title={isAr ? 'فاتورة ضريبية ورمز زاتكا' : 'ZATCA Tax Invoice QR'}
+        showBack={true}
+        showSettings={false}
+        rightAction={
+          <div style={{ backgroundColor: 'rgba(235, 180, 50, 0.12)', border: '1px solid rgba(235, 180, 50, 0.3)', borderRadius: '10px', padding: '6px 8px', display: 'flex', alignItems: 'center' }}>
+            <ZatcaLogo size={16} themeMode="dark" />
           </div>
-          <div style={{ fontSize: '11px', color: '#56bbb4', fontWeight: 700 }}>
-            {t('zatca.tlv_qr', 'TLV Cryptographic QR')}
-          </div>
-        </div>
-
-        <div
-          style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
-            backgroundColor: 'rgba(56, 171, 195, 0.12)',
-            border: '1px solid rgba(56, 171, 195, 0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <ZatcaLogo variant="icon" size={24} />
-        </div>
-      </div>
+        }
+      />
 
       {/* QR Code Card Display */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '14px 0' }}>
@@ -161,7 +124,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
       <div style={{ width: '100%', maxWidth: '360px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div style={{ display: 'flex', gap: '10px' }}>
           <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '10.5px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>
+            <label style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>
               {isAr ? 'المبلغ الإجمالي (ر.س)' : 'Invoice Total (SAR)'}
             </label>
             <input
@@ -171,8 +134,8 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
               onChange={(e) => setInvoiceAmount(e.target.value)}
               placeholder="150.00"
               style={{
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '12px',
                 padding: '10px 14px',
                 color: '#FFFFFF',
@@ -187,7 +150,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
           </div>
 
           <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '10.5px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>
+            <label style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>
               {isAr ? 'رقم / مرجع الفاتورة' : 'Order Reference'}
             </label>
             <input
@@ -196,8 +159,8 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
               onChange={(e) => setOrderNote(e.target.value)}
               placeholder={isAr ? 'فاتورة #INV-9901' : 'Invoice #INV-9901'}
               style={{
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '12px',
                 padding: '10px 14px',
                 color: '#FFFFFF',
@@ -220,11 +183,11 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
           onClick={handleCopyLink}
           className="interactive-tap"
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '12px',
             padding: '10px',
-            color: '#A2A2BA',
+            color: '#94A3B8',
             fontSize: '12px',
             fontWeight: 700,
             cursor: 'pointer',
@@ -241,7 +204,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
 
       {/* SAMA Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '10px' }}>
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
           {isAr ? 'فوترة إلكترونية متوافقة مع زاتكا ونظام سريع' : 'SAMA Sarie & ZATCA Compatible E-Invoicing'}
         </span>
         <SamaLogo height={14} themeMode="green" />

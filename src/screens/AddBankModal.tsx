@@ -58,8 +58,8 @@ export const AddBankModal: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '13px 16px',
-                  backgroundColor: isSelected ? '#1E1E32' : '#151524',
-                  border: isSelected ? '1.5px solid #7FE87F' : '1px solid #2C2C44',
+                  backgroundColor: isSelected ? '#1A2234' : '#0B0F19',
+                  border: isSelected ? '1.5px solid #7FE87F' : '1px solid #1E293B',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   boxShadow: 'none',
@@ -72,9 +72,9 @@ export const AddBankModal: React.FC = () => {
                       width: '36px',
                       height: '36px',
                       borderRadius: '10px',
-                      backgroundColor: '#1E1E32',
-                      color: isSelected ? '#7FE87F' : '#A2A2BA',
-                      border: `1px solid ${isSelected ? 'rgba(127, 232, 127, 0.4)' : '#2C2C44'}`,
+                      backgroundColor: '#111726',
+                      color: isSelected ? '#7FE87F' : '#94A3B8',
+                      border: `1px solid ${isSelected ? 'rgba(127, 232, 127, 0.4)' : '#1E293B'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -88,7 +88,7 @@ export const AddBankModal: React.FC = () => {
                     <div style={{ fontWeight: 700, fontSize: '14px', color: '#FFFFFF' }}>
                       {displayBankName}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#6E6E85', marginTop: '1px', fontFamily: 'monospace' }} dir="ltr">
+                    <div style={{ fontSize: '11px', color: '#64748B', marginTop: '1px', fontFamily: 'monospace' }} dir="ltr">
                       Sarie Rail • IBAN {bank.code}
                     </div>
                   </div>
@@ -99,14 +99,14 @@ export const AddBankModal: React.FC = () => {
                     width: '20px',
                     height: '20px',
                     borderRadius: '50%',
-                    border: isSelected ? 'none' : '1.5px solid #2C2C44',
+                    border: isSelected ? 'none' : '1.5px solid #1E293B',
                     backgroundColor: isSelected ? '#7FE87F' : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  {isSelected && <Check size={13} color="#000000" strokeWidth={3} />}
+                  {isSelected && <Check size={13} color="#080C14" strokeWidth={3} />}
                 </div>
               </div>
             );
@@ -123,7 +123,7 @@ export const AddBankModal: React.FC = () => {
       {/* SAMA Verification Footer */}
       <div style={{ marginTop: '14px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
         <SamaLogo height={12} themeMode="green" />
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 600 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 600 }}>
           {language === 'العربية'
             ? 'ربط مباشر مع البنك • موثق من البنك المركزي وسريع'
             : 'Direct Bank Binding • SAMA & Sarie Authenticated'}

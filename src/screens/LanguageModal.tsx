@@ -38,8 +38,8 @@ export const LanguageModal: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px 18px',
-                backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.14)' : '#151524',
-                border: isSelected ? '1.5px solid #7FE87F' : '1px solid #2C2C44',
+                backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.12)' : '#0B0F19',
+                border: isSelected ? '1.5px solid #7FE87F' : '1px solid #1E293B',
                 borderRadius: '16px',
                 marginBottom: '10px',
                 cursor: 'pointer',
@@ -53,8 +53,8 @@ export const LanguageModal: React.FC = () => {
                     width: '40px',
                     height: '40px',
                     borderRadius: '12px',
-                    backgroundColor: isSelected ? '#7FE87F' : '#1E1E32',
-                    color: isSelected ? '#000000' : '#7FE87F',
+                    backgroundColor: isSelected ? '#7FE87F' : '#1A2234',
+                    color: isSelected ? '#080C14' : '#7FE87F',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -83,7 +83,7 @@ export const LanguageModal: React.FC = () => {
                       {lang.badge}
                     </span>
                   </div>
-                  <div style={{ fontSize: '12px', color: '#A2A2BA', marginTop: '3px' }}>
+                  <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '3px' }}>
                     {lang.native}
                   </div>
                 </div>

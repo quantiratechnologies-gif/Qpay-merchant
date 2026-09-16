@@ -7,7 +7,7 @@ import { useApp } from '../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
   const { navigateTo, user, updateUser, setUserRole, setIsKycModalOpen, t, isRtl, language } = useApp();
-  const [accountType, setAccountType] = useState<'customer' | 'merchant'>('customer');
+  const [accountType, setAccountType] = useState<'customer' | 'merchant'>('merchant');
   const [fullName, setFullName] = useState<string>(user.name || 'Fahad Al-Harbi');
   const [mobileNumber, setMobileNumber] = useState<string>('501234567');
 
@@ -29,8 +29,8 @@ export const MobileNumberScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#070D0A',
-        backgroundImage: 'radial-gradient(circle at 50% 15%, rgba(52, 211, 153, 0.12) 0%, rgba(7, 13, 10, 0.98) 60%)',
+        backgroundColor: '#080C14',
+        backgroundImage: 'radial-gradient(circle at 50% 15%, rgba(127, 232, 127, 0.08) 0%, rgba(8, 12, 20, 0.98) 60%)',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -60,12 +60,12 @@ export const MobileNumberScreen: React.FC = () => {
           width: '100%',
           maxWidth: '380px',
           margin: '0 auto',
-          backgroundColor: 'rgba(21, 21, 36, 0.8)',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: '#111726',
+          border: '1px solid #1E293B',
           borderRadius: '24px',
           padding: '24px 20px',
           boxSizing: 'border-box',
+          boxShadow: 'none',
         }}
       >
         {/* Account Type Selector Toggle */}
@@ -74,8 +74,8 @@ export const MobileNumberScreen: React.FC = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '8px',
-            backgroundColor: '#0E0E1A',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            backgroundColor: '#080C14',
+            border: '1px solid #1E293B',
             borderRadius: '16px',
             padding: '4px',
             marginBottom: '18px',
@@ -83,34 +83,11 @@ export const MobileNumberScreen: React.FC = () => {
         >
           <button
             type="button"
-            onClick={() => setAccountType('customer')}
-            className="interactive-tap"
-            style={{
-              backgroundColor: accountType === 'customer' ? '#7FE87F' : 'transparent',
-              color: accountType === 'customer' ? '#000000' : '#A2A2BA',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '10px',
-              fontSize: '12.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <UserIcon size={15} /> {t('auth.customer', 'Customer')}
-          </button>
-
-          <button
-            type="button"
             onClick={() => setAccountType('merchant')}
             className="interactive-tap"
             style={{
               backgroundColor: accountType === 'merchant' ? '#7FE87F' : 'transparent',
-              color: accountType === 'merchant' ? '#000000' : '#A2A2BA',
+              color: accountType === 'merchant' ? '#080C14' : '#94A3B8',
               border: 'none',
               borderRadius: '12px',
               padding: '10px',
@@ -126,6 +103,29 @@ export const MobileNumberScreen: React.FC = () => {
           >
             <Store size={15} /> {t('auth.merchant', 'Merchant')}
           </button>
+
+          <button
+            type="button"
+            onClick={() => setAccountType('customer')}
+            className="interactive-tap"
+            style={{
+              backgroundColor: accountType === 'customer' ? '#7FE87F' : 'transparent',
+              color: accountType === 'customer' ? '#080C14' : '#94A3B8',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '10px',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <UserIcon size={15} /> {t('auth.customer', 'Staff / Agent')}
+          </button>
         </div>
 
         <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -136,21 +136,21 @@ export const MobileNumberScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '8px',
                 display: 'block',
               }}
             >
-              {language === 'العربية' ? 'الاسم الكامل (حسب الهوية الوطنية / الإقامة)' : 'Full Name (as per National ID / Iqama)'}
+              {language === 'العربية' ? 'الاسم الكامل للمالك أو المدير' : 'Business Owner / Manager Name'}
             </label>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#1A2234',
+                border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '14px 16px',
                 transition: 'border-color 0.2s ease',
@@ -184,7 +184,7 @@ export const MobileNumberScreen: React.FC = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 800,
-                color: '#A2A2BA',
+                color: '#94A3B8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 marginBottom: '8px',
@@ -197,8 +197,8 @@ export const MobileNumberScreen: React.FC = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#1A2234',
+                border: '1px solid #1E293B',
                 borderRadius: '14px',
                 padding: '14px 16px',
                 transition: 'border-color 0.2s ease',
@@ -212,7 +212,7 @@ export const MobileNumberScreen: React.FC = () => {
                   gap: '6px',
                   paddingInlineEnd: '12px',
                   marginInlineEnd: '12px',
-                  borderInlineEnd: '1px solid #2C2C44',
+                  borderInlineEnd: '1px solid #1E293B',
                   fontWeight: 800,
                   fontSize: '14px',
                   color: '#FFFFFF',
@@ -272,7 +272,7 @@ export const MobileNumberScreen: React.FC = () => {
         <span
           style={{
             fontSize: '11px',
-            color: '#6E6E85',
+            color: '#64748B',
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.08em',

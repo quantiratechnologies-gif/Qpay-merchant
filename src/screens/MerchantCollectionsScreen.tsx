@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  ArrowLeft,
   Receipt,
   RotateCcw,
   CheckCircle2,
@@ -12,17 +11,15 @@ import { formatCurrency } from '../utils/formatters';
 import type { MerchantCollection } from '../types';
 import { SamaLogo } from '../components/SamaLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
+import { AppHeader } from '../components/AppHeader';
 import { translateText, formatSaudiCurrency } from '../utils/i18n';
 
 export const MerchantCollectionsScreen: React.FC = () => {
   const {
     merchantCollections,
     processMerchantRefund,
-    merchantInfo,
-    goBack,
     language,
     isRtl,
-    t,
   } = useApp();
 
   const isAr = language === 'العربية';
@@ -75,70 +72,46 @@ export const MerchantCollectionsScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '16px 20px 24px 20px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
       }}
     >
       {/* Top Header */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <button
-            onClick={goBack}
-            aria-label={t('btn.back', 'Back')}
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
-              color: '#FFFFFF',
-              width: '38px',
-              height: '38px',
-              borderRadius: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-          </button>
-
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF' }}>
-              {isAr ? 'سجل التحصيلات والفوترة' : 'Collections & ZATCA Ledger'}
+        <AppHeader
+          title={isAr ? 'سجل التحصيلات والفوترة' : 'Collections & ZATCA Ledger'}
+          showBack={true}
+          showSettings={false}
+          rightAction={
+            <div
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
+                border: '1px solid rgba(127, 232, 127, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#7FE87F',
+              }}
+            >
+              <Receipt size={18} />
             </div>
-            <div style={{ fontSize: '11px', color: '#7FE87F', fontWeight: 700 }}>
-              {translateText(merchantInfo.businessName, language)}
-            </div>
-          </div>
-
-          <div
-            style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '12px',
-              backgroundColor: 'rgba(127, 232, 127, 0.12)',
-              border: '1px solid rgba(127, 232, 127, 0.25)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#7FE87F',
-            }}
-          >
-            <Receipt size={18} />
-          </div>
-        </div>
+          }
+        />
 
         {/* Total Ledger Summary Box */}
         <div
           style={{
-            backgroundColor: '#151524',
-            border: '1px solid #2C2C44',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '18px',
             padding: '16px 18px',
             marginBottom: '14px',
@@ -146,7 +119,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 {isAr ? 'إجمالي التحصيلات المحددة' : 'Filtered Total Collections'}
               </div>
               <div className="tabular-nums" style={{ fontSize: '26px', fontWeight: 900, color: '#FFFFFF', marginTop: '2px' }}>
@@ -154,7 +127,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
               </div>
             </div>
             <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                 {isAr ? '١٥٪ ضريبة زاتكا' : '15% ZATCA VAT'}
               </div>
               <div style={{ fontSize: '16px', fontWeight: 800, color: '#7FE87F', marginTop: '2px' }}>
@@ -178,9 +151,9 @@ export const MerchantCollectionsScreen: React.FC = () => {
               onClick={() => setActiveFilter(f.id as any)}
               className="interactive-tap"
               style={{
-                backgroundColor: activeFilter === f.id ? '#7FE87F' : '#151524',
-                color: activeFilter === f.id ? '#000000' : '#A2A2BA',
-                border: activeFilter === f.id ? '1px solid #7FE87F' : '1px solid #2C2C44',
+                backgroundColor: activeFilter === f.id ? '#7FE87F' : '#111726',
+                color: activeFilter === f.id ? '#000000' : '#94A3B8',
+                border: activeFilter === f.id ? '1px solid #7FE87F' : '1px solid #1E293B',
                 borderRadius: '12px',
                 padding: '7px 14px',
                 fontSize: '12px',
@@ -202,8 +175,8 @@ export const MerchantCollectionsScreen: React.FC = () => {
               onClick={() => handleOpenRefundModal(c)}
               className="interactive-tap"
               style={{
-                backgroundColor: '#151524',
-                border: '1px solid #2C2C44',
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
                 borderRadius: '16px',
                 padding: '14px 16px',
                 display: 'flex',
@@ -217,7 +190,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
                   {c.orderRef} • {c.customerMasked}
                 </div>
-                <div style={{ fontSize: '11px', color: '#A2A2BA', marginTop: '2px' }}>
+                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
                   {c.paymentMethod.replace('_', ' ').toUpperCase()} &bull; {isAr ? 'المرجع:' : 'Ref:'} {c.id} &bull; {translateText(c.date, language)}
                 </div>
               </div>
@@ -226,7 +199,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 <div className="tabular-nums" style={{ fontSize: '15px', fontWeight: 900, color: c.status === 'refunded' ? '#FF6B6B' : '#7FE87F' }}>
                   {c.status === 'refunded' ? (isAr ? 'مستردة' : 'REFUNDED') : `+${formatCurrency(c.amount, language)}`}
                 </div>
-                <div style={{ fontSize: '10px', color: '#6E6E85', marginTop: '2px' }}>
+                <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
                   {isAr ? `الضريبة: ${formatSaudiCurrency(c.vatAmount, language)}` : `VAT: SAR ${c.vatAmount.toFixed(2)}`}
                 </div>
               </div>
@@ -256,8 +229,8 @@ export const MerchantCollectionsScreen: React.FC = () => {
             style={{
               width: '100%',
               maxWidth: '380px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               borderRadius: '22px',
               padding: '24px 20px',
               boxSizing: 'border-box',
@@ -274,15 +247,15 @@ export const MerchantCollectionsScreen: React.FC = () => {
               <button
                 onClick={() => setSelectedTxn(null)}
                 style={{
-                  background: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  background: '#1A2234',
+                  border: '1px solid #1E293B',
                   borderRadius: '50%',
                   width: '30px',
                   height: '30px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#A2A2BA',
+                  color: '#94A3B8',
                   cursor: 'pointer',
                 }}
               >
@@ -296,7 +269,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 <div style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF' }}>
                   {isAr ? 'تم تأكيد الاسترداد بنجاح' : 'Refund Authorized'}
                 </div>
-                <div style={{ fontSize: '12px', color: '#A2A2BA', marginTop: '4px' }}>
+                <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '4px' }}>
                   {isAr
                     ? `تم إرجاع ${formatSaudiCurrency(selectedTxn.amount, language)} إلى حساب العميل البنكي فورياً.`
                     : `SAR ${selectedTxn.amount.toFixed(2)} returned to customer bank account.`}
@@ -304,22 +277,22 @@ export const MerchantCollectionsScreen: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleConfirmRefund} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ backgroundColor: '#1E1E32', borderRadius: '12px', padding: '12px', fontSize: '12.5px' }}>
+                <div style={{ backgroundColor: '#1A2234', borderRadius: '12px', padding: '12px', fontSize: '12.5px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ color: '#A2A2BA' }}>{isAr ? 'العملية:' : 'Transaction:'}</span>
+                    <span style={{ color: '#94A3B8' }}>{isAr ? 'العملية:' : 'Transaction:'}</span>
                     <span style={{ fontWeight: 700 }}>{selectedTxn.orderRef}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#A2A2BA' }}>{isAr ? 'مبلغ الاسترداد:' : 'Refund Amount:'}</span>
+                    <span style={{ color: '#94A3B8' }}>{isAr ? 'مبلغ الاسترداد:' : 'Refund Amount:'}</span>
                     <span style={{ fontWeight: 900, color: '#FF6B6B' }}>{formatSaudiCurrency(selectedTxn.amount, language)}</span>
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
                     {isAr ? 'أدخل الرمز السري للتاجر (٤ أرقام)' : 'Enter 4-Digit Merchant PIN'}
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '12px', padding: '12px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '12px', padding: '12px 14px' }}>
                     <Lock size={16} color="#7FE87F" style={{ marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                     <input
                       type="password"
@@ -363,7 +336,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
 
       {/* SAMA Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px' }}>
-        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
+        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
           {isAr ? 'سجل تسوية للمنشآت خاضع لإشراف البنك المركزي السعودي' : 'SAMA Regulated Corporate Settlement Ledger'}
         </span>
         <SamaLogo height={14} themeMode="green" />

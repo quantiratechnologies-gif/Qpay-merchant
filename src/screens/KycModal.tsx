@@ -51,8 +51,8 @@ export const KycModal: React.FC = () => {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(5, 8, 15, 0.85)',
+        backdropFilter: 'blur(10px)',
         zIndex: 110,
         display: 'flex',
         alignItems: 'center',
@@ -66,8 +66,8 @@ export const KycModal: React.FC = () => {
         style={{
           width: '100%',
           maxWidth: '420px',
-          backgroundColor: '#151524',
-          border: '1px solid #2C2C44',
+          backgroundColor: '#111726',
+          border: '1px solid #1E293B',
           borderRadius: '24px',
           padding: '26px 22px',
           boxSizing: 'border-box',
@@ -107,8 +107,8 @@ export const KycModal: React.FC = () => {
             onClick={() => !isVerifying && setIsKycModalOpen(false)}
             aria-label={t('btn.close', 'Close')}
             style={{
-              background: '#1E1E32',
-              border: '1px solid #2C2C44',
+              background: '#1A2234',
+              border: '1px solid #1E293B',
               borderRadius: '50%',
               width: '32px',
               height: '32px',
@@ -116,7 +116,7 @@ export const KycModal: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#A2A2BA',
+              color: '#94A3B8',
             }}
           >
             <X size={16} />
@@ -130,7 +130,7 @@ export const KycModal: React.FC = () => {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(127, 232, 127, 0.15)',
+                backgroundColor: 'rgba(127, 232, 127, 0.12)',
                 border: '1.5px solid #7FE87F',
                 display: 'flex',
                 alignItems: 'center',
@@ -143,7 +143,7 @@ export const KycModal: React.FC = () => {
             <h4 style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0' }}>
               {language === 'العربية' ? 'تم التحقق من الهوية عبر منصة أبشر' : 'Identity Verified via Absher'}
             </h4>
-            <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
               {language === 'العربية'
                 ? 'تم استيفاء متطلبات البنك المركزي وهيئة الزكاة. جاري الانتقال للملف التجاري...'
                 : 'SAMA regulatory requirements fulfilled. Directing to Merchant Business Profile...'}
@@ -157,7 +157,7 @@ export const KycModal: React.FC = () => {
                 style={{
                   fontSize: '11px',
                   fontWeight: 800,
-                  color: '#A2A2BA',
+                  color: '#94A3B8',
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
                   marginBottom: '8px',
@@ -170,8 +170,8 @@ export const KycModal: React.FC = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   borderRadius: '14px',
                   padding: '13px 16px',
                 }}
@@ -206,7 +206,7 @@ export const KycModal: React.FC = () => {
                 style={{
                   fontSize: '11px',
                   fontWeight: 800,
-                  color: '#A2A2BA',
+                  color: '#94A3B8',
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
                   marginBottom: '8px',
@@ -219,8 +219,8 @@ export const KycModal: React.FC = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#1E1E32',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#1A2234',
+                  border: '1px solid #1E293B',
                   borderRadius: '14px',
                   padding: '13px 16px',
                 }}
@@ -269,7 +269,7 @@ export const KycModal: React.FC = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ZatcaLogo variant="icon" size={18} />
-                <span style={{ fontSize: '11px', color: '#A2A2BA', fontWeight: 600 }}>
+                <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
                   {language === 'العربية' ? 'معتمد من ساما وهيئة الزكاة والضريبة (ZATCA)' : 'SAMA & ZATCA Verified'}
                 </span>
               </div>

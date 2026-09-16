@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, Delete, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { SamaLogo } from '../components/SamaLogo';
+import { AppHeader } from '../components/AppHeader';
 import { toArabicNumerals } from '../utils/i18n';
 
 export const MerchantPinSetupScreen: React.FC = () => {
@@ -70,18 +71,25 @@ export const MerchantPinSetupScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '40px 24px 30px 24px',
+        paddingBottom: '30px',
         boxSizing: 'border-box',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
+      <AppHeader
+        title={isAr ? 'تعيين رمز الأمان للمدير' : 'Set Manager PIN'}
+        showBack={true}
+        showSettings={false}
+      />
+
       {/* Top Header */}
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', padding: '20px 24px 0 24px' }}>
         <div
           style={{
             width: '60px',

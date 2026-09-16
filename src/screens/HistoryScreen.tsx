@@ -48,7 +48,7 @@ export const HistoryScreen: React.FC = () => {
   };
 
   return (
-    <div className="fade-in" style={{ backgroundColor: '#0B0B14', minHeight: '100%', paddingBottom: '96px' }}>
+    <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100%', paddingBottom: '96px' }}>
       <AppHeader
         title={t('history.title', 'Transactions')}
         showSearch
@@ -63,7 +63,7 @@ export const HistoryScreen: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              backgroundColor: '#151524',
+              backgroundColor: '#111726',
               border: '1px solid #7FE87F',
               borderRadius: '12px',
               padding: '10px 14px',
@@ -95,7 +95,7 @@ export const HistoryScreen: React.FC = () => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#6E6E85',
+                  color: '#64748B',
                   cursor: 'pointer',
                   padding: 0,
                   display: 'flex',
@@ -127,9 +127,9 @@ export const HistoryScreen: React.FC = () => {
               onClick={() => setFilter(f)}
               className="interactive-tap"
               style={{
-                backgroundColor: isActive ? '#7FE87F' : '#151524',
-                border: isActive ? '1px solid #7FE87F' : '1px solid #2C2C44',
-                color: isActive ? '#0B0B14' : '#A2A2BA',
+                backgroundColor: isActive ? '#7FE87F' : '#111726',
+                border: isActive ? '1px solid #7FE87F' : '1px solid #1E293B',
+                color: isActive ? '#080C14' : '#94A3B8',
                 borderRadius: '20px',
                 padding: '7px 16px',
                 fontSize: '12px',
@@ -153,11 +153,11 @@ export const HistoryScreen: React.FC = () => {
           <div
             style={{
               textAlign: 'center',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               borderRadius: '16px',
               padding: '40px 20px',
-              color: '#A2A2BA',
+              color: '#94A3B8',
               boxShadow: 'none',
             }}
           >
@@ -166,9 +166,9 @@ export const HistoryScreen: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '14px',
-                backgroundColor: '#1E1E32',
+                backgroundColor: '#1A2234',
                 color: '#7FE87F',
-                border: '1px solid #2C2C44',
+                border: '1px solid #1E293B',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -180,7 +180,7 @@ export const HistoryScreen: React.FC = () => {
             <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF' }}>
               {language === 'العربية' ? 'لا توجد عمليات' : 'No transactions'}
             </div>
-            <div style={{ fontSize: '13px', marginTop: '4px', color: '#6E6E85' }}>
+            <div style={{ fontSize: '13px', marginTop: '4px', color: '#64748B' }}>
               {language === 'العربية' ? 'جرّب تعديل البحث أو الفلاتر' : 'Try adjusting your search or filters'}
             </div>
           </div>
@@ -191,7 +191,7 @@ export const HistoryScreen: React.FC = () => {
                 style={{
                   fontSize: '11px',
                   fontWeight: 800,
-                  color: '#6E6E85',
+                  color: '#64748B',
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   marginBottom: '8px',
@@ -202,8 +202,8 @@ export const HistoryScreen: React.FC = () => {
               </div>
               <div
                 style={{
-                  backgroundColor: '#151524',
-                  border: '1px solid #2C2C44',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
                   borderRadius: '16px',
                   overflow: 'hidden',
                   padding: '8px 8px 0 8px',

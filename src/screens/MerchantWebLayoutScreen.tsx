@@ -78,7 +78,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
       className="fade-in"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#000000',
+        backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -93,13 +93,13 @@ export const MerchantWebLayoutScreen: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '16px 24px',
-          backgroundColor: '#151524',
-          borderBottom: '1px solid #2C2C44',
+          backgroundColor: '#111726',
+          borderBottom: '1px solid #1E293B',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
-          <div style={{ height: '20px', width: '1px', backgroundColor: '#2C2C44' }} />
+          <div style={{ height: '20px', width: '1px', backgroundColor: '#1E293B' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
               {translateText(merchantInfo.businessName, language)}
@@ -115,8 +115,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             onClick={() => navigateTo('MERCHANT_HOME')}
             className="interactive-tap"
             style={{
-              backgroundColor: '#1E1E32',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#1A2234',
+              border: '1px solid #1E293B',
               color: '#FFFFFF',
               borderRadius: '10px',
               padding: '7px 14px',
@@ -139,9 +139,9 @@ export const MerchantWebLayoutScreen: React.FC = () => {
         <aside
           style={{
             width: '240px',
-            backgroundColor: '#0B0B14',
-            borderRight: isRtl ? 'none' : '1px solid #2C2C44',
-            borderLeft: isRtl ? '1px solid #2C2C44' : 'none',
+            backgroundColor: '#0D131F',
+            borderRight: isRtl ? 'none' : '1px solid #1E293B',
+            borderLeft: isRtl ? '1px solid #1E293B' : 'none',
             padding: '20px 14px',
             display: 'flex',
             flexDirection: 'column',
@@ -170,7 +170,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     borderRadius: '12px',
                     backgroundColor: isSelected ? 'rgba(127, 232, 127, 0.12)' : 'transparent',
                     border: isSelected ? '1px solid rgba(127, 232, 127, 0.3)' : '1px solid transparent',
-                    color: isSelected ? '#7FE87F' : '#A2A2BA',
+                    color: isSelected ? '#7FE87F' : '#94A3B8',
                     fontSize: '13px',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -185,8 +185,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             })}
           </div>
 
-          <div style={{ padding: '14px', backgroundColor: '#151524', borderRadius: '14px', border: '1px solid #2C2C44' }}>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+          <div style={{ padding: '14px', backgroundColor: '#111726', borderRadius: '14px', border: '1px solid #1E293B' }}>
+            <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
               {isAr ? 'شبكة التسوية' : 'Settlement Rail'}
             </div>
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
@@ -208,7 +208,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <h2 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0', color: '#FFFFFF' }}>
                     {isAr ? 'نظرة عامة على الإيرادات والتحصيلات' : 'Revenue & Collections Overview'}
                   </h2>
-                  <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
                     {isAr ? 'تحليلات موحدة فورية عبر جميع أجهزة نقاط البيع' : 'Real-time consolidated analytics across all store POS terminals'}
                   </p>
                 </div>
@@ -217,8 +217,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   onClick={handleExportZatcaCsv}
                   className="interactive-tap"
                   style={{
-                    backgroundColor: '#1E1E32',
-                    border: '1px solid #2C2C44',
+                    backgroundColor: '#1A2234',
+                    border: '1px solid #1E293B',
                     color: '#7FE87F',
                     borderRadius: '10px',
                     padding: '8px 16px',
@@ -242,8 +242,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
 
               {/* KPI Cards */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-                <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '18px', padding: '18px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '18px', padding: '18px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                     {isAr ? 'إجمالي مبيعات المتجر' : 'Total Store Sales'}
                   </div>
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
@@ -254,20 +254,20 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   </div>
                 </div>
 
-                <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '18px', padding: '18px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '18px', padding: '18px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                     {isAr ? 'ضريبة القيمة المضافة المحصلة (١٥٪)' : 'ZATCA 15% VAT Collected'}
                   </div>
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#7FE87F', marginTop: '6px' }}>
                     {formatSaudiCurrency(totalVat, language)}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#A2A2BA', marginTop: '6px' }}>
+                  <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '6px' }}>
                     {isAr ? 'مخصص ضريبي تلقائي' : 'Auto Tax Provisioned'}
                   </div>
                 </div>
 
-                <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '18px', padding: '18px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '18px', padding: '18px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                     {isAr ? 'عمليات مدى اللاتلامسية' : 'mada SoftPOS Transactions'}
                   </div>
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
@@ -278,8 +278,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   </div>
                 </div>
 
-                <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '18px', padding: '18px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '18px', padding: '18px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                     {isAr ? 'نقاط البيع النشطة' : 'Active Terminals'}
                   </div>
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
@@ -292,13 +292,13 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </div>
 
               {/* Collections Bar Chart Visualization */}
-              <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '20px', padding: '22px' }}>
+              <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '20px', padding: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                   <div>
                     <h3 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 2px 0', color: '#FFFFFF' }}>
                       {isAr ? 'مؤشر التحصيلات الأسبوعية (ر.س)' : 'Weekly Collections Trend (SAR)'}
                     </h3>
-                    <span style={{ fontSize: '12px', color: '#A2A2BA' }}>
+                    <span style={{ fontSize: '12px', color: '#94A3B8' }}>
                       {isAr ? 'تسويات العمليات عبر شبكة مدى وسريع' : 'Sarie and mada Contactless Settlements'}
                     </span>
                   </div>
@@ -319,7 +319,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     { day: isAr ? 'السببت' : 'Sat', sar: 22100, height: '95%' },
                   ].map((d) => (
                     <div key={d.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', width: '48px' }}>
-                      <div style={{ fontSize: '11px', color: '#A2A2BA', fontWeight: 700 }}>
+                      <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 700 }}>
                         {isAr ? `${formatLocalizedNumber((d.sar / 1000).toFixed(1), language)} ألف` : (d.sar >= 1000 ? `${(d.sar / 1000).toFixed(1)}k` : d.sar)}
                       </div>
                       <div
@@ -347,7 +347,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <h2 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0', color: '#FFFFFF' }}>
                     {isAr ? 'الكاشيرات وأجهزة نقاط البيع' : 'Cashiers & POS Terminals'}
                   </h2>
-                  <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
                     {isAr ? 'إدارة صلاحيات الكاشير والأجهزة الفرعية والرموز السرية' : 'Manage cashier permissions, sub-terminals, and SoftPOS PIN overrides'}
                   </p>
                 </div>
@@ -358,10 +358,10 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </div>
 
               {/* Cashiers Table */}
-              <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '20px', overflow: 'hidden' }}>
+              <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '20px', overflow: 'hidden' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: isRtl ? 'right' : 'left', fontSize: '13px' }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid #2C2C44', color: '#A2A2BA', backgroundColor: '#10101C' }}>
+                    <tr style={{ borderBottom: '1px solid #1E293B', color: '#94A3B8', backgroundColor: '#0D131F' }}>
                       <th style={{ padding: '14px 18px', fontWeight: 800 }}>{isAr ? 'اسم الكاشير' : 'Cashier Name'}</th>
                       <th style={{ padding: '14px 18px', fontWeight: 800 }}>{isAr ? 'الدور / الصلاحية' : 'Role'}</th>
                       <th style={{ padding: '14px 18px', fontWeight: 800 }}>{isAr ? 'الجهاز المعين' : 'Assigned Terminal'}</th>
@@ -371,12 +371,12 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   </thead>
                   <tbody>
                     {cashiers.map((c) => (
-                      <tr key={c.id} style={{ borderBottom: '1px solid #2C2C44' }}>
+                      <tr key={c.id} style={{ borderBottom: '1px solid #1E293B' }}>
                         <td style={{ padding: '14px 18px', fontWeight: 800, color: '#FFFFFF' }}>{translateText(c.name, language)}</td>
                         <td style={{ padding: '14px 18px', color: '#7FE87F', fontWeight: 700 }}>
                           {isAr ? (c.role === 'Cashier' ? 'كاشير' : c.role === 'Supervisor' ? 'مشرف' : 'مدير') : c.role}
                         </td>
-                        <td style={{ padding: '14px 18px', color: '#A2A2BA' }}>{translateText(c.terminal, language)}</td>
+                        <td style={{ padding: '14px 18px', color: '#94A3B8' }}>{translateText(c.terminal, language)}</td>
                         <td style={{ padding: '14px 18px' }}>
                           <span
                             style={{
@@ -395,8 +395,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                           <button
                             onClick={() => toggleCashierStatus(c.id)}
                             style={{
-                              backgroundColor: '#1E1E32',
-                              border: '1px solid #2C2C44',
+                              backgroundColor: '#1A2234',
+                              border: '1px solid #1E293B',
                               color: '#FFFFFF',
                               borderRadius: '8px',
                               padding: '5px 10px',
@@ -439,7 +439,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     <h2 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0', color: '#FFFFFF' }}>
                       {isAr ? 'سجل الفوترة الإلكترونية المرحلة الثانية (زاتكا)' : 'ZATCA Phase 2 E-Invoicing Ledger'}
                     </h2>
-                    <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+                    <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
                       {isAr ? 'التوافق الإلزامي المشفر مع منصة فاتورة وهيئة الزكاة والضريبة والجمارك' : 'Mandatory cryptographic compliance with ZATCA (Fatoora platform)'}
                     </p>
                   </div>
@@ -467,10 +467,10 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </div>
 
               {/* Tax Information Card */}
-              <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '20px', padding: '22px' }}>
+              <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '20px', padding: '22px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
                   <div>
-                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                       {t('zatca.vat_id', 'Tax Identification (VAT ID)')}
                     </div>
                     <div style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px', fontFamily: 'monospace' }}>
@@ -478,7 +478,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                       {t('zatca.cr_number', 'Commercial Registration (CR)')}
                     </div>
                     <div style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
@@ -486,7 +486,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                       {isAr ? 'حالة منصة فاتورة' : 'ZATCA Platform Status'}
                     </div>
                     <div style={{ fontSize: '14px', fontWeight: 800, color: '#7FE87F', marginTop: '4px' }}>
@@ -506,17 +506,17 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   <h2 style={{ fontSize: '22px', fontWeight: 800, margin: '0 0 4px 0', color: '#FFFFFF' }}>
                     {isAr ? 'تسويات الحسابات البنكية عبر سريع' : 'Sarie Bank Settlements'}
                   </h2>
-                  <p style={{ fontSize: '13px', color: '#A2A2BA', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
                     {isAr ? 'إيداع يومي تلقائي ومباشر في الحساب البنكي التجاري المسجل' : 'Automated daily payouts directly to registered Saudi Corporate IBAN'}
                   </p>
                 </div>
                 <SamaLogo height={22} themeMode="green" />
               </div>
 
-              <div style={{ backgroundColor: '#151524', border: '1px solid #2C2C44', borderRadius: '20px', padding: '24px' }}>
+              <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '20px', padding: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
                   <div>
-                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
                       {isAr ? 'بنك التسوية الرئيسي' : 'Primary Settlement Bank'}
                     </div>
                     <div style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
@@ -531,8 +531,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   </span>
                 </div>
 
-                <div style={{ borderTop: '1px solid #2C2C44', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '13px', color: '#A2A2BA' }}>
+                <div style={{ borderTop: '1px solid #1E293B', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '13px', color: '#94A3B8' }}>
                     {isAr
                       ? `دفعة التسوية القادمة: الليلة الساعة ١٢:٠٠ منتصف الليل (المبلغ التقديري: ${formatSaudiCurrency(totalRevenue, language)})`
                       : `Next Batch Payout: Tonight at 12:00 AM (Estimated SAR ${totalRevenue.toLocaleString()})`}
@@ -580,8 +580,8 @@ export const MerchantWebLayoutScreen: React.FC = () => {
             style={{
               width: '100%',
               maxWidth: '420px',
-              backgroundColor: '#151524',
-              border: '1px solid #2C2C44',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
               borderRadius: '22px',
               padding: '24px 22px',
               boxSizing: 'border-box',
@@ -595,7 +595,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </h3>
               <button
                 onClick={() => setIsAddCashierOpen(false)}
-                style={{ background: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#A2A2BA', cursor: 'pointer' }}
+                style={{ background: '#1A2234', border: '1px solid #1E293B', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8', cursor: 'pointer' }}
               >
                 <X size={15} />
               </button>
@@ -603,7 +603,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
 
             <form onSubmit={handleAddCashierSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
                   {isAr ? 'الاسم الكامل' : 'Full Name'}
                 </label>
                 <input
@@ -612,18 +612,18 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   onChange={(e) => setNewCashierName(e.target.value)}
                   placeholder={isAr ? 'مثال: فيصل العتيبي' : 'e.g. Faisal Al-Otaibi'}
                   required
-                  style={{ backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '14px', width: '100%', boxSizing: 'border-box', outline: 'none' }}
+                  style={{ backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '14px', width: '100%', boxSizing: 'border-box', outline: 'none' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
                   {isAr ? 'صلاحية الحساب' : 'Role Permission'}
                 </label>
                 <select
                   value={newCashierRole}
                   onChange={(e) => setNewCashierRole(e.target.value as any)}
-                  style={{ backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '14px', width: '100%', boxSizing: 'border-box', outline: 'none' }}
+                  style={{ backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '14px', width: '100%', boxSizing: 'border-box', outline: 'none' }}
                 >
                   <option value="Cashier">{isAr ? 'كاشير (عمليات بيع فقط)' : 'Cashier (POS Sales Only)'}</option>
                   <option value="Supervisor">{isAr ? 'مشرف (بيع واسترداد)' : 'Supervisor (Sales + Refunds)'}</option>
@@ -632,7 +632,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '11px', fontWeight: 800, color: '#A2A2BA', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
                   {isAr ? 'رمز تسجيل الدخول للجهاز (٤ أرقام)' : '4-Digit Terminal Login PIN'}
                 </label>
                 <input
@@ -642,7 +642,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                   onChange={(e) => setNewCashierPin(e.target.value.replace(/\D/g, ''))}
                   placeholder="••••"
                   required
-                  style={{ backgroundColor: '#1E1E32', border: '1px solid #2C2C44', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '16px', width: '100%', boxSizing: 'border-box', outline: 'none', letterSpacing: '0.2em', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}
+                  style={{ backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '12px', padding: '12px', color: '#FFFFFF', fontSize: '16px', width: '100%', boxSizing: 'border-box', outline: 'none', letterSpacing: '0.2em', direction: 'ltr', textAlign: isRtl ? 'right' : 'left' }}
                 />
               </div>
 
