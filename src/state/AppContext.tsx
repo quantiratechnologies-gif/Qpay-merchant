@@ -395,7 +395,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else if (screen === 'SOFTPOS_TERMINAL' || screen === 'BANK_ACCOUNTS') setActiveTabState('account');
     else if (screen === 'PAYMENT_LINK_GENERATOR') setActiveTabState('pay');
     else if (screen === 'MERCHANT_QR_GENERATOR') setActiveTabState('scan');
-    else if (screen === 'MERCHANT_COLLECTIONS' || screen === 'HISTORY') setActiveTabState('history');
+    else if (screen === 'MERCHANT_INSIGHTS' || screen === 'MERCHANT_COLLECTIONS' || screen === 'HISTORY') setActiveTabState('history');
     else if (screen === 'MERCHANT_BANK_LINK' || screen === 'PROFILE') setActiveTabState('profile');
   };
 
@@ -412,7 +412,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       else if (prev.screen === 'SOFTPOS_TERMINAL' || prev.screen === 'BANK_ACCOUNTS') setActiveTabState('account');
       else if (prev.screen === 'PAYMENT_LINK_GENERATOR') setActiveTabState('pay');
       else if (prev.screen === 'MERCHANT_QR_GENERATOR') setActiveTabState('scan');
-      else if (prev.screen === 'MERCHANT_COLLECTIONS' || prev.screen === 'HISTORY') setActiveTabState('history');
+      else if (prev.screen === 'MERCHANT_INSIGHTS' || prev.screen === 'MERCHANT_COLLECTIONS' || prev.screen === 'HISTORY') setActiveTabState('history');
       else if (prev.screen === 'MERCHANT_BANK_LINK' || prev.screen === 'PROFILE') setActiveTabState('profile');
     } else {
       navigateTo('MERCHANT_HOME');
@@ -435,7 +435,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         navigateTo('MERCHANT_QR_GENERATOR');
         break;
       case 'history':
-        navigateTo('MERCHANT_COLLECTIONS');
+        navigateTo('MERCHANT_INSIGHTS');
         break;
       case 'profile':
         navigateTo('PROFILE');

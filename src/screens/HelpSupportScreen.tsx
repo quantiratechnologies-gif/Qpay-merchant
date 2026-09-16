@@ -17,7 +17,7 @@ export const HelpSupportScreen: React.FC = () => {
 
   const faqs = [
     { q: 'How long does a Sarie refund take?', a: 'Instant Sarie refunds are usually credited within seconds to 1-2 hours. In rare bank network delays, it can take up to 24 hours.' },
-    { q: 'What is the daily Sarie transfer limit?', a: 'As per SAMA guidelines, the standard daily Sarie instant transaction limit is SAR 50,000 across digital banking apps.' },
+    { q: 'What is the daily Sarie transfer limit?', a: 'The standard daily Sarie instant transaction limit is SAR 50,000 across digital banking apps.' },
     { q: 'How do I add a new Saudi bank account?', a: 'Go to Profile > Bank Accounts > tap Add Bank, select your Saudi bank, and verify your mobile number via SMS.' },
   ];
 

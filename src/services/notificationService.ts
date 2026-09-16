@@ -20,7 +20,7 @@ const INITIAL_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-3',
     title: 'Bank linked',
-    description: 'Al Rajhi Bank was linked successfully via SAMA.',
+    description: 'Al Rajhi Bank was linked successfully.',
     timestamp: '1 day ago',
     read: true,
     type: 'info',

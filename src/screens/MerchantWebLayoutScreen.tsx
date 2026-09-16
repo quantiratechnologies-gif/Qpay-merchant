@@ -13,7 +13,6 @@ import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
-import { SamaLogo } from '../components/SamaLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
 
@@ -268,7 +267,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
 
                 <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '18px', padding: '18px' }}>
                   <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
-                    {isAr ? 'عمليات مدى اللاتلامسية' : 'mada SoftPOS Transactions'}
+                    {isAr ? 'عمليات الدفع اللاتلامسية' : 'SoftPOS Tap Transactions'}
                   </div>
                   <div className="tabular-nums" style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', marginTop: '6px' }}>
                     {formatLocalizedNumber(softPosCount, language)}
@@ -286,7 +285,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     {formatLocalizedNumber(cashiers.filter(c => c.active).length, language)} / {formatLocalizedNumber(cashiers.length, language)}
                   </div>
                   <div style={{ fontSize: '11.5px', color: '#7FE87F', marginTop: '6px' }}>
-                    {isAr ? '١٠٠٪ جاهزية شبكة البنك المركزي' : '100% SAMA Uptime'}
+                    {isAr ? '١٠٠٪ جاهزية شبكة المدفوعات' : '100% Engine Uptime'}
                   </div>
                 </div>
               </div>
@@ -299,7 +298,7 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                       {isAr ? 'مؤشر التحصيلات الأسبوعية (ر.س)' : 'Weekly Collections Trend (SAR)'}
                     </h3>
                     <span style={{ fontSize: '12px', color: '#94A3B8' }}>
-                      {isAr ? 'تسويات العمليات عبر شبكة مدى وسريع' : 'Sarie and mada Contactless Settlements'}
+                      {isAr ? 'تسويات العمليات الفورية عبر سريع وتقنيات كوانتيرا' : 'Instant Sarie & Card Settlements • Quantira Technologies'}
                     </span>
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>
@@ -510,7 +509,9 @@ export const MerchantWebLayoutScreen: React.FC = () => {
                     {isAr ? 'إيداع يومي تلقائي ومباشر في الحساب البنكي التجاري المسجل' : 'Automated daily payouts directly to registered Saudi Corporate IBAN'}
                   </p>
                 </div>
-                <SamaLogo height={22} themeMode="green" />
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F', backgroundColor: 'rgba(127, 232, 127, 0.12)', padding: '4px 10px', borderRadius: '8px' }}>
+                  Quantira Payouts
+                </span>
               </div>
 
               <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '20px', padding: '24px' }}>

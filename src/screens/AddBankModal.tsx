@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Landmark, Check } from 'lucide-react';
 import { BottomSheet } from '../components/BottomSheet';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { useApp } from '../state/AppContext';
 
 export const AddBankModal: React.FC = () => {
@@ -120,13 +119,12 @@ export const AddBankModal: React.FC = () => {
           : (language === 'العربية' ? `ربط ${displaySelectedBank}` : `Link ${selectedBank}`)}
       </PrimaryButton>
 
-      {/* SAMA Verification Footer */}
+      {/* Quantira Technologies Verification Footer */}
       <div style={{ marginTop: '14px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-        <SamaLogo height={12} themeMode="green" />
         <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 600 }}>
           {language === 'العربية'
-            ? 'ربط مباشر مع البنك • موثق من البنك المركزي وسريع'
-            : 'Direct Bank Binding • SAMA & Sarie Authenticated'}
+            ? 'ربط بنكي مباشر ومشفر • مدعوم بتقنيات كوانتيرا وسريع'
+            : 'Direct Bank Binding • Sarie Authenticated • Quantira Technologies'}
         </span>
       </div>
     </BottomSheet>

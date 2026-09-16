@@ -14,11 +14,11 @@ import {
   Building2,
   Receipt,
   RotateCcw,
+  Smartphone,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import type { MerchantCollection } from '../types';
-import { SamaLogo } from '../components/SamaLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { AppHeader } from '../components/AppHeader';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
@@ -30,6 +30,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
     triggerSettleNow,
     merchantInfo,
     processMerchantRefund,
+    navigateTo,
     language,
     isRtl,
     t,
@@ -37,7 +38,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
 
   const isAr = language === 'العربية';
   const [activeMainTab, setActiveMainTab] = useState<'transactions' | 'settlements'>('transactions');
-  const [activeFilter, setActiveFilter] = useState<'all' | 'mada' | 'applepay' | 'zatca' | 'cash' | 'link'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'card' | 'applepay' | 'zatca' | 'cash' | 'link'>('all');
   const [selectedTxn, setSelectedTxn] = useState<MerchantCollection | null>(null);
   const [refundPin, setRefundPin] = useState('');
   const [isRefunding, setIsRefunding] = useState(false);
@@ -68,7 +69,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
       ];
 
   const filtered = allCollections.filter((c) => {
-    if (activeFilter === 'mada') return c.paymentMethod === 'softpos_mada' || c.paymentMethod.includes('mada');
+    if (activeFilter === 'card') return c.paymentMethod === 'softpos_mada' || c.paymentMethod.includes('card') || c.paymentMethod.includes('mada');
     if (activeFilter === 'applepay') return c.paymentMethod === 'softpos_applepay' || c.paymentMethod.includes('apple');
     if (activeFilter === 'zatca') return c.paymentMethod === 'zatca_qr';
     if (activeFilter === 'cash') return c.paymentMethod === 'cash';
@@ -137,7 +138,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
   };
 
   const renderPaymentIcon = (method: string) => {
-    if (method.includes('mada')) {
+    if (method.includes('mada') || method.includes('card') || method.startsWith('softpos')) {
       return (
         <div
           style={{
@@ -155,8 +156,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
             flexShrink: 0,
           }}
         >
-          <span style={{ fontSize: '8px', fontWeight: 900, letterSpacing: '0.04em' }}>MADA</span>
-          <CreditCard size={15} strokeWidth={2.4} />
+          <CreditCard size={18} strokeWidth={2.4} />
         </div>
       );
     }
@@ -175,10 +175,9 @@ export const MerchantCollectionsScreen: React.FC = () => {
             justifyContent: 'center',
             color: '#FFFFFF',
             flexShrink: 0,
-            fontSize: '18px',
           }}
         >
-          <span></span>
+          <Smartphone size={18} />
         </div>
       );
     }
@@ -190,16 +189,16 @@ export const MerchantCollectionsScreen: React.FC = () => {
             width: '42px',
             height: '42px',
             borderRadius: '12px',
-            backgroundColor: 'rgba(139, 92, 246, 0.12)',
-            border: '1px solid rgba(139, 92, 246, 0.35)',
+            backgroundColor: 'rgba(0, 200, 83, 0.12)',
+            border: '1px solid rgba(0, 200, 83, 0.3)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#A78BFA',
+            color: '#00C853',
             flexShrink: 0,
           }}
         >
-          <QrCode size={20} />
+          <QrCode size={18} />
         </div>
       );
     }
@@ -216,11 +215,11 @@ export const MerchantCollectionsScreen: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#94A3B8',
+            color: '#00C853',
             flexShrink: 0,
           }}
         >
-          <Banknote size={20} />
+          <Banknote size={18} />
         </div>
       );
     }
@@ -231,12 +230,12 @@ export const MerchantCollectionsScreen: React.FC = () => {
           width: '42px',
           height: '42px',
           borderRadius: '12px',
-          backgroundColor: 'rgba(59, 130, 246, 0.12)',
-          border: '1px solid rgba(59, 130, 246, 0.3)',
+          backgroundColor: '#161F30',
+          border: '1px solid #2A364F',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#60A5FA',
+          color: '#94A3B8',
           flexShrink: 0,
         }}
       >
@@ -246,8 +245,8 @@ export const MerchantCollectionsScreen: React.FC = () => {
   };
 
   const getTransactionTitle = (c: MerchantCollection) => {
-    if (c.paymentMethod.includes('mada')) {
-      return isAr ? 'مدى لا تلامسي' : 'mada contactless';
+    if (c.paymentMethod.includes('mada') || c.paymentMethod.includes('card') || c.paymentMethod.startsWith('softpos')) {
+      return isAr ? 'بطاقة بنكية لا تلامسية' : 'Debit Card Contactless';
     }
     if (c.paymentMethod.includes('apple')) {
       return `Apple Pay • ${c.orderRef || 'ORD-9842'}`;
@@ -298,6 +297,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
         <AppHeader
           title={t('settlements.title', 'Collections & Settlements')}
           showBack={true}
+          onBack={() => navigateTo('MERCHANT_INSIGHTS')}
           showSettings={false}
           rightAction={
             <div
@@ -428,7 +428,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
             >
               {[
                 { id: 'all', label: isAr ? `الكل (${allCollections.length})` : `All (${allCollections.length})` },
-                { id: 'mada', label: 'mada', dot: true },
+                { id: 'card', label: isAr ? 'بطاقات الدفع' : 'Cards', dot: true },
                 { id: 'applepay', label: 'Apple Pay' },
                 { id: 'zatca', label: 'ZATCA QR' },
                 { id: 'cash', label: isAr ? 'بيع نقدي' : 'Cash Sale' },
@@ -901,12 +901,11 @@ export const MerchantCollectionsScreen: React.FC = () => {
         </div>
       )}
 
-      {/* SAMA Dock */}
+      {/* Quantira Technologies Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '16px' }}>
         <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-          {isAr ? 'سجل تسوية للمنشآت خاضع لإشراف البنك المركزي السعودي' : 'SAMA Regulated Corporate Settlement Ledger'}
+          {isAr ? 'سجل تسوية للمنشآت مدعوم بتقنيات كوانتيرا' : 'Corporate Settlement Ledger • Quantira Technologies'}
         </span>
-        <SamaLogo height={14} themeMode="green" />
       </div>
     </div>
   );

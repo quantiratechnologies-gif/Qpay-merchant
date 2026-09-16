@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Landmark, Check, ArrowRight, Clock } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { AppHeader } from '../components/AppHeader';
 
 const SAUDI_SETTLEMENT_BANKS = [
@@ -201,9 +200,8 @@ export const MerchantSettlementBankScreen: React.FC = () => {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
           <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
-            {isAr ? 'تسوية معتمدة ومرخصة من البنك المركزي السعودي' : 'SAMA Sarie Regulated Direct Settlement'}
+            {isAr ? 'تسوية مباشرة وفورية مدعومة بتقنيات كوانتيرا' : 'Instant Sarie Direct Settlement • Quantira Technologies'}
           </span>
-          <SamaLogo height={14} themeMode="green" />
         </div>
       </div>
     </div>

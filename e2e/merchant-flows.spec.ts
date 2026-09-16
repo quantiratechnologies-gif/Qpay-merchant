@@ -60,7 +60,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
   test('5. SoftPOS Keypad and Card Tap Simulation', async ({ page }) => {
     await page.goto('/?screen=SOFTPOS_TERMINAL');
     await expect(page.locator('text=SoftPOS Terminal').first()).toBeVisible();
-    await expect(page.locator('text=mada').first()).toBeVisible();
+    await expect(page.locator('text=Debit').first()).toBeVisible();
     await expect(page.locator('button:has-text("Charge")').first()).toBeVisible();
 
     await page.click('button:has-text("Charge")');
@@ -71,7 +71,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await page.goto('/?screen=SOUNDBOX_NOTIFIER');
     await expect(page.locator('text=QTPay Smart SoundBox')).toBeVisible();
     await expect(page.locator('text=Voice Announcement Language')).toBeVisible();
-    await expect(page.locator('text=Quick Audio Triggers')).toBeVisible();
+    await expect(page.locator('text=Trigger Audio Test Announcement')).toBeVisible();
   });
 
   test('7. My Store Profile Hub & Business Management', async ({ page }) => {
@@ -79,7 +79,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=My Store').first()).toBeVisible();
     await expect(page.locator('text=SETTLEMENT ACCOUNT')).toBeVisible();
     await expect(page.locator('text=Al Rajhi Bank')).toBeVisible();
-    await expect(page.locator('text=SAMA Verified')).toBeVisible();
+    await expect(page.locator('text=Bank Verified')).toBeVisible();
     await expect(page.locator('text=Business Profile')).toBeVisible();
     await expect(page.locator('text=KYC Verification')).toBeVisible();
     await expect(page.locator('text=Manage QR')).toBeVisible();
@@ -121,5 +121,21 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=City')).toBeVisible();
     await expect(page.locator('text=Postal Code')).toBeVisible();
     await expect(page.locator('button:has-text("Save & Continue")')).toBeVisible();
+  });
+
+  test('11. Merchant Insights & Analytics Hub', async ({ page }) => {
+    await page.goto('/?screen=MERCHANT_INSIGHTS');
+    await expect(page.locator('text=Insights & Analytics')).toBeVisible();
+    await expect(page.locator('text=TOTAL SALES')).toBeVisible();
+    await expect(page.locator('text=AVG TICKET')).toBeVisible();
+    await expect(page.locator('text=SETTLEMENT')).toBeVisible();
+    await expect(page.locator('text=Payment Rail Distribution')).toBeVisible();
+    await expect(page.locator('text=Hourly Transaction Velocity')).toBeVisible();
+    await expect(page.locator("text=Today's Collections")).toBeVisible();
+    await expect(page.locator('button:has-text("View Full")')).toBeVisible();
+
+    // Click "View Full" to navigate to Collections sub-page
+    await page.click('button:has-text("View Full")');
+    await expect(page.locator('text=Collections & Settlements')).toBeVisible();
   });
 });

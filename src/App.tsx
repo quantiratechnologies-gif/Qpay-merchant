@@ -21,6 +21,7 @@ import { MerchantQrGeneratorScreen } from './screens/MerchantQrGeneratorScreen';
 import { PaymentLinkGeneratorScreen } from './screens/PaymentLinkGeneratorScreen';
 import { SoundBoxNotifierScreen } from './screens/SoundBoxNotifierScreen';
 import { MerchantCollectionsScreen } from './screens/MerchantCollectionsScreen';
+import { MerchantInsightsScreen } from './screens/MerchantInsightsScreen';
 import { MerchantWebLayoutScreen } from './screens/MerchantWebLayoutScreen';
 
 // Merchant Settings Screens
@@ -80,6 +81,8 @@ const AppContent: React.FC = () => {
         return <SoundBoxNotifierScreen />;
       case 'MERCHANT_COLLECTIONS':
         return <MerchantCollectionsScreen />;
+      case 'MERCHANT_INSIGHTS':
+        return <MerchantInsightsScreen />;
       case 'MERCHANT_WEB':
         return <MerchantWebLayoutScreen />;
 

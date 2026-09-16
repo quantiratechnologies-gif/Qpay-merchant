@@ -26,7 +26,7 @@ const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-3',
     title: 'Panda Supermarket',
-    subTitle: 'mada POS Payment',
+    subTitle: 'Debit Card POS Payment',
     amount: 184.25,
     type: 'sent',
     date: 'TODAY',
@@ -48,7 +48,7 @@ const INITIAL_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-5',
     title: 'Half Million Coffee',
-    subTitle: 'mada Contactless',
+    subTitle: 'Card Contactless',
     amount: 28.0,
     type: 'sent',
     date: 'YESTERDAY',

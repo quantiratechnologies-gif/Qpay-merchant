@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, Delete, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { SamaLogo } from '../components/SamaLogo';
 import { AppHeader } from '../components/AppHeader';
 import { toArabicNumerals } from '../utils/i18n';
 
@@ -225,12 +224,11 @@ export const MerchantPinSetupScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* SAMA Dock */}
+      {/* Quantira Technologies Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '20px' }}>
         <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 700 }}>
-          {isAr ? 'محمي بواسطة تشفير البنك المركزي السعودي' : 'SAMA 256-Bit Hardware Encrypted PIN'}
+          {isAr ? 'محمي بتشفير عتادي ٢٥٦-بت • تقنيات كوانتيرا' : '256-Bit Hardware Encrypted • Quantira Technologies'}
         </span>
-        <SamaLogo height={14} themeMode="green" />
       </div>
     </div>
   );

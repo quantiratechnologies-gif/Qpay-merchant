@@ -11,8 +11,8 @@ interface PaymentRail {
 
 const PAYMENT_RAILS: PaymentRail[] = [
   {
-    id: 'mada',
-    name: 'mada',
+    id: 'debit',
+    name: 'Debit',
     renderIcon: () => (
       <span
         style={{

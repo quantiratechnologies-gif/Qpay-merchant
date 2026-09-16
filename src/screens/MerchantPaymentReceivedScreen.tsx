@@ -10,7 +10,6 @@ import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
 import { AppHeader } from '../components/AppHeader';
 
@@ -43,8 +42,8 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
 
   const handleShareReceipt = () => {
     const text = isAr
-      ? `*إيصال فاتورة زاتكا الإلكترونية*\nالمتجر: ${merchantInfo.businessName}\nالسجل التجاري: ${merchantInfo.crNumber}\nالرقم الضريبي: ${merchantInfo.vatNumber}\nالمرجع: ${collection.id}\nالمبلغ: ${collection.amount.toFixed(2)} ر.س (شامل الضريبة: ${collection.vatAmount.toFixed(2)} ر.س)\nتمت التسوية عبر البنك المركزي السعودي شبكة سريع.`
-      : `*ZATCA E-INVOICE RECEIPT*\nStore: ${merchantInfo.businessName}\nCR: ${merchantInfo.crNumber}\nVAT ID: ${merchantInfo.vatNumber}\nRef: ${collection.id}\nAmount: SAR ${collection.amount.toFixed(2)} (Incl. 15% VAT: SAR ${collection.vatAmount.toFixed(2)})\nSettled via SAMA Sarie Network.`;
+      ? `*إيصال فاتورة زاتكا الإلكترونية*\nالمتجر: ${merchantInfo.businessName}\nالسجل التجاري: ${merchantInfo.crNumber}\nالرقم الضريبي: ${merchantInfo.vatNumber}\nالمرجع: ${collection.id}\nالمبلغ: ${collection.amount.toFixed(2)} ر.س (شامل الضريبة: ${collection.vatAmount.toFixed(2)} ر.س)\nتمت التسوية المباشرة عبر شبكة سريع المدعومة بتقنيات كوانتيرا.`
+      : `*ZATCA E-INVOICE RECEIPT*\nStore: ${merchantInfo.businessName}\nCR: ${merchantInfo.crNumber}\nVAT ID: ${merchantInfo.vatNumber}\nRef: ${collection.id}\nAmount: SAR ${collection.amount.toFixed(2)} (Incl. 15% VAT: SAR ${collection.vatAmount.toFixed(2)})\nSettled via Sarie Network • Powered by Quantira Technologies.`;
     navigator.clipboard?.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -234,21 +233,21 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
         </button>
       </div>
 
-      {/* SAMA & ZATCA Compliance Dock */}
+      {/* Compliance Dock */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '12px',
+          gap: '8px',
           width: '100%',
           textAlign: 'center',
           marginTop: '10px',
         }}
       >
-        <SamaLogo height={14} themeMode="green" />
-        <span style={{ fontSize: '10px', color: '#6E6E85' }}>•</span>
         <ZatcaLogo variant="full" height={13} themeMode="dark" />
+        <span style={{ fontSize: '10px', color: '#6E6E85' }}>•</span>
+        <span style={{ fontSize: '10.5px', color: '#6E6E85', fontWeight: 600 }}>Quantira Technologies Engine</span>
       </div>
     </div>
   );

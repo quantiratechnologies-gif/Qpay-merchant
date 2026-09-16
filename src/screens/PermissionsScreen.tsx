@@ -320,7 +320,7 @@ export const PermissionsScreen: React.FC = () => {
             <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 20px 0', lineHeight: '1.4' }}>
               {discoveryStep === 1 && (language === 'العربية' ? 'تأمين اتصال NFC المشفر لنقاط البيع' : 'Securing NFC SoftPOS encrypted connection')}
               {discoveryStep === 2 && (language === 'العربية' ? 'الربط بمنظومة الفوترة الإلكترونية المرحلة الثانية' : 'Enrolled in ZATCA Phase 2 E-Invoicing')}
-              {discoveryStep === 3 && (language === 'العربية' ? 'تم تفعيل شبكة مدى وسريع. جاري إكمال بيانات المتجر...' : 'mada & Sarie POS enabled. Proceeding to store setup...')}
+              {discoveryStep === 3 && (language === 'العربية' ? 'تم تفعيل منظومة المدفوعات وسريع. جاري إكمال بيانات المتجر...' : 'POS Engine & Sarie enabled. Proceeding to store setup...')}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: isRtl ? 'right' : 'left' }}>
@@ -372,7 +372,7 @@ export const PermissionsScreen: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {discoveryStep >= 3 ? <CheckCircle2 size={16} color="#7FE87F" /> : <Sparkles size={16} color="#94A3B8" />}
                   <span style={{ fontSize: '12.5px', fontWeight: 700, color: discoveryStep >= 3 ? '#7FE87F' : '#94A3B8' }}>
-                    {language === 'العربية' ? 'جاهزية شبكة مدى وسريع' : 'mada & Sarie POS Engine Ready'}
+                    {language === 'العربية' ? 'جاهزية منظومة نقاط البيع وسريع' : 'POS Engine & Sarie Ready'}
                   </span>
                 </div>
               </div>

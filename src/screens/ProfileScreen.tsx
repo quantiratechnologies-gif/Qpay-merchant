@@ -9,12 +9,11 @@ import {
   Languages,
   LogOut,
   ChevronRight,
+  Building2,
   LayoutGrid,
   Check,
-  Building2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { SamaLogo } from '../components/SamaLogo';
 
 export const ProfileScreen: React.FC = () => {
   const {
@@ -207,7 +206,7 @@ export const ProfileScreen: React.FC = () => {
               </div>
             </div>
 
-            {/* SAMA Verified Tag */}
+            {/* Bank Verified Tag */}
             <div
               style={{
                 display: 'flex',
@@ -221,7 +220,7 @@ export const ProfileScreen: React.FC = () => {
             >
               <Check size={12} color="#00C853" strokeWidth={3} />
               <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#00C853' }}>
-                {isAr ? 'موثق ساما' : 'SAMA Verified'}
+                {isAr ? 'حساب موثق' : 'Bank Verified'}
               </span>
             </div>
           </div>
@@ -599,12 +598,11 @@ export const ProfileScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* SAMA Compliance Dock */}
+        {/* Quantira Technologies Dock */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
           <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-            {isAr ? 'منصة مدفوعات تجارية مرخصة من البنك المركزي السعودي' : 'SAMA Regulated Merchant Platform'}
+            {isAr ? 'منصة مدفوعات تجارية مدعومة بتقنيات كوانتيرا' : 'Merchant Platform • Powered by Quantira Technologies'}
           </span>
-          <SamaLogo height={13} themeMode="green" />
         </div>
       </div>
     </div>

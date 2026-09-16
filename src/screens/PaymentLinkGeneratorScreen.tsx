@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link2, Copy, Check, MessageSquare, Sparkles } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { AppHeader } from '../components/AppHeader';
 import { formatSaudiCurrency } from '../utils/i18n';
 
@@ -39,8 +38,8 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
       isAr
-        ? `مرحباً ${customerName}، إليك رابط الدفع لطلبك ${orderRef} (${merchantInfo.businessName}):\nالمبلغ: ${numAmount.toFixed(2)} ر.س\nادفع بأمان عبر مدى / أبل باي / سريع:\n${generatedLink}`
-        : `Hello ${customerName}, here is your payment link for ${orderRef} (${merchantInfo.businessName}):\nAmount: SAR ${numAmount.toFixed(2)}\nPay securely via mada / Apple Pay / Sarie:\n${generatedLink}`
+        ? `مرحباً ${customerName}، إليك رابط الدفع لطلبك ${orderRef} (${merchantInfo.businessName}):\nالمبلغ: ${numAmount.toFixed(2)} ر.س\nادفع بأمان عبر أبل باي / البطاقات البنكية / سريع:\n${generatedLink}`
+        : `Hello ${customerName}, here is your payment link for ${orderRef} (${merchantInfo.businessName}):\nAmount: SAR ${numAmount.toFixed(2)}\nPay securely via Apple Pay / Debit Card / Sarie:\n${generatedLink}`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
@@ -291,12 +290,11 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
         </PrimaryButton>
       </div>
 
-      {/* SAMA Dock */}
+      {/* Quantira Technologies Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '10px' }}>
         <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-          {isAr ? 'روابط دفع فورية محمية بواسطة البنك المركزي' : 'SAMA 3DS Secure Hosted Checkout Rail'}
+          {isAr ? 'روابط دفع آمنة مدعومة بتقنيات كوانتيرا' : '3DS Secure Hosted Checkout Rail • Quantira Technologies'}
         </span>
-        <SamaLogo height={14} themeMode="green" />
       </div>
     </div>
   );

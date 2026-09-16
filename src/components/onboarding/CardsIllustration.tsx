@@ -101,10 +101,10 @@ export const CardsIllustration: React.FC = () => {
           <text x="52" y="180" fill="rgba(255,255,255,0.7)" fontSize="9" fontWeight="800" letterSpacing="1">
             AL RAJHI BANK
           </text>
-          {/* mada badge */}
+          {/* Debit badge */}
           <rect x="198" y="165" width="46" height="24" rx="6" fill="#FFFFFF" />
-          <text x="207" y="181" fill="#053026" fontSize="10" fontWeight="900">
-            mada
+          <text x="210" y="181" fill="#053026" fontSize="10" fontWeight="900">
+            PAY
           </text>
         </g>
 

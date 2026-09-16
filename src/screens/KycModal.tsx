@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, ShieldCheck, CheckCircle2, FileText, UserCheck, ArrowRight, Loader2 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { SamaLogo } from '../components/SamaLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
 
@@ -95,7 +94,7 @@ export const KycModal: React.FC = () => {
             </div>
             <div>
               <h3 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: '#FFFFFF' }}>
-                {t('sec.absher_kyc', 'SAMA & ZATCA e-KYC')}
+                {t('sec.absher_kyc', 'Absher & ZATCA e-KYC')}
               </h3>
               <span style={{ fontSize: '11px', color: '#7FE87F', fontWeight: 700 }}>
                 {language === 'العربية' ? 'التحقق التجاري عبر أبشر' : 'Absher Business Validation'}
@@ -145,8 +144,8 @@ export const KycModal: React.FC = () => {
             </h4>
             <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
               {language === 'العربية'
-                ? 'تم استيفاء متطلبات البنك المركزي وهيئة الزكاة. جاري الانتقال للملف التجاري...'
-                : 'SAMA regulatory requirements fulfilled. Directing to Merchant Business Profile...'}
+                ? 'تم استيفاء متطلبات التحقق وهيئة الزكاة. جاري الانتقال للملف التجاري...'
+                : 'Regulatory verification requirements fulfilled. Directing to Merchant Business Profile...'}
             </p>
           </div>
         ) : (
@@ -159,48 +158,44 @@ export const KycModal: React.FC = () => {
                   fontWeight: 800,
                   color: '#94A3B8',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  marginBottom: '8px',
                   display: 'block',
+                  marginBottom: '6px',
                 }}
               >
-                {t('sec.national_id', 'National ID / Iqama Number (10 Digits)')}
+                {language === 'العربية' ? 'رقم الهوية الوطنية / الإقامة للمالك' : 'Owner National ID / Iqama'}
               </label>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#1A2234',
-                  border: '1px solid #1E293B',
-                  borderRadius: '14px',
-                  padding: '13px 16px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  borderRadius: '12px',
+                  padding: '10px 14px',
+                  gap: '10px',
                 }}
               >
-                <UserCheck size={18} color="#7FE87F" style={{ marginInlineEnd: '12px', flexShrink: 0 }} />
+                <UserCheck size={18} color="#7FE87F" />
                 <input
-                  type="text"
+                  type="tel"
                   maxLength={10}
                   value={nationalId}
-                  onChange={(e) => setNationalId(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  placeholder="1098472910"
-                  required
+                  onChange={(e) => setNationalId(e.target.value)}
+                  placeholder="10XXXXXXXX"
                   style={{
-                    background: 'none',
+                    backgroundColor: 'transparent',
                     border: 'none',
                     outline: 'none',
-                    fontSize: '15px',
-                    fontWeight: 700,
                     color: '#FFFFFF',
+                    fontSize: '14px',
+                    fontWeight: 700,
                     width: '100%',
-                    fontVariantNumeric: 'tabular-nums',
-                    direction: 'ltr',
-                    textAlign: isRtl ? 'right' : 'left',
                   }}
                 />
               </div>
             </div>
 
-            {/* Commercial Registration (CR) Number */}
+            {/* Commercial Registration (CR) */}
             <div>
               <label
                 style={{
@@ -208,41 +203,37 @@ export const KycModal: React.FC = () => {
                   fontWeight: 800,
                   color: '#94A3B8',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  marginBottom: '8px',
                   display: 'block',
+                  marginBottom: '6px',
                 }}
               >
-                {t('zatca.cr_number', 'Commercial Registration (CR) Number')}
+                {language === 'العربية' ? 'رقم السجل التجاري (CR)' : 'Commercial Registration (CR) Number'}
               </label>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#1A2234',
-                  border: '1px solid #1E293B',
-                  borderRadius: '14px',
-                  padding: '13px 16px',
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  borderRadius: '12px',
+                  padding: '10px 14px',
+                  gap: '10px',
                 }}
               >
-                <FileText size={18} color="#7FE87F" style={{ marginInlineEnd: '12px', flexShrink: 0 }} />
+                <FileText size={18} color="#7FE87F" />
                 <input
                   type="text"
                   value={crNumber}
                   onChange={(e) => setCrNumber(e.target.value)}
-                  placeholder="CR-1010849201"
-                  required
+                  placeholder="CR-1010XXXXXX"
                   style={{
-                    background: 'none',
+                    backgroundColor: 'transparent',
                     border: 'none',
                     outline: 'none',
-                    fontSize: '15px',
-                    fontWeight: 700,
                     color: '#FFFFFF',
+                    fontSize: '14px',
+                    fontWeight: 700,
                     width: '100%',
-                    textTransform: 'uppercase',
-                    direction: 'ltr',
-                    textAlign: isRtl ? 'right' : 'left',
                   }}
                 />
               </div>
@@ -270,10 +261,9 @@ export const KycModal: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ZatcaLogo variant="icon" size={18} />
                 <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
-                  {language === 'العربية' ? 'معتمد من ساما وهيئة الزكاة والضريبة (ZATCA)' : 'SAMA & ZATCA Verified'}
+                  {language === 'العربية' ? 'معتمد من هيئة الزكاة والضريبة والجمارك (ZATCA)' : 'ZATCA Tax Compliant'}
                 </span>
               </div>
-              <SamaLogo height={16} themeMode="green" />
             </div>
 
             {/* Submit Button */}

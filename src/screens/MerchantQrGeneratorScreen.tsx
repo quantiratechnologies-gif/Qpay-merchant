@@ -13,7 +13,6 @@ import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { SamaLogo } from '../components/SamaLogo';
 import { ZatcaLogo } from '../components/ZatcaLogo';
 import { QRCodeView } from '../components/QRCodeView';
 import { AppHeader } from '../components/AppHeader';
@@ -237,7 +236,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
                   {isAr ? 'منظومة قبول المدفوعات والفوترة' : 'National Merchant Acceptance'}
                 </span>
                 <span style={{ fontSize: '9px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
-                  ZATCA Phase 2 &bull; mada &bull; Sarie
+                  ZATCA Phase 2 &bull; Sarie &bull; Quantira
                 </span>
               </div>
             </div>
@@ -425,12 +424,11 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* SAMA & Rails Dock */}
+      {/* Quantira Technologies Dock */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '14px' }}>
         <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-          {isAr ? 'فوترة إلكترونية متوافقة مع زاتكا ونظام سريع' : 'SAMA Sarie & ZATCA Compatible E-Invoicing'}
+          {isAr ? 'فوترة إلكترونية متوافقة مع زاتكا ونظام سريع • تقنيات كوانتيرا' : 'ZATCA & Sarie Compatible • Quantira Technologies'}
         </span>
-        <SamaLogo height={14} themeMode="green" />
       </div>
     </div>
   );

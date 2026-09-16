@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Volume2, Radio, Play } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { SamaLogo } from '../components/SamaLogo';
 import { AppHeader } from '../components/AppHeader';
 import { formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
 
@@ -17,7 +16,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
 
   const isAr = language === 'العربية';
   const [lastPlayedLog, setLastPlayedLog] = useState<string>(
-    isAr ? 'جاهز لاستقبال إشعارات سريع ومدى الفورية' : 'Ready for incoming Sarie/mada payments'
+    isAr ? 'جاهز لاستقبال إشعارات سريع والمدفوعات الفورية' : 'Ready for incoming Sarie & instant payments'
   );
 
   const handlePlayTest = (amount: number) => {
@@ -99,161 +98,168 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             }}
           />
 
-          {/* Concentric Speaker Grille */}
+          {/* Speaker Grille Pattern */}
           <div
             style={{
-              width: '90px',
-              height: '90px',
+              width: '100px',
+              height: '100px',
               borderRadius: '50%',
-              backgroundColor: '#080C14',
-              border: '2px solid #1E293B',
+              backgroundColor: '#0F172A',
+              border: '2px solid #2A364F',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#7FE87F',
+              position: 'relative',
             }}
           >
-            <Volume2 size={40} />
+            <Volume2 size={44} color="#7FE87F" />
           </div>
 
-          <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', marginTop: '12px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            QTPay SoundBox 5G
-          </div>
+          <span style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', marginTop: '10px' }}>
+            SoundBox Pro v2.4
+          </span>
         </div>
 
-        {/* Live Audio Status */}
-        <div style={{ fontSize: '12px', color: '#7FE87F', fontWeight: 700, marginTop: '14px', textAlign: 'center', maxWidth: '300px' }}>
-          ✓ {lastPlayedLog}
+        {/* Live Status Toast */}
+        <div
+          style={{
+            marginTop: '14px',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '12px',
+            padding: '8px 16px',
+            fontSize: '11.5px',
+            color: '#7FE87F',
+            fontWeight: 700,
+            maxWidth: '320px',
+            textAlign: 'center',
+          }}
+        >
+          {lastPlayedLog}
         </div>
       </div>
 
-      {/* SoundBox Controls */}
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        {/* Language Switcher */}
+      {/* Control Panel Card */}
+      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <div
           style={{
             backgroundColor: '#111726',
             border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '14px 16px',
+            borderRadius: '20px',
+            padding: '16px',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
+            gap: '14px',
           }}
         >
-          <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-            {isAr ? 'لغة الإشعار الصوتي' : 'Voice Announcement Language'}
-          </span>
-
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <button
-              onClick={() => setSoundBoxLanguage('ar')}
+          {/* Volume Control */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
+                {isAr ? 'مستوى الصوت' : 'Announcement Volume'}
+              </span>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>
+                {formatLocalizedNumber(soundBoxVolume, language)}%
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={soundBoxVolume}
+              onChange={(e) => setSoundBoxVolume(Number(e.target.value))}
               style={{
-                backgroundColor: soundBoxLanguage === 'ar' ? '#7FE87F' : '#1A2234',
-                color: soundBoxLanguage === 'ar' ? '#000000' : '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '5px 12px',
-                fontSize: '12px',
-                fontWeight: 800,
+                width: '100%',
+                accentColor: '#7FE87F',
                 cursor: 'pointer',
               }}
-            >
-              العربية 🇸🇦
-            </button>
-            <button
-              onClick={() => setSoundBoxLanguage('en')}
-              style={{
-                backgroundColor: soundBoxLanguage === 'en' ? '#7FE87F' : '#1A2234',
-                color: soundBoxLanguage === 'en' ? '#000000' : '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '5px 12px',
-                fontSize: '12px',
-                fontWeight: 800,
-                cursor: 'pointer',
-              }}
-            >
-              English 🇬🇧
-            </button>
-          </div>
-        </div>
-
-        {/* Volume Level Slider */}
-        <div
-          style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '14px 16px',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-              {isAr ? 'مستوى الصوت' : 'SoundBox Volume Level'}
-            </span>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>
-              {isAr ? `${formatLocalizedNumber(Math.round(soundBoxVolume * 100), language)}٪` : `${Math.round(soundBoxVolume * 100)}%`}
-            </span>
+            />
           </div>
 
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={soundBoxVolume}
-            onChange={(e) => setSoundBoxVolume(parseFloat(e.target.value))}
-            style={{
-              width: '100%',
-              accentColor: '#7FE87F',
-              cursor: 'pointer',
-            }}
-          />
-        </div>
-
-        {/* Quick Test Voice Triggers */}
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '8px' }}>
-            {isAr ? 'تجربة سريعة للإشعارات الصوتية' : 'Quick Audio Triggers'}
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-            {[50, 150, 1200].map((amt) => (
+          {/* Voice Language Selector */}
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
+              {isAr ? 'لغة النطق الصوتي' : 'Voice Announcement Language'}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
               <button
-                key={amt}
                 type="button"
-                onClick={() => handlePlayTest(amt)}
+                onClick={() => setSoundBoxLanguage('ar')}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: '#1A2234',
-                  border: '1px solid #1E293B',
+                  backgroundColor: soundBoxLanguage === 'ar' ? '#161F30' : '#080C14',
+                  border: soundBoxLanguage === 'ar' ? '1.5px solid #7FE87F' : '1px solid #1E293B',
                   borderRadius: '12px',
-                  padding: '10px 8px',
+                  padding: '10px',
                   color: '#FFFFFF',
-                  fontSize: '12.5px',
+                  fontSize: '13px',
                   fontWeight: 800,
                   cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px',
                 }}
               >
-                <Play size={13} color="#7FE87F" /> {formatSaudiCurrency(amt, language)}
+                🇸🇦 العربية (Arabic)
               </button>
-            ))}
+              <button
+                type="button"
+                onClick={() => setSoundBoxLanguage('en')}
+                className="interactive-tap"
+                style={{
+                  backgroundColor: soundBoxLanguage === 'en' ? '#161F30' : '#080C14',
+                  border: soundBoxLanguage === 'en' ? '1.5px solid #7FE87F' : '1px solid #1E293B',
+                  borderRadius: '12px',
+                  padding: '10px',
+                  color: '#FFFFFF',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Audio Test Triggers */}
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginBottom: '8px' }}>
+              {isAr ? 'اختبار النطق الصوتي للمبالغ' : 'Trigger Audio Test Announcement'}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              {[25, 150, 480].map((amt) => (
+                <button
+                  key={amt}
+                  type="button"
+                  onClick={() => handlePlayTest(amt)}
+                  className="interactive-tap"
+                  style={{
+                    backgroundColor: '#161F30',
+                    border: '1px solid #2A364F',
+                    borderRadius: '12px',
+                    padding: '10px 8px',
+                    color: '#FFFFFF',
+                    fontSize: '12.5px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <Play size={13} color="#7FE87F" /> {formatSaudiCurrency(amt, language)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* SAMA Dock */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '10px' }}>
-        <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
-          {isAr ? 'عتاد ذكي معتمد ومتصل بشبكة البنك المركزي' : 'SAMA Certified IoT Hardware Integration'}
-        </span>
-        <SamaLogo height={14} themeMode="green" />
+        {/* Quantira Technologies Dock */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
+          <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
+            {isAr ? 'مدعوم بتقنيات كوانتيرا للأجهزة الذكية' : 'Powered by Quantira Technologies IoT Engine'}
+          </span>
+        </div>
       </div>
     </div>
   );
 };
-

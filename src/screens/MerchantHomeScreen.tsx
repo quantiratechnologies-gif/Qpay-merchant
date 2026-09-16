@@ -435,7 +435,7 @@ export const MerchantHomeScreen: React.FC = () => {
 
           {/* Inset Sub-Card: Payments Count & Avg Ticket */}
           <div
-            onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+            onClick={() => navigateTo('MERCHANT_INSIGHTS')}
             className="interactive-tap"
             style={{
               backgroundColor: '#161F30',
@@ -753,7 +753,7 @@ export const MerchantHomeScreen: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    mada &bull; ****4021
+                    Debit Card &bull; ****4021
                   </div>
                   <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
                     {isAr ? 'تموينات • منذ دقيقتين' : 'Grocery • 2 mins ago'}

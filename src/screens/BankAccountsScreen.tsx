@@ -5,13 +5,11 @@ import {
   Trash2,
   Eye,
   EyeOff,
-  Star,
   CheckCircle2,
+  Star,
 } from 'lucide-react';
 import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { PaymentPartnerLogo } from '../components/PaymentPartnerLogo';
-import { SamaLogo } from '../components/SamaLogo';
 import { Modal } from '../components/Modal';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -109,8 +107,7 @@ export const BankAccountsScreen: React.FC = () => {
                 </span>
               </div>
               <div style={{ fontSize: '11.5px', color: '#94A3B8', fontWeight: 600, marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <SamaLogo height={12} themeMode="green" />
-                <span>&bull; {language === 'العربية' ? 'محمي عبر البنية التحتية لسريع' : 'Sarie Instant Rails Secured'}</span>
+                <span>&bull; {language === 'العربية' ? 'محمي عبر البنية التحتية لسريع وتقنيات كوانتيرا' : 'Sarie Instant Rails Secured • Quantira Technologies'}</span>
               </div>
             </div>
           </div>
@@ -484,7 +481,7 @@ export const BankAccountsScreen: React.FC = () => {
           <Plus size={18} /> {t('banks.add_bank', 'Add New Bank Account')}
         </PrimaryButton>
 
-        {/* Security & SAMA Trust Footer */}
+        {/* Security & Quantira Trust Footer */}
         <div
           style={{
             marginTop: '24px',
@@ -500,16 +497,9 @@ export const BankAccountsScreen: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <SamaLogo height={12} themeMode="green" />
             <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
-              &bull; {language === 'العربية' ? 'تشفير أجهزة ٢٥٦ بت • خاضع لإشراف البنك المركزي السعودي (ساما)' : '256-Bit Hardware Encrypted • Sarie Regulated'}
+              &bull; {language === 'العربية' ? 'تشفير أجهزة ٢٥٦ بت • مدعوم بتقنيات كوانتيرا ونظام سريع' : '256-Bit Hardware Encrypted • Sarie Instant Rails • Quantira Technologies'}
             </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>
-              {t('home.payment_partner', 'Official Payment Partner:')}
-            </span>
-            <PaymentPartnerLogo height={16} themeMode="dark" />
           </div>
         </div>
       </div>
