@@ -10,9 +10,11 @@ test.describe('Saudi Merchant App Flow QA', () => {
   test('2. Merchant Dashboard, SettleNow, and Working Capital', async ({ page }) => {
     await page.goto('/?screen=MERCHANT_HOME');
     await expect(page.locator('text=Starmart Supermarket')).toBeVisible();
-    await expect(page.locator('text=SettleNow — Instant Sarie Transfer')).toBeVisible();
-    await expect(page.locator('text=Merchant Growth Financing')).toBeVisible();
-    await expect(page.locator('span:has-text("SAR 50,000")').first()).toBeVisible();
+    await expect(page.locator('text=Speaker Online')).toBeVisible();
+    await expect(page.locator('text=Smart Soundbox Pro')).toBeVisible();
+    await expect(page.locator("text=Today's Collection")).toBeVisible();
+    await expect(page.locator('text=Accept Payment')).toBeVisible();
+    await expect(page.locator('text=Recent Payments')).toBeVisible();
 
     // Trigger SettleNow
     const settleBtn = page.locator('button:has-text("Settle Now")').first();

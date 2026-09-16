@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import {
-  QrCode,
-  Link2,
+  Store,
+  ChevronDown,
+  Bell,
+  User,
   Volume2,
-  ChevronRight,
-  Landmark,
-  Monitor,
-  ReceiptText,
-  ShieldCheck,
-  SmartphoneNfc,
+  Megaphone,
+  Eye,
+  EyeOff,
+  RefreshCw,
   Zap,
-  TrendingUp,
-  Sparkles,
-  ArrowUpRight,
+  ChevronRight,
+  QrCode,
+  SmartphoneNfc,
+  Share2,
+  Banknote,
+  CreditCard,
+  Smartphone,
   CheckCircle2,
+  Check,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { formatCurrency } from '../utils/formatters';
-import { translateText, formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
-import { SamaLogo } from '../components/SamaLogo';
-import { PaymentPartnerLogo } from '../components/PaymentPartnerLogo';
-import { AppHeader } from '../components/AppHeader';
+import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
@@ -31,17 +32,21 @@ export const MerchantHomeScreen: React.FC = () => {
     speakSoundBox,
     language,
     isRtl,
-    t,
   } = useApp();
 
   const [isSettling, setIsSettling] = useState(false);
   const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
+  const [showBalance, setShowBalance] = useState(true);
+  const [cashSaleSuccess, setCashSaleSuccess] = useState<string | null>(null);
 
   const isAr = language === 'العربية';
-  const totalToday = merchantCollections.reduce((acc, c) => acc + (c.status === 'settled' ? c.amount : 0), 0);
-  const totalVat = merchantCollections.reduce((acc, c) => acc + (c.status === 'settled' ? c.vatAmount : 0), 0);
-  const settledCount = merchantCollections.filter((c) => c.status === 'settled').length;
-  const recentCollections = merchantCollections.slice(0, 3);
+  const totalToday = merchantCollections.reduce(
+    (acc, c) => acc + (c.status === 'settled' ? c.amount : 0),
+    0
+  );
+  const displayTotal = totalToday > 0 ? totalToday : 14850.5;
+  const paymentCount = 142;
+  const avgTicket = (displayTotal / paymentCount).toFixed(2);
 
   const handleSettleNowClick = async () => {
     setIsSettling(true);
@@ -49,7 +54,7 @@ export const MerchantHomeScreen: React.FC = () => {
       const settlement = await triggerSettleNow();
       setSettleSuccessMsg(
         isAr
-          ? `تم إرسال تسوية فورية بقيمة ${formatSaudiCurrency(settlement.amount, language)} عبر سريع إلى ${settlement.bankName}`
+          ? `تم تحويل تسوية فورية بقيمة ${formatSaudiCurrency(settlement.amount, language)} عبر سريع إلى ${settlement.bankName}`
           : `Instant payout of SAR ${settlement.amount.toFixed(2)} dispatched via Sarie to ${settlement.bankName}`
       );
       setTimeout(() => {
@@ -62,112 +67,145 @@ export const MerchantHomeScreen: React.FC = () => {
     }
   };
 
-  const getMethodBadge = (method: string) => {
-    switch (method) {
-      case 'softpos_mada':
-        return { label: isAr ? 'مدى Tap' : 'mada Tap', bg: 'rgba(0, 200, 83, 0.12)', color: '#00C853' };
-      case 'softpos_applepay':
-        return { label: isAr ? 'أبل باي' : 'Apple Pay', bg: 'rgba(59, 130, 246, 0.12)', color: '#3B82F6' };
-      case 'softpos_visa':
-      case 'softpos_mastercard':
-        return { label: isAr ? 'بطاقة بنكية' : 'Card Tap', bg: 'rgba(6, 182, 212, 0.12)', color: '#06B6D4' };
-      case 'zatca_qr':
-        return { label: isAr ? 'رمز زاتكا' : 'ZATCA QR', bg: 'rgba(245, 158, 11, 0.12)', color: '#F59E0B' };
-      case 'payment_link':
-        return { label: isAr ? 'رابط دفع' : 'Payment Link', bg: 'rgba(139, 92, 246, 0.12)', color: '#8B5CF6' };
-      default:
-        return { label: isAr ? 'نقاط بيع سريع' : 'Sarie POS', bg: 'rgba(0, 200, 83, 0.12)', color: '#00C853' };
-    }
+  const handleTestSoundBox = () => {
+    speakSoundBox(245.0);
   };
 
-  const paymentMixData = [
-    { name: isAr ? 'مدى Tap' : 'mada Tap', percentage: 38, color: '#00C853', amount: totalToday * 0.38 },
-    { name: isAr ? 'Apple Pay' : 'Apple Pay', percentage: 26, color: '#3B82F6', amount: totalToday * 0.26 },
-    { name: isAr ? 'رمز زاتكا QR' : 'ZATCA QR', percentage: 18, color: '#F59E0B', amount: totalToday * 0.18 },
-    { name: isAr ? 'روابط الدفع' : 'Payment Link', percentage: 12, color: '#8B5CF6', amount: totalToday * 0.12 },
-    { name: isAr ? 'سريع POS' : 'Sarie POS', percentage: 6, color: '#06B6D4', amount: totalToday * 0.06 },
-  ];
+  const handleCashSale = () => {
+    setCashSaleSuccess(
+      isAr ? 'تم تسجيل مبيعات نقدية بقيمة ٥٠٫٠٠ ر.س بنجاح' : 'Cash sale of SAR 50.00 recorded successfully'
+    );
+    setTimeout(() => setCashSaleSuccess(null), 3000);
+  };
 
   return (
     <div
       className="fade-in"
       style={{
-        backgroundColor: '#0B0E14',
+        backgroundColor: '#080C14',
         minHeight: '100vh',
-        paddingBottom: '96px',
-        color: '#F8FAFC',
+        paddingBottom: '100px',
+        color: '#FFFFFF',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* 1. Standardized Responsive AppHeader */}
-      <AppHeader
-        showBack={false}
-        rightAction={
-          <button
-            onClick={() => navigateTo('MERCHANT_WEB')}
-            title={isAr ? 'فتح بوابة الإدارة الإلكترونية' : 'Open Merchant Web Admin'}
-            className="interactive-tap"
+      {/* 1. Top Header (Store Selector, Soundbox Online, Notification & Profile) */}
+      <div
+        style={{
+          padding: '18px 20px 14px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Store Squircle Icon */}
+          <div
             style={{
               width: '40px',
               height: '40px',
               borderRadius: '12px',
-              backgroundColor: '#131B26',
-              border: '1px solid #1E293B',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00C853',
-              cursor: 'pointer',
-              transition: 'background 0.2s',
+              color: '#FFFFFF',
+              flexShrink: 0,
             }}
           >
-            <Monitor size={18} />
-          </button>
-        }
-      />
+            <Store size={20} />
+          </div>
 
-      {/* 2. Store Metadata Banner */}
-      <div
-        style={{
-          backgroundColor: '#0F151F',
-          padding: '12px 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid #1E293B',
-        }}
-      >
-        <div className="store-info">
-          <h1 style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-            {translateText(merchantInfo.businessName || 'Starmart Supermarket', language)}
-          </h1>
-          <p style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px', margin: 0 }} dir="ltr">
-            {isAr ? `السجل التجاري: ${formatLocalizedNumber(merchantInfo.crNumber || '1010849201', language)}` : `CR: ${merchantInfo.crNumber || '1010849201'}`}
-          </p>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+              <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
+              </span>
+              <ChevronDown size={15} color="#94A3B8" />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: '#00C853',
+                  display: 'inline-block',
+                  boxShadow: '0 0 6px #00C853',
+                }}
+              />
+              <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
+                {isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
+              </span>
+            </div>
+          </div>
         </div>
-        <div
-          style={{
-            backgroundColor: 'rgba(0, 200, 83, 0.1)',
-            color: '#00C853',
-            fontSize: '11px',
-            fontWeight: 700,
-            padding: '4px 10px',
-            borderRadius: '20px',
-            border: '1px solid rgba(0, 200, 83, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-          }}
-        >
-          <ShieldCheck size={13} />
-          <span>SoftPOS</span>
+
+        {/* Right Header Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Notification Button */}
+          <button
+            onClick={() => navigateTo('NOTIFICATIONS')}
+            aria-label="Notifications"
+            className="interactive-tap"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              position: 'relative',
+            }}
+          >
+            <Bell size={18} />
+            <span
+              style={{
+                position: 'absolute',
+                top: '9px',
+                right: '9px',
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#00C853',
+                border: '1.5px solid #161F30',
+              }}
+            />
+          </button>
+
+          {/* Profile Button */}
+          <button
+            onClick={() => navigateTo('PROFILE')}
+            aria-label="Profile"
+            className="interactive-tap"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+            }}
+          >
+            <User size={18} />
+          </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div style={{ padding: '16px 20px 0 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-        {/* Instant SettleNow Success Banner / Toast */}
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Toast / Notification Messages */}
         {settleSuccessMsg && (
           <div
             style={{
@@ -178,7 +216,7 @@ export const MerchantHomeScreen: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              color: '#F8FAFC',
+              color: '#FFFFFF',
               fontSize: '12px',
               fontWeight: 700,
             }}
@@ -188,28 +226,46 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
         )}
 
-        {/* SettleNow Instant Sarie Banner */}
+        {cashSaleSuccess && (
+          <div
+            style={{
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid #00C853',
+              borderRadius: '12px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#FFFFFF',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <span>{cashSaleSuccess}</span>
+          </div>
+        )}
+
+        {/* 2. Smart Soundbox Pro Banner */}
         <div
           style={{
-            background: 'linear-gradient(135deg, #07271B 0%, #0D3B2A 50%, #131B26 100%)',
-            border: '1px solid rgba(0, 200, 83, 0.35)',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             borderRadius: '16px',
-            padding: '16px 18px',
+            padding: '12px 16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px',
-            boxShadow: '0 8px 24px rgba(0, 200, 83, 0.08)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div
               style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(0, 200, 83, 0.15)',
-                border: '1px solid rgba(0, 200, 83, 0.3)',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -217,503 +273,392 @@ export const MerchantHomeScreen: React.FC = () => {
                 flexShrink: 0,
               }}
             >
-              <Zap size={20} fill="#00C853" />
+              <Volume2 size={18} />
             </div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                  {t('settlenow.banner_title', 'SettleNow — Instant Sarie Transfer')}
-                </h3>
-                <span style={{ fontSize: '9.5px', fontWeight: 800, backgroundColor: '#00C853', color: '#000000', padding: '1px 5px', borderRadius: '4px' }}>
-                  {isAr ? 'فوري' : 'INSTANT'}
-                </span>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
+                Smart Soundbox Pro <span style={{ color: '#94A3B8', fontWeight: 500 }}>&bull; 98% {isAr ? 'البطارية' : 'Battery'}</span>
               </div>
-              <p style={{ fontSize: '11px', color: '#94A3B8', margin: '3px 0 0 0', lineHeight: 1.3 }}>
-                {t('settlenow.banner_sub', 'Direct 24/7 liquidity straight to your IBAN with 0 fees')}
-              </p>
+              <div style={{ fontSize: '11px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                {isAr ? 'تنبيهات صوتية فورية نشطة' : 'Instant Voice Alerts Active'}
+              </div>
             </div>
           </div>
 
+          {/* Test Sound Button */}
           <button
-            onClick={handleSettleNowClick}
-            disabled={isSettling}
+            onClick={handleTestSoundBox}
             className="interactive-tap"
             style={{
-              backgroundColor: '#00C853',
-              color: '#000000',
-              border: 'none',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              color: '#FFFFFF',
               borderRadius: '10px',
-              padding: '9px 14px',
+              padding: '6px 12px',
               fontSize: '12px',
-              fontWeight: 800,
+              fontWeight: 700,
               cursor: 'pointer',
-              whiteSpace: 'nowrap',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              boxShadow: '0 4px 12px rgba(0, 200, 83, 0.3)',
-              flexShrink: 0,
+              gap: '5px',
             }}
           >
-            {isSettling ? (
-              isAr ? 'جاري التحويل...' : 'Settling...'
-            ) : (
-              <>
-                <span>{t('settlenow.cta', 'Settle Now')}</span>
-                <ArrowUpRight size={14} />
-              </>
-            )}
+            <Megaphone size={14} color="#00C853" />
+            <span>{isAr ? 'اختبار' : 'Test'}</span>
           </button>
         </div>
 
-        {/* 3. Collections Overview Card */}
+        {/* 3. Hero Today's Collection Card */}
         <div
           style={{
-            background: 'linear-gradient(145deg, #131B26 0%, #0F1722 100%)',
+            backgroundColor: '#111726',
             border: '1px solid #1E293B',
-            borderRadius: '16px',
+            borderRadius: '20px',
             padding: '20px',
             position: 'relative',
-            overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
           }}
         >
-          {/* Card Header Row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-              }}
-            >
-              {t('merchant.today_sales', "Today's Collections")}
-            </span>
+          {/* Card Top Row: Title + Live Badge + Balance Toggle */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#94A3B8' }}>
+                {isAr ? 'تحصيلات اليوم' : "Today's Collection"}
+              </span>
               <span
                 style={{
-                  backgroundColor: 'rgba(0, 200, 83, 0.15)',
-                  color: '#00C853',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  padding: '4px 8px',
-                  borderRadius: '6px',
-                }}
-              >
-                {formatLocalizedNumber(settledCount, language)} {isAr ? 'عمليات مسجلة' : 'Sales Recorded'}
-              </span>
-              <button
-                onClick={() => speakSoundBox(totalToday)}
-                title={isAr ? 'إشعار الصندوق الصوتي' : 'SoundBox Voice Notifier'}
-                className="interactive-tap"
-                style={{
-                  background: 'rgba(0, 200, 83, 0.1)',
-                  border: '1px solid rgba(0, 200, 83, 0.25)',
-                  color: '#00C853',
-                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  borderRadius: '12px',
+                  padding: '2px 8px',
                   fontSize: '10.5px',
-                  fontWeight: 700,
-                  padding: '3px 8px',
-                  borderRadius: '6px',
-                }}
-              >
-                <Volume2 size={12} /> {isAr ? 'صوت' : 'Audio'}
-              </button>
-            </div>
-          </div>
-
-          {/* Amount Display */}
-          <div
-            className="tabular-nums"
-            style={{
-              fontSize: '28px',
-              fontWeight: 800,
-              letterSpacing: '-0.02em',
-              color: '#F8FAFC',
-              marginBottom: '6px',
-            }}
-          >
-            {formatCurrency(totalToday, language)}
-          </div>
-
-          {/* Tax Info */}
-          <div
-            style={{
-              fontSize: '12px',
-              color: '#94A3B8',
-              marginBottom: '16px',
-              paddingBottom: '16px',
-              borderBottom: '1px solid #1E293B',
-              fontWeight: 500,
-            }}
-          >
-            {isAr ? (
-              <>شامل ضريبة زاتكا ١٥٪ (<span style={{ color: '#F8FAFC', fontWeight: 700 }}>{formatSaudiCurrency(totalVat, language)}</span>)</>
-            ) : (
-              <>Incl. <span style={{ color: '#F8FAFC', fontWeight: 700 }}>SAR {totalVat.toFixed(2)}</span> ZATCA 15% VAT</>
-            )}
-          </div>
-
-          {/* Settlement Footer */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '12px',
-              color: '#94A3B8',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Landmark size={14} color="#00C853" />
-              <span>{isAr ? `تسوية تلقائية إلى ${translateText(merchantInfo.settlementBank, language)}` : `Auto Settles to ${merchantInfo.settlementBank}`}</span>
-            </div>
-            <strong style={{ color: '#F8FAFC', fontWeight: 700 }}>{isAr ? '١٢:٠٠ ص' : '12:00 AM'}</strong>
-          </div>
-        </div>
-
-        {/* 4. Payment Acceptance Suite (4-Column Action Grid) */}
-        <div
-          style={{
-            backgroundColor: '#131B26',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '16px',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '0.05em',
-              color: '#94A3B8',
-              textTransform: 'uppercase',
-              marginBottom: '12px',
-              display: 'block',
-            }}
-          >
-            {isAr ? 'منظومة قبول المدفوعات' : 'Payment Acceptance Suite'}
-          </span>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-            {/* 1. SoftPOS Tap */}
-            <div
-              onClick={() => navigateTo('SOFTPOS_TERMINAL')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#131B26',
-                border: '1px solid #1E293B',
-                borderRadius: '12px',
-                padding: '12px 6px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  fontWeight: 800,
                   color: '#00C853',
                 }}
               >
-                <SmartphoneNfc size={18} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'مدى Tap' : 'SoftPOS Tap'}
+                <span
+                  style={{
+                    width: '5px',
+                    height: '5px',
+                    borderRadius: '50%',
+                    backgroundColor: '#00C853',
+                    display: 'inline-block',
+                  }}
+                />
+                {isAr ? 'مباشر' : 'Live'}
               </span>
             </div>
 
-            {/* 2. ZATCA QR */}
-            <div
-              onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#131B26',
-                border: '1px solid #1E293B',
-                borderRadius: '12px',
-                padding: '12px 6px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#00C853',
-                }}
-              >
-                <QrCode size={18} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'رمز زاتكا' : 'ZATCA QR'}
-              </span>
-            </div>
-
-            {/* 3. Link Pay */}
-            <div
-              onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#131B26',
-                border: '1px solid #1E293B',
-                borderRadius: '12px',
-                padding: '12px 6px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#00C853',
-                }}
-              >
-                <Link2 size={18} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'رابط دفع' : 'Link Pay'}
-              </span>
-            </div>
-
-            {/* 4. SoundBox */}
-            <div
-              onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#131B26',
-                border: '1px solid #1E293B',
-                borderRadius: '12px',
-                padding: '12px 6px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#00C853',
-                }}
-              >
-                <Volume2 size={18} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
-                {isAr ? 'الصوت الذكي' : 'SoundBox'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 5. Daily Payment Mix Analysis (Conic Donut Chart) */}
-        <div
-          style={{
-            backgroundColor: '#131B26',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '20px',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-                color: '#94A3B8',
-                textTransform: 'uppercase',
-              }}
-            >
-              {isAr ? 'توزيع قنوات الدفع اليومية' : 'Daily Payment Mix'}
-            </span>
-            <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 500 }}>
-              {isAr ? '٥ قنوات نشطة' : '5 Channels Active'}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            {/* Donut Chart */}
-            <div
-              style={{
-                width: '90px',
-                height: '90px',
-                borderRadius: '50%',
-                background: 'conic-gradient(#00C853 0deg 137deg, #3B82F6 137deg 230deg, #F59E0B 230deg 295deg, #8B5CF6 295deg 338deg, #06B6D4 338deg 360deg)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                flexShrink: 0,
-              }}
-            >
-              <div
-                style={{
-                  width: '66px',
-                  height: '66px',
-                  backgroundColor: '#131B26',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <span style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 500 }}>{isAr ? 'الإجمالي' : 'Total'}</span>
-                <strong style={{ fontSize: '11px', color: '#F8FAFC', fontWeight: 700 }}>100%</strong>
-              </div>
-            </div>
-
-            {/* Breakdown List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, marginInlineStart: '16px' }}>
-              {paymentMixData.map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-                  <span style={{ color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color, display: 'inline-block' }} />
-                    {item.name}
-                  </span>
-                  <span style={{ fontWeight: 700, color: '#F8FAFC' }}>
-                    {formatLocalizedNumber(item.percentage, language)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Merchant Growth Financing Card */}
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #131B26 0%, #1A2738 100%)',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
-            padding: '16px 18px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#3B82F6',
-                }}
-              >
-                <TrendingUp size={16} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                  {t('financing.title', 'Merchant Growth Financing')}
-                </h4>
-                <span style={{ fontSize: '10.5px', color: '#3B82F6', fontWeight: 700 }}>
-                  {t('financing.badge', 'Pre-Approved')} &bull; {isAr ? 'معدل ربح ٠٪ للشهر الأول' : '0% Margin Month 1'}
-                </span>
-              </div>
-            </div>
-            <span
-              style={{
-                backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                color: '#60A5FA',
-                fontSize: '11px',
-                fontWeight: 800,
-                padding: '3px 8px',
-                borderRadius: '6px',
-              }}
-            >
-              SAR 50,000
-            </span>
-          </div>
-
-          <p style={{ fontSize: '11.5px', color: '#94A3B8', margin: '0 0 12px 0', lineHeight: 1.4 }}>
-            {t('financing.sub', 'Get instant working capital up to SAR 50,000 based on your card sales')}
-          </p>
-
-          <div style={{ display: 'flex', gap: '10px' }}>
             <button
-              onClick={() => {
-                alert(
-                  isAr
-                    ? 'تم استلام طلب التمويل بقيمة ٥٠,٠٠٠ ر.س بنجاح! سيتم التواصل معكم فوراً.'
-                    : 'Financing request for SAR 50,000 received! An approval specialist will reach out shortly.'
-                );
-              }}
+              onClick={() => setShowBalance(!showBalance)}
+              aria-label="Toggle Balance Visibility"
               className="interactive-tap"
               style={{
-                flex: 1,
-                backgroundColor: '#1E293B',
-                color: '#F8FAFC',
-                border: '1px solid #334155',
-                borderRadius: '10px',
-                padding: '9px 12px',
-                fontSize: '12px',
-                fontWeight: 700,
+                background: 'none',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {showBalance ? <Eye size={18} /> : <EyeOff size={18} />}
+            </button>
+          </div>
+
+          {/* Large Hero Amount */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '10px' }}>
+            <span style={{ fontSize: '18px', fontWeight: 800, color: '#00C853' }}>SAR</span>
+            <span
+              className="tabular-nums"
+              style={{
+                fontSize: '34px',
+                fontWeight: 900,
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {showBalance
+                ? displayTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                : '••••••'}
+            </span>
+          </div>
+
+          {/* Auto-Settle Schedule Row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94A3B8', fontSize: '11.5px', marginBottom: '16px' }}>
+            <RefreshCw size={13} color="#00C853" />
+            <span>
+              {isAr
+                ? `تسوية تلقائية الليلة الساعة ١١:٥٩ م إلى ${merchantInfo.settlementBank || 'مصرف الراجحي'}`
+                : `Auto-settles tonight at 11:59 PM to ${merchantInfo.settlementBank || 'Al Rajhi'}`}
+            </span>
+          </div>
+
+          {/* Inset Sub-Card: Payments Count & Avg Ticket */}
+          <div
+            style={{
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '12px',
+              marginBottom: '16px',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+                {isAr ? 'العمليات' : 'Payments'}
+              </div>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                {isAr ? `${formatLocalizedNumber(paymentCount, language)} عملية` : `${paymentCount} received`}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+                {isAr ? 'متوسط العملية' : 'Avg Ticket'}
+              </div>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                SAR {avgTicket}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Dual Action Buttons: Settle Now + Statement */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+            <button
+              onClick={handleSettleNowClick}
+              disabled={isSettling}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#00C853',
+                color: '#080C14',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                fontSize: '13.5px',
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
+                boxShadow: '0 4px 16px rgba(0, 200, 83, 0.3)',
               }}
             >
-              <Sparkles size={14} color="#60A5FA" />
-              <span>{t('financing.cta', 'Get Working Capital')}</span>
+              <Zap size={16} fill="#080C14" />
+              <span>{isSettling ? (isAr ? 'جاري التحويل...' : 'Settling...') : (isAr ? 'تسوية فورية' : 'Settle Now')}</span>
+            </button>
+
+            <button
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#161F30',
+                border: '1px solid #2A364F',
+                color: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                fontSize: '13.5px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+              }}
+            >
+              <span>{isAr ? 'كشف الحساب' : 'Statement'}</span>
+              <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
             </button>
           </div>
         </div>
 
-        {/* 6. Recent Transactions */}
+        {/* 4. Accept Payment Section (4 Grid Tiles) */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-              {isAr ? 'العمليات الأخيرة' : 'Recent Transactions'}
-            </h3>
+          <h2
+            style={{
+              fontSize: '15px',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              margin: '0 0 12px 0',
+              textAlign: isRtl ? 'right' : 'left',
+            }}
+          >
+            {isAr ? 'قبول المدفوعات' : 'Accept Payment'}
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+            {/* Tile 1: Show QR */}
+            <div
+              onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <QrCode size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'عرض الرمز' : 'Show QR'}
+              </span>
+            </div>
+
+            {/* Tile 2: Tap to Pay */}
+            <div
+              onClick={() => navigateTo('SOFTPOS_TERMINAL')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <SmartphoneNfc size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'الدفع باللمس' : 'Tap to Pay'}
+              </span>
+            </div>
+
+            {/* Tile 3: Send Link */}
+            <div
+              onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Share2 size={19} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'إرسال رابط' : 'Send Link'}
+              </span>
+            </div>
+
+            {/* Tile 4: Cash Sale */}
+            <div
+              onClick={handleCashSale}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Banknote size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'بيع نقدي' : 'Cash Sale'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Recent Payments Section */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                {isAr ? 'المدفوعات الأخيرة' : 'Recent Payments'}
+              </h2>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#00C853' }} />
+            </div>
+
             <button
               onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
               className="interactive-tap"
@@ -721,7 +666,7 @@ export const MerchantHomeScreen: React.FC = () => {
                 background: 'none',
                 border: 'none',
                 color: '#00C853',
-                fontSize: '13px',
+                fontSize: '12.5px',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -730,111 +675,223 @@ export const MerchantHomeScreen: React.FC = () => {
                 padding: 0,
               }}
             >
-              {isAr ? 'سجل العمليات الكامل' : 'Full Ledger'}{' '}
-              <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+              <span>{isAr ? `عرض الكل (${paymentCount})` : `See All (${paymentCount})`}</span>
+              <ChevronRight size={15} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-            {recentCollections.map((col) => {
-              const badge = getMethodBadge(col.paymentMethod);
-              return (
+          {/* Payment List Rows matching mockup */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {/* Row 1: mada */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div
-                  key={col.id}
-                  onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-                  className="interactive-tap"
                   style={{
-                    backgroundColor: '#131B26',
-                    border: '1px solid #1E293B',
-                    borderRadius: '12px',
-                    padding: '14px 16px',
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
                     display: 'flex',
-                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    cursor: 'pointer',
+                    justifyContent: 'center',
+                    color: '#00C853',
+                    flexShrink: 0,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '8px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: badge.color,
-                        flexShrink: 0,
-                      }}
-                    >
-                      <ReceiptText size={18} />
-                    </div>
-                    <div>
-                      <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-                        {col.orderRef} • {col.customerMasked}
-                      </h4>
-                      <p style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px', margin: 0 }}>
-                        {badge.label} • {translateText(col.date, language)}
-                      </p>
-                    </div>
+                  <CreditCard size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    mada &bull; ****4021
                   </div>
-
-                  <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                    <div
-                      className="tabular-nums"
-                      style={{
-                        fontSize: '13px',
-                        fontWeight: 800,
-                        color: col.status === 'refunded' ? '#FF4757' : '#00C853',
-                      }}
-                    >
-                      {col.status === 'refunded' ? '- ' : '+ '}SAR {col.amount.toFixed(2)}
-                    </div>
-                    <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px', fontWeight: 500 }}>
-                      {isAr ? `الضريبة: ${formatSaudiCurrency(col.vatAmount, language)}` : `VAT: SAR ${col.vatAmount.toFixed(2)}`}
-                    </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'تموينات • منذ دقيقتين' : 'Grocery • 2 mins ago'}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 245.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: Apple Pay */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: '#161F30',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#94A3B8',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Smartphone size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    Apple Pay
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'مشروبات • منذ ١٢ دقيقة' : 'Beverages • 12 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 89.50
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'تم الإشعار' : 'Announced'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 3: Counter QR Code */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#00C853',
+                    flexShrink: 0,
+                  }}
+                >
+                  <QrCode size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    {isAr ? 'رمز QR المنضدة' : 'Counter QR Code'}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'نقطة بيع #٠٢ • منذ ٢٤ دقيقة' : 'Register #02 • 24 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 512.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 4: STC Pay Link */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: '#161F30',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#94A3B8',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Share2 size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    STC Pay Link
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'توصيل واتساب • منذ ٤١ دقيقة' : 'WhatsApp Delivery • 41 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 130.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* 7. SAMA & ZATCA Compliance Footer */}
-        <div
-          style={{
-            backgroundColor: '#131B26',
-            border: '1px solid #1E293B',
-            borderRadius: '14px',
-            padding: '14px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: '4px',
-          }}
-        >
-          <div>
-            <div style={{ fontSize: '10px', color: '#00C853', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2px' }}>
-              {isAr ? 'محرك مدفوعات معتمد من البنك المركزي' : 'SAMA Certified Merchant Engine'}
-            </div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#F8FAFC' }}>
-              {isAr ? 'متوافق مع المرحلة الثانية للفوترة الإلكترونية (زاتكا)' : 'ZATCA Phase 2 E-Invoicing Compliant'}
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ backgroundColor: '#0B0E14', border: '1px solid #1E293B', borderRadius: '8px', padding: '4px 6px', display: 'flex', alignItems: 'center' }}>
-              <PaymentPartnerLogo size={18} width={56} height={28} themeMode="dark" />
-            </div>
-            <div style={{ backgroundColor: '#0B0E14', border: '1px solid #1E293B', borderRadius: '8px', padding: '4px 6px', display: 'flex', alignItems: 'center' }}>
-              <SamaLogo height={14} themeMode="green" />
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );
 };
-
