@@ -201,6 +201,19 @@ const INITIAL_MERCHANT_COLLECTIONS: MerchantCollection[] = [
     status: 'settled',
     zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
   },
+  {
+    id: 'CSH-1049201',
+    orderRef: 'REG-01',
+    amount: 80.0,
+    vatAmount: 10.43,
+    netAmount: 69.57,
+    paymentMethod: 'cash',
+    customerMasked: 'Cash Sale • Register 1',
+    date: 'Yesterday, 08:30 PM',
+    timestamp: new Date(Date.now() - 100000000),
+    status: 'settled',
+    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
+  },
 ];
 
 const INITIAL_MERCHANT_SETTLEMENTS: MerchantSettlement[] = [

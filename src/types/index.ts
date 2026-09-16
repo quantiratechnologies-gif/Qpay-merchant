@@ -83,7 +83,8 @@ export type PaymentAcceptanceMethod =
   | 'softpos_mastercard'
   | 'softpos_applepay'
   | 'zatca_qr'
-  | 'payment_link';
+  | 'payment_link'
+  | 'cash';
 
 export interface MerchantCollection {
   id: string;

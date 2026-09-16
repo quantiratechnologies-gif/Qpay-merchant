@@ -26,7 +26,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
   test('3. Dual-Tab Collections and Settlements Ledger', async ({ page }) => {
     await page.goto('/?screen=MERCHANT_COLLECTIONS');
     await expect(page.locator('text=Collections & Settlements')).toBeVisible();
-    await expect(page.locator('button:has-text("Transactions")')).toBeVisible();
+    await expect(page.locator('button:has-text("Collections")')).toBeVisible();
     await expect(page.locator('button:has-text("Settlements")')).toBeVisible();
 
     // Switch to Settlements Tab

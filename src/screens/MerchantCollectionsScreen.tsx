@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import {
-  Receipt,
-  RotateCcw,
+  CreditCard,
+  Landmark,
+  QrCode,
+  Banknote,
+  Share2,
   CheckCircle2,
   X,
   Lock,
-  Landmark,
   Zap,
   ArrowUpRight,
   Download,
   Building2,
+  Receipt,
+  RotateCcw,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -33,7 +37,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
 
   const isAr = language === 'العربية';
   const [activeMainTab, setActiveMainTab] = useState<'transactions' | 'settlements'>('transactions');
-  const [activeFilter, setActiveFilter] = useState<'all' | 'softpos' | 'qr' | 'link'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'mada' | 'applepay' | 'zatca' | 'cash' | 'link'>('all');
   const [selectedTxn, setSelectedTxn] = useState<MerchantCollection | null>(null);
   const [refundPin, setRefundPin] = useState('');
   const [isRefunding, setIsRefunding] = useState(false);
@@ -43,15 +47,36 @@ export const MerchantCollectionsScreen: React.FC = () => {
   const [isSettling, setIsSettling] = useState(false);
   const [downloadSuccessMsg, setDownloadSuccessMsg] = useState<string | null>(null);
 
-  const filtered = merchantCollections.filter((c) => {
-    if (activeFilter === 'softpos') return c.paymentMethod.startsWith('softpos');
-    if (activeFilter === 'qr') return c.paymentMethod === 'zatca_qr';
+  // Extended mock items if state has only base items
+  const allCollections: MerchantCollection[] = merchantCollections.length >= 4
+    ? merchantCollections
+    : [
+        ...merchantCollections,
+        {
+          id: 'CSH-1049',
+          orderRef: 'REG-01',
+          amount: 80.0,
+          vatAmount: 10.43,
+          netAmount: 69.57,
+          paymentMethod: 'cash',
+          customerMasked: isAr ? 'بيع نقدي • كاشير ١' : 'Cash Sale • Register 1',
+          date: 'Yesterday, 08:30 PM',
+          timestamp: new Date(Date.now() - 86400000),
+          status: 'settled',
+          zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
+        },
+      ];
+
+  const filtered = allCollections.filter((c) => {
+    if (activeFilter === 'mada') return c.paymentMethod === 'softpos_mada' || c.paymentMethod.includes('mada');
+    if (activeFilter === 'applepay') return c.paymentMethod === 'softpos_applepay' || c.paymentMethod.includes('apple');
+    if (activeFilter === 'zatca') return c.paymentMethod === 'zatca_qr';
+    if (activeFilter === 'cash') return c.paymentMethod === 'cash';
     if (activeFilter === 'link') return c.paymentMethod === 'payment_link';
     return true;
   });
 
   const totalSales = filtered.reduce((acc, c) => acc + (c.status === 'settled' ? c.amount : 0), 0);
-  const totalVat = filtered.reduce((acc, c) => acc + (c.status === 'settled' ? c.vatAmount : 0), 0);
   const unsettledTotal = merchantCollections
     .filter((c) => c.status === 'settled')
     .reduce((sum, c) => sum + c.amount, 0);
@@ -111,6 +136,147 @@ export const MerchantCollectionsScreen: React.FC = () => {
     }, 3000);
   };
 
+  const renderPaymentIcon = (method: string) => {
+    if (method.includes('mada')) {
+      return (
+        <div
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            backgroundColor: 'rgba(0, 200, 83, 0.12)',
+            border: '1px solid rgba(0, 200, 83, 0.3)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '2px',
+            color: '#00C853',
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ fontSize: '8px', fontWeight: 900, letterSpacing: '0.04em' }}>MADA</span>
+          <CreditCard size={15} strokeWidth={2.4} />
+        </div>
+      );
+    }
+
+    if (method.includes('apple')) {
+      return (
+        <div
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            backgroundColor: '#161F30',
+            border: '1px solid #2A364F',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            flexShrink: 0,
+            fontSize: '18px',
+          }}
+        >
+          <span></span>
+        </div>
+      );
+    }
+
+    if (method === 'zatca_qr') {
+      return (
+        <div
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            backgroundColor: 'rgba(139, 92, 246, 0.12)',
+            border: '1px solid rgba(139, 92, 246, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#A78BFA',
+            flexShrink: 0,
+          }}
+        >
+          <QrCode size={20} />
+        </div>
+      );
+    }
+
+    if (method === 'cash') {
+      return (
+        <div
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            backgroundColor: '#161F30',
+            border: '1px solid #2A364F',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#94A3B8',
+            flexShrink: 0,
+          }}
+        >
+          <Banknote size={20} />
+        </div>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          width: '42px',
+          height: '42px',
+          borderRadius: '12px',
+          backgroundColor: 'rgba(59, 130, 246, 0.12)',
+          border: '1px solid rgba(59, 130, 246, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#60A5FA',
+          flexShrink: 0,
+        }}
+      >
+        <Share2 size={18} />
+      </div>
+    );
+  };
+
+  const getTransactionTitle = (c: MerchantCollection) => {
+    if (c.paymentMethod.includes('mada')) {
+      return isAr ? 'مدى لا تلامسي' : 'mada contactless';
+    }
+    if (c.paymentMethod.includes('apple')) {
+      return `Apple Pay • ${c.orderRef || 'ORD-9842'}`;
+    }
+    if (c.paymentMethod === 'zatca_qr') {
+      return c.customerMasked || (isAr ? 'طارق العتيبي' : 'Tariq Al-Otaibi');
+    }
+    if (c.paymentMethod === 'cash') {
+      return isAr ? 'بيع نقدي • كاشير ١' : 'Cash Sale • Register 1';
+    }
+    return c.customerMasked || c.orderRef || 'Payment Link';
+  };
+
+  const getTransactionSubtitle = (c: MerchantCollection) => {
+    if (c.paymentMethod.includes('mada')) {
+      return isAr ? '١١:٤٢ ص • نقطة بيع بالجوال' : '11:42 AM • SoftPOS Tap';
+    }
+    if (c.paymentMethod.includes('apple')) {
+      return isAr ? '١٠:١٥ ص • جهاز #٨٨٣٩٢٠٢' : '10:15 AM • POS–8839202';
+    }
+    if (c.paymentMethod === 'zatca_qr') {
+      return isAr ? '٠٩:٣٠ ص • فاتورة ضريبية #٤٠١٩' : '09:30 AM • Tax Inv #4019';
+    }
+    if (c.paymentMethod === 'cash') {
+      return isAr ? 'أمس • سجل النقد' : 'Yesterday • Cash Log';
+    }
+    return translateText(c.date, language);
+  };
+
   return (
     <div
       className="fade-in"
@@ -124,6 +290,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
         paddingBottom: '24px',
         boxSizing: 'border-box',
         userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
       {/* Top Header */}
@@ -173,15 +340,15 @@ export const MerchantCollectionsScreen: React.FC = () => {
           </div>
         )}
 
-        {/* Dual Tab Segmented Control (Transactions vs Settlements) */}
+        {/* 1. Dual Tab Segmented Control (Collections vs Settlements) */}
         <div
           style={{
             backgroundColor: '#111726',
             border: '1px solid #1E293B',
-            borderRadius: '14px',
-            padding: '4px',
+            borderRadius: '16px',
+            padding: '5px',
             display: 'flex',
-            gap: '4px',
+            gap: '6px',
             marginBottom: '16px',
           }}
         >
@@ -192,22 +359,22 @@ export const MerchantCollectionsScreen: React.FC = () => {
             style={{
               flex: 1,
               backgroundColor: activeMainTab === 'transactions' ? '#00C853' : 'transparent',
-              color: activeMainTab === 'transactions' ? '#000000' : '#94A3B8',
+              color: activeMainTab === 'transactions' ? '#080C14' : '#94A3B8',
               border: 'none',
-              borderRadius: '10px',
-              padding: '9px',
-              fontSize: '13px',
+              borderRadius: '12px',
+              padding: '10px 12px',
+              fontSize: '13.5px',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
-              transition: 'all 0.2s',
+              gap: '8px',
+              transition: 'all 0.15s ease',
             }}
           >
-            <Receipt size={15} />
-            <span>{t('settlements.tab_transactions', 'Transactions')}</span>
+            <CreditCard size={17} strokeWidth={2.4} />
+            <span>{isAr ? 'التحصيلات' : 'Collections'}</span>
           </button>
 
           <button
@@ -217,89 +384,131 @@ export const MerchantCollectionsScreen: React.FC = () => {
             style={{
               flex: 1,
               backgroundColor: activeMainTab === 'settlements' ? '#00C853' : 'transparent',
-              color: activeMainTab === 'settlements' ? '#000000' : '#94A3B8',
+              color: activeMainTab === 'settlements' ? '#080C14' : '#94A3B8',
               border: 'none',
-              borderRadius: '10px',
-              padding: '9px',
-              fontSize: '13px',
+              borderRadius: '12px',
+              padding: '10px 12px',
+              fontSize: '13.5px',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
-              transition: 'all 0.2s',
+              gap: '8px',
+              transition: 'all 0.15s ease',
             }}
           >
-            <Landmark size={15} />
-            <span>{t('settlements.tab_settlements', 'Settlements')}</span>
+            <Landmark size={17} strokeWidth={2.4} />
+            <span>{isAr ? 'التسويات' : 'Settlements'}</span>
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: activeMainTab === 'settlements' ? '#080C14' : '#00C853',
+                display: 'inline-block',
+              }}
+            />
           </button>
         </div>
 
-        {/* TAB 1: TRANSACTIONS VIEW */}
+        {/* TAB 1: COLLECTIONS VIEW */}
         {activeMainTab === 'transactions' && (
           <div>
-            {/* Total Ledger Summary Box */}
+            {/* 2. Horizontal Filter Chips */}
             <div
               style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '18px',
-                padding: '16px 18px',
-                marginBottom: '14px',
+                display: 'flex',
+                gap: '8px',
+                marginBottom: '16px',
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                paddingBottom: '2px',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    {isAr ? 'إجمالي التحصيلات المحددة' : 'Filtered Total Collections'}
-                  </div>
-                  <div className="tabular-nums" style={{ fontSize: '26px', fontWeight: 900, color: '#FFFFFF', marginTop: '2px' }}>
-                    {formatCurrency(totalSales, language)}
-                  </div>
-                </div>
-                <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
-                    {isAr ? '١٥٪ ضريبة زاتكا' : '15% ZATCA VAT'}
-                  </div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#00C853', marginTop: '2px' }}>
-                    {formatSaudiCurrency(totalVat, language)}
-                  </div>
-                </div>
+              {[
+                { id: 'all', label: isAr ? `الكل (${allCollections.length})` : `All (${allCollections.length})` },
+                { id: 'mada', label: 'mada', dot: true },
+                { id: 'applepay', label: 'Apple Pay' },
+                { id: 'zatca', label: 'ZATCA QR' },
+                { id: 'cash', label: isAr ? 'بيع نقدي' : 'Cash Sale' },
+                { id: 'link', label: isAr ? 'روابط الدفع' : 'Payment Link' },
+              ].map((f) => {
+                const isSelected = activeFilter === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setActiveFilter(f.id as any)}
+                    className="interactive-tap"
+                    style={{
+                      backgroundColor: isSelected ? '#00C853' : '#111726',
+                      color: isSelected ? '#080C14' : '#CBD5E1',
+                      border: isSelected ? '1px solid #00C853' : '1px solid #1E293B',
+                      borderRadius: '20px',
+                      padding: '8px 16px',
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {f.dot && (
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: isSelected ? '#080C14' : '#00C853',
+                          display: 'inline-block',
+                        }}
+                      />
+                    )}
+                    <span>{f.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 3. Section Date Header with Group Total */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '12px',
+                padding: '0 4px',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  color: '#94A3B8',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                }}
+              >
+                {isAr ? 'اليوم، ٢٤ أكتوبر' : 'TODAY, 24 OCT'}
+              </div>
+              <div
+                className="tabular-nums"
+                style={{
+                  fontSize: '13.5px',
+                  fontWeight: 800,
+                  color: '#FFFFFF',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                SAR {totalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             </div>
 
-            {/* Filter Pills */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', overflowX: 'auto', scrollbarWidth: 'none' }}>
-              {[
-                { id: 'all', label: isAr ? 'جميع العمليات' : 'All Payments' },
-                { id: 'softpos', label: isAr ? 'نقاط بيع Tap' : 'SoftPOS Tap' },
-                { id: 'qr', label: isAr ? 'رمز زاتكا' : 'ZATCA QR' },
-                { id: 'link', label: isAr ? 'روابط الدفع' : 'Payment Links' },
-              ].map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setActiveFilter(f.id as any)}
-                  className="interactive-tap"
-                  style={{
-                    backgroundColor: activeFilter === f.id ? '#00C853' : '#111726',
-                    color: activeFilter === f.id ? '#000000' : '#94A3B8',
-                    border: activeFilter === f.id ? '1px solid #00C853' : '1px solid #1E293B',
-                    borderRadius: '12px',
-                    padding: '7px 14px',
-                    fontSize: '12px',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Collections List */}
+            {/* 4. Collections Transaction Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {filtered.map((c) => (
                 <div
@@ -309,31 +518,76 @@ export const MerchantCollectionsScreen: React.FC = () => {
                   style={{
                     backgroundColor: '#111726',
                     border: '1px solid #1E293B',
-                    borderRadius: '16px',
+                    borderRadius: '18px',
                     padding: '14px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    cursor: c.status === 'settled' ? 'pointer' : 'default',
-                    opacity: c.status === 'refunded' ? 0.6 : 1,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  <div>
-                    <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                      {c.orderRef} • {c.customerMasked}
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                      {c.paymentMethod.replace('_', ' ').toUpperCase()} &bull; {isAr ? 'المرجع:' : 'Ref:'} {c.id} &bull; {translateText(c.date, language)}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {renderPaymentIcon(c.paymentMethod)}
+
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                        {getTransactionTitle(c)}
+                      </div>
+                      <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '3px' }}>
+                        {getTransactionSubtitle(c)}
+                      </div>
                     </div>
                   </div>
 
-                  <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                    <div className="tabular-nums" style={{ fontSize: '15px', fontWeight: 900, color: c.status === 'refunded' ? '#FF6B6B' : '#00C853' }}>
-                      {c.status === 'refunded' ? (isAr ? 'مستردة' : 'REFUNDED') : `+${formatCurrency(c.amount, language)}`}
+                  <div style={{ textAlign: isRtl ? 'left' : 'right', display: 'flex', flexDirection: 'column', alignItems: isRtl ? 'flex-start' : 'flex-end', gap: '4px' }}>
+                    <div
+                      className="tabular-nums"
+                      style={{
+                        fontSize: '14.5px',
+                        fontWeight: 900,
+                        color: c.status === 'refunded' ? '#FF6B81' : '#00C853',
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {c.status === 'refunded' ? '-SAR ' : '+SAR '}
+                      {c.amount.toFixed(2)}
                     </div>
-                    <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
-                      {isAr ? `الضريبة: ${formatSaudiCurrency(c.vatAmount, language)}` : `VAT: SAR ${c.vatAmount.toFixed(2)}`}
-                    </div>
+
+                    {/* Status Pill Badge */}
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        backgroundColor:
+                          c.status === 'refunded'
+                            ? 'rgba(239, 68, 68, 0.15)'
+                            : c.paymentMethod === 'cash'
+                            ? '#161F30'
+                            : 'rgba(0, 200, 83, 0.12)',
+                        border:
+                          c.status === 'refunded'
+                            ? '1px solid rgba(239, 68, 68, 0.3)'
+                            : c.paymentMethod === 'cash'
+                            ? '1px solid #2A364F'
+                            : '1px solid rgba(0, 200, 83, 0.3)',
+                        color:
+                          c.status === 'refunded'
+                            ? '#FF6B81'
+                            : c.paymentMethod === 'cash'
+                            ? '#94A3B8'
+                            : '#00C853',
+                      }}
+                    >
+                      {c.status === 'refunded'
+                        ? isAr ? 'مستردة' : 'Refunded'
+                        : c.paymentMethod === 'cash'
+                        ? isAr ? 'مسجل' : 'Logged'
+                        : isAr ? 'مدفوع' : 'Paid'}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -347,11 +601,12 @@ export const MerchantCollectionsScreen: React.FC = () => {
             {/* SettleNow Action Card */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #07271B 0%, #0D3B2A 50%, #131B26 100%)',
-                border: '1px solid rgba(0, 200, 83, 0.35)',
-                borderRadius: '18px',
+                backgroundColor: '#0D1424',
+                border: '1px solid #1A263D',
+                borderRadius: '20px',
                 padding: '18px',
-                boxShadow: '0 8px 24px rgba(0, 200, 83, 0.08)',
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                background: 'radial-gradient(ellipse at top, rgba(0, 200, 83, 0.08) 0%, #0D1424 70%)',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
@@ -359,7 +614,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                   <span style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     {isAr ? 'رصيد التحصيلات غير المسوى' : "Today's Unsettled Payout"}
                   </span>
-                  <div className="tabular-nums" style={{ fontSize: '26px', fontWeight: 900, color: '#FFFFFF', marginTop: '3px' }}>
+                  <div className="tabular-nums" style={{ fontSize: '28px', fontWeight: 900, color: '#FFFFFF', marginTop: '3px' }}>
                     {formatCurrency(unsettledTotal, language)}
                   </div>
                 </div>
@@ -370,20 +625,20 @@ export const MerchantCollectionsScreen: React.FC = () => {
                   className="interactive-tap"
                   style={{
                     backgroundColor: '#00C853',
-                    color: '#000000',
+                    color: '#080C14',
                     border: 'none',
-                    borderRadius: '10px',
+                    borderRadius: '12px',
                     padding: '10px 16px',
-                    fontSize: '12.5px',
+                    fontSize: '13px',
                     fontWeight: 800,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    boxShadow: '0 4px 14px rgba(0, 200, 83, 0.3)',
+                    boxShadow: '0 4px 16px rgba(0, 200, 83, 0.35)',
                   }}
                 >
-                  <Zap size={15} fill="#000000" />
+                  <Zap size={15} fill="#080C14" />
                   <span>{isSettling ? (isAr ? 'جاري التحويل...' : 'Settling...') : t('settlenow.cta', 'Settle Now')}</span>
                   <ArrowUpRight size={14} />
                 </button>
@@ -392,7 +647,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
               <div
                 style={{
                   paddingTop: '12px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -430,14 +685,15 @@ export const MerchantCollectionsScreen: React.FC = () => {
                     style={{
                       backgroundColor: '#111726',
                       border: '1px solid #1E293B',
-                      borderRadius: '16px',
+                      borderRadius: '18px',
                       padding: '16px',
+                      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                          <span style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
                             {s.settlementRef}
                           </span>
                           <span
@@ -446,8 +702,8 @@ export const MerchantCollectionsScreen: React.FC = () => {
                               color: s.method === 'instant_settlenow' ? '#00C853' : '#60A5FA',
                               fontSize: '10px',
                               fontWeight: 800,
-                              padding: '2px 6px',
-                              borderRadius: '4px',
+                              padding: '2px 7px',
+                              borderRadius: '6px',
                             }}
                           >
                             {s.method === 'instant_settlenow' ? (isAr ? 'سريع فوري' : 'Instant SettleNow') : (isAr ? 'تسوية تلقائية' : 'Auto Settle')}
@@ -459,11 +715,11 @@ export const MerchantCollectionsScreen: React.FC = () => {
                       </div>
 
                       <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                        <div className="tabular-nums" style={{ fontSize: '16px', fontWeight: 900, color: '#00C853' }}>
+                        <div className="tabular-nums" style={{ fontSize: '15px', fontWeight: 900, color: '#00C853' }}>
                           +{formatCurrency(s.amount, language)}
                         </div>
-                        <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 600 }}>
-                          {isAr ? 'محول إلى الآيبان' : 'Settled to IBAN'}
+                        <span style={{ fontSize: '10px', color: '#00C853', fontWeight: 700 }}>
+                          {isAr ? 'تم التحويل' : 'Settled'}
                         </span>
                       </div>
                     </div>
@@ -544,14 +800,14 @@ export const MerchantCollectionsScreen: React.FC = () => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <RotateCcw size={18} color="#FF6B6B" />
-                <span style={{ fontSize: '15px', fontWeight: 800 }}>{isAr ? 'تأكيد استرداد المبلغ' : 'Authorize Refund'}</span>
+                <RotateCcw size={18} color="#FF6B81" />
+                <span style={{ fontSize: '15px', fontWeight: 800 }}>{isAr ? 'تفاصيل العملية والاسترداد' : 'Transaction Details & Refund'}</span>
               </div>
               <button
                 onClick={() => setSelectedTxn(null)}
                 style={{
-                  background: '#1A2234',
-                  border: '1px solid #1E293B',
+                  background: '#161F30',
+                  border: '1px solid #2A364F',
                   borderRadius: '50%',
                   width: '30px',
                   height: '30px',
@@ -580,22 +836,30 @@ export const MerchantCollectionsScreen: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleConfirmRefund} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ backgroundColor: '#1A2234', borderRadius: '12px', padding: '12px', fontSize: '12.5px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <div style={{ backgroundColor: '#161F30', border: '1px solid #2A364F', borderRadius: '12px', padding: '14px', fontSize: '12.5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                     <span style={{ color: '#94A3B8' }}>{isAr ? 'العملية:' : 'Transaction:'}</span>
-                    <span style={{ fontWeight: 700 }}>{selectedTxn.orderRef}</span>
+                    <span style={{ fontWeight: 700 }}>{getTransactionTitle(selectedTxn)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#94A3B8' }}>{isAr ? 'مبلغ الاسترداد:' : 'Refund Amount:'}</span>
-                    <span style={{ fontWeight: 900, color: '#FF6B6B' }}>{formatSaudiCurrency(selectedTxn.amount, language)}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ color: '#94A3B8' }}>{isAr ? 'المرجع:' : 'Reference:'}</span>
+                    <span style={{ fontWeight: 700, fontFamily: 'monospace' }}>{selectedTxn.id}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ color: '#94A3B8' }}>{isAr ? 'ضريبة زاتكا ١٥٪:' : '15% ZATCA VAT:'}</span>
+                    <span style={{ fontWeight: 700, color: '#00C853' }}>SAR {selectedTxn.vatAmount.toFixed(2)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid #2A364F' }}>
+                    <span style={{ color: '#94A3B8' }}>{isAr ? 'المبلغ:' : 'Total Amount:'}</span>
+                    <span style={{ fontWeight: 900, color: '#FFFFFF' }}>SAR {selectedTxn.amount.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
-                    {isAr ? 'أدخل الرمز السري للتاجر (٤ أرقام)' : 'Enter 4-Digit Merchant PIN'}
+                    {isAr ? 'أدخل الرمز السري للتاجر (٤ أرقام للاسترداد)' : 'Enter 4-Digit Merchant PIN to Refund'}
                   </label>
-                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#1A2234', border: '1px solid #1E293B', borderRadius: '12px', padding: '12px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#161F30', border: '1px solid #2A364F', borderRadius: '12px', padding: '12px 14px' }}>
                     <Lock size={16} color="#00C853" style={{ marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                     <input
                       type="password"
@@ -621,7 +885,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 </div>
 
                 {refundError && (
-                  <div style={{ fontSize: '11.5px', color: '#FF6B6B', fontWeight: 700 }}>
+                  <div style={{ fontSize: '11.5px', color: '#FF6B81', fontWeight: 700 }}>
                     {refundError}
                   </div>
                 )}
@@ -629,7 +893,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 <PrimaryButton type="submit" disabled={isRefunding || refundPin.length < 4}>
                   {isRefunding
                     ? (isAr ? 'جاري معالجة الاسترداد...' : 'Processing Refund...')
-                    : (isAr ? `تأكيد استرداد ${formatSaudiCurrency(selectedTxn.amount, language)}` : `Confirm Refund SAR ${selectedTxn.amount.toFixed(2)}`)}
+                    : (isAr ? `تأكيد استرداد ${formatSaudiCurrency(selectedTxn.amount, language)}` : `Authorize Refund SAR ${selectedTxn.amount.toFixed(2)}`)}
                 </PrimaryButton>
               </form>
             )}
@@ -647,4 +911,5 @@ export const MerchantCollectionsScreen: React.FC = () => {
     </div>
   );
 };
+
 
