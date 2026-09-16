@@ -139,13 +139,13 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     <div
       className="fade-in"
       style={{
-        minHeight: '100vh',
+        minHeight: '100%',
         backgroundColor: colors.bgPage,
         color: colors.textPrimary,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: `${spacing.space4} ${spacing.space5} ${spacing.space6} ${spacing.space5}`,
+        padding: `${spacing.space4} ${spacing.space5} 96px ${spacing.space5}`,
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',

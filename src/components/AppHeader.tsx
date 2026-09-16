@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Search, Settings } from 'lucide-react';
+import { ArrowLeft, Search, Settings, Store, Bell } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AlphPayLogo } from './AlphPayLogo';
 import { designSystem } from '../design-system';
@@ -24,7 +24,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showSettings = true,
   rightAction,
 }) => {
-  const { user, goBack, navigateTo, currentScreen, isRtl, t } = useApp();
+  const { goBack, navigateTo, currentScreen, isRtl, t } = useApp();
 
   const handleBack = () => {
     if (onBack) onBack();
@@ -40,7 +40,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   const displayTitle = title ? t(title, title) : undefined;
-  const displayName = t(user.name, user.name);
 
   return (
     <header
@@ -96,38 +95,28 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         ) : (
-          <div
+          <button
             onClick={handleAvatarClick}
-            role="button"
-            tabIndex={0}
-            aria-label={currentScreen === 'PROFILE' ? 'Go to home' : 'View merchant profile'}
+            aria-label="Store Profile"
             className="interactive-tap"
             style={{
               width: '38px',
               height: '38px',
-              borderRadius: '50%',
-              backgroundColor: '#7FE87F',
-              color: '#000000',
-              fontWeight: '800',
-              fontSize: '13.5px',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.25)',
+              color: '#00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               boxShadow: 'none',
-              overflow: 'hidden',
-              border: '2px solid #0B0B14',
-              outline: '1.5px solid #7FE87F',
               transition: 'transform 0.15s ease',
               flexShrink: 0,
             }}
           >
-            {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              user.avatarInitials
-            )}
-          </div>
+            <Store size={18} color="#00C853" />
+          </button>
         )}
       </div>
 
@@ -213,27 +202,64 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {rightAction}
 
         {showSettings && !rightAction && (
-          <button
-            onClick={() => navigateTo('MERCHANT_SETUP')}
-            aria-label="Settings"
-            className="interactive-tap"
-            style={{
-              backgroundColor: '#151524',
-              border: `1px solid ${designSystem.colors.borderHairline}`,
-              color: '#FFFFFF',
-              width: '38px',
-              height: '38px',
-              borderRadius: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              boxShadow: 'none',
-              transition: 'background-color 0.15s ease',
-            }}
-          >
-            <Settings size={18} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              onClick={() => navigateTo('NOTIFICATIONS')}
+              aria-label="Notifications"
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#151524',
+                border: `1px solid ${designSystem.colors.borderHairline}`,
+                color: '#FFFFFF',
+                width: '38px',
+                height: '38px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: 'none',
+                position: 'relative',
+                transition: 'background-color 0.15s ease',
+              }}
+            >
+              <Bell size={18} />
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: '#00C853',
+                  boxShadow: '0 0 6px #00C853',
+                }}
+              />
+            </button>
+
+            <button
+              onClick={() => navigateTo('MERCHANT_SETUP')}
+              aria-label="Settings"
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#151524',
+                border: `1px solid ${designSystem.colors.borderHairline}`,
+                color: '#FFFFFF',
+                width: '38px',
+                height: '38px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: 'none',
+                transition: 'background-color 0.15s ease',
+              }}
+            >
+              <Settings size={18} />
+            </button>
+          </div>
         )}
       </div>
     </header>

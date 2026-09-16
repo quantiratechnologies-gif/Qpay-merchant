@@ -120,7 +120,7 @@ export const SmsOtpScreen: React.FC = () => {
     <div
       className="fade-in"
       style={{
-        minHeight: '100vh',
+        minHeight: '100%',
         backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',

@@ -76,13 +76,16 @@ export const MetricTile: React.FC<MetricTileProps> = ({
       <div
         className="tabular-nums"
         style={{
-          fontSize: '24px',
+          fontSize: 'clamp(14px, 3.8vw, 18px)',
           fontWeight: 800,
           color: highlightGreen
             ? 'var(--accent-green-bright, #7FE87F)'
             : 'var(--text-primary, #FFFFFF)',
           lineHeight: '1.2',
           letterSpacing: '-0.02em',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
         }}
       >
         {value}

@@ -129,8 +129,8 @@ export const MerchantInsightsScreen: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '10px',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gap: '8px',
           }}
         >
           {/* Card 1: TOTAL SALES */}
@@ -138,16 +138,16 @@ export const MerchantInsightsScreen: React.FC = () => {
             title={t('insights.total_sales', 'TOTAL SALES')}
             value={isAr ? `${formatLocalizedNumber(Math.round(totalVolume))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(totalVolume))}`}
             subtitle={isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
-            style={{ padding: '14px 12px' }}
+            style={{ padding: '12px 10px', minWidth: 0 }}
           />
 
           {/* Card 2: AVG TICKET (Highlighted Green) */}
           <MetricTile
             title={t('insights.avg_ticket', 'AVG TICKET')}
-            value={isAr ? `${formatLocalizedNumber(avgTicket.toFixed(2))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(2))}`}
+            value={isAr ? `${formatLocalizedNumber(avgTicket.toFixed(1))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(1))}`}
             subtitle={isAr ? 'لكل عميل' : 'per ticket'}
             highlightGreen={true}
-            style={{ padding: '14px 12px' }}
+            style={{ padding: '12px 10px', minWidth: 0 }}
           />
 
           {/* Card 3: SETTLEMENT */}
@@ -155,7 +155,7 @@ export const MerchantInsightsScreen: React.FC = () => {
             title={t('insights.settlement', 'SETTLEMENT')}
             value={isAr ? `${formatLocalizedNumber(Math.round(settlementReady))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(settlementReady))}`}
             subtitle={<span style={{ color: colors.accentGreen, fontWeight: 600 }}>{isAr ? 'مستحق الصرف' : 'Auto Ready'}</span>}
-            style={{ padding: '14px 12px' }}
+            style={{ padding: '12px 10px', minWidth: 0 }}
           />
         </div>
 
@@ -163,7 +163,7 @@ export const MerchantInsightsScreen: React.FC = () => {
         <Card
           variant="elevated"
           style={{
-            padding: '18px',
+            padding: '16px',
           }}
         >
           {/* Card Header */}
@@ -199,15 +199,15 @@ export const MerchantInsightsScreen: React.FC = () => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: spacing.space4,
-              marginTop: spacing.space3,
+              gap: '14px',
+              marginTop: spacing.space2,
             }}
           >
             {/* Donut Chart (SVG) */}
-            <div style={{ position: 'relative', width: '100px', height: '100px', flexShrink: 0 }}>
-              <svg width="100" height="100" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+            <div style={{ position: 'relative', width: '84px', height: '84px', flexShrink: 0 }}>
+              <svg width="84" height="84" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
                 {/* Background Ring */}
-                <circle cx="50" cy="50" r="38" fill="none" stroke={colors.bgInset} strokeWidth="12" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke={colors.bgInset} strokeWidth="13" />
                 
                 {/* Green Segment (58%) */}
                 <circle
@@ -216,7 +216,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentGreen}
-                  strokeWidth="12"
+                  strokeWidth="13"
                   strokeDasharray="138 238"
                   strokeDashoffset="0"
                 />
@@ -228,7 +228,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentBlue}
-                  strokeWidth="12"
+                  strokeWidth="13"
                   strokeDasharray="57 238"
                   strokeDashoffset="-138"
                 />
@@ -240,7 +240,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentPurple}
-                  strokeWidth="12"
+                  strokeWidth="13"
                   strokeDasharray="33 238"
                   strokeDashoffset="-195"
                 />
@@ -252,7 +252,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentAmber}
-                  strokeWidth="12"
+                  strokeWidth="13"
                   strokeDasharray="10 238"
                   strokeDashoffset="-228"
                 />
@@ -270,49 +270,52 @@ export const MerchantInsightsScreen: React.FC = () => {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, lineHeight: 1.1 }}>
+                <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.1 }}>
                   82%
                 </span>
-                <span style={{ fontSize: '8.5px', fontWeight: 700, color: colors.textSecondary, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '8px', fontWeight: 800, color: '#94A3B8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                   {t('insights.digital_share', 'DIGITAL')}
                 </span>
               </div>
             </div>
 
-            {/* Legend List */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: spacing.space2 }}>
+            {/* Legend 3-Column Grid */}
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {railStats.map((rail, idx) => (
                 <div
                   key={idx}
                   style={{
-                    display: 'flex',
+                    display: 'grid',
+                    gridTemplateColumns: 'minmax(0, 1fr) auto auto',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    fontSize: '12px',
+                    gap: '6px',
+                    fontSize: '11.5px',
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, overflow: 'hidden' }}>
                     <span
                       style={{
-                        width: '8px',
-                        height: '8px',
+                        width: '7px',
+                        height: '7px',
                         borderRadius: radii.full,
                         backgroundColor: rail.color,
                         flexShrink: 0,
                       }}
                     />
-                    <span style={{ color: colors.textPrimary, fontWeight: 600 }}>
+                    <span style={{ color: colors.textPrimary, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {rail.shortName}
-                    </span>
-                    <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 500 }}>
-                      ({formatLocalizedNumber(rail.percent)}%)
                     </span>
                   </div>
 
-                  <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '12px' }}>
+                  <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 600 }}>
+                    {formatLocalizedNumber(rail.percent)}%
+                  </span>
+
+                  <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '11.5px', textAlign: isAr ? 'left' : 'right' }}>
                     {isAr
-                      ? `${formatLocalizedNumber(rail.amount.toFixed(2))} ر.س`
-                      : `SAR ${formatLocalizedNumber(rail.amount.toFixed(2))}`}
+                      ? `${formatLocalizedNumber(Math.round(rail.amount))} ر.س`
+                      : `SAR ${formatLocalizedNumber(Math.round(rail.amount))}`}
                   </div>
                 </div>
               ))}

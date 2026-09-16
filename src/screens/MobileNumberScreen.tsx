@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, User, Phone } from 'lucide-react';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 import { QuantiraLogo } from '../components/QuantiraLogo';
 import { useApp } from '../state/AppContext';
@@ -23,29 +23,29 @@ export const MobileNumberScreen: React.FC = () => {
     <div
       className="fade-in"
       style={{
-        minHeight: '100vh',
+        minHeight: '100%',
         backgroundColor: '#080C14',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '36px 20px 24px 20px',
+        padding: '32px 20px 24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
       {/* Top Header with Brand Logo */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '8px' }}>
         <div
           style={{
-            marginBottom: '20px',
+            marginBottom: '16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <AlphPayLogo variant="horizontal" size={32} themeMode="dark" />
+          <AlphPayLogo variant="horizontal" size={30} themeMode="dark" />
         </div>
 
         <h1
@@ -79,16 +79,16 @@ export const MobileNumberScreen: React.FC = () => {
         style={{
           width: '100%',
           maxWidth: '380px',
-          margin: '24px auto',
+          margin: '20px auto',
           backgroundColor: '#111726',
           border: '1px solid #1E293B',
           borderRadius: '20px',
-          padding: '24px 20px',
+          padding: '22px 18px',
           boxSizing: 'border-box',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         }}
       >
-        <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Merchant Owner Name Field */}
           <div>
             <label
@@ -110,9 +110,13 @@ export const MobileNumberScreen: React.FC = () => {
                 border: '1px solid #2A364F',
                 borderRadius: '12px',
                 padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
                 transition: 'border-color 0.2s ease',
               }}
             >
+              <User size={17} color="#94A3B8" style={{ flexShrink: 0 }} />
               <input
                 id="owner-name-input"
                 type="text"
@@ -186,8 +190,12 @@ export const MobileNumberScreen: React.FC = () => {
                   border: '1px solid #2A364F',
                   borderRadius: '12px',
                   padding: '12px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                 }}
               >
+                <Phone size={15} color="#94A3B8" style={{ flexShrink: 0 }} />
                 <input
                   id="merchant-phone-input"
                   type="tel"
