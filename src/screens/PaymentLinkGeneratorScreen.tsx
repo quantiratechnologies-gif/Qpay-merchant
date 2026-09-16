@@ -105,7 +105,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
         <form onSubmit={handleGenerate} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {/* Order Ref */}
           <div>
-            <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
               {isAr ? 'رقم / مرجع الطلب' : 'Order Reference / Invoice #'}
             </label>
             <input
@@ -131,7 +131,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
 
           {/* Customer Name */}
           <div>
-            <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
               {isAr ? 'اسم العميل' : 'Customer Name'}
             </label>
             <input
@@ -157,7 +157,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
 
           {/* Amount */}
           <div>
-            <label style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
               {isAr ? 'المبلغ الإجمالي (ر.س)' : 'Amount to Collect (SAR)'}
             </label>
             <input

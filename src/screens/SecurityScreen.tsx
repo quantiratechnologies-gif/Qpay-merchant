@@ -58,9 +58,7 @@ export const SecurityScreen: React.FC = () => {
 
         <div
           style={{
-            fontSize: '11px',
-            fontWeight: 800,
-            color: '#64748B',
+            fontSize: '12px', fontWeight: 500, color: '#94A3B8',
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
             marginBottom: '12px',

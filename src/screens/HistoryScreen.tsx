@@ -188,9 +188,7 @@ export const HistoryScreen: React.FC = () => {
             <div key={dateLabel} style={{ marginBottom: '20px' }}>
               <div
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  color: '#64748B',
+                  fontSize: '12px', fontWeight: 500, color: '#94A3B8',
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   marginBottom: '8px',

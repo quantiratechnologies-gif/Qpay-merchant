@@ -202,7 +202,7 @@ export const MerchantInsightsScreen: React.FC = () => {
               >
                 <Activity size={18} />
               </div>
-              <span style={{ fontSize: '16px', fontWeight: 800, color: colors.textPrimary }}>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: colors.textPrimary }}>
                 {t('insights.rail_dist', 'Payment Rail')}
               </span>
             </div>
@@ -289,10 +289,10 @@ export const MerchantInsightsScreen: React.FC = () => {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', lineHeight: 1 }}>
+                <span style={{ fontSize: '24px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1 }}>
                   82%
                 </span>
-                <span style={{ fontSize: '9px', fontWeight: 800, color: colors.textSecondary, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '3px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 500, color: colors.textSecondary, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '3px' }}>
                   {t('insights.digital_share', 'DIGITAL')}
                 </span>
               </div>
@@ -335,7 +335,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <span style={{ color: colors.textSecondary, fontSize: '12px', fontWeight: 600 }}>
+                  <span style={{ color: colors.textSecondary, fontSize: '12px', fontWeight: 500 }}>
                     {formatLocalizedNumber(rail.percent)}%
                   </span>
 
@@ -343,7 +343,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                     className="tabular-nums"
                     style={{
                       color: colors.textPrimary,
-                      fontWeight: 800,
+                      fontWeight: 700,
                       minWidth: '65px',
                       textAlign: isAr ? 'left' : 'right',
                     }}

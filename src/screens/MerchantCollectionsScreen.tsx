@@ -370,7 +370,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
               borderRadius: radii.md,
               padding: '10px 12px',
               fontSize: '13.5px',
-              fontWeight: 800,
+              fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -417,7 +417,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
               <div
                 style={{
                   fontSize: '11px',
-                  fontWeight: 800,
+                  fontWeight: 600,
                   color: colors.textSecondary,
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
@@ -429,7 +429,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 className="tabular-nums"
                 style={{
                   fontSize: '13.5px',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: colors.textPrimary,
                   letterSpacing: '-0.01em',
                 }}
@@ -490,7 +490,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: spacing.space3 }}>
                 <div>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     {isAr ? 'رصيد التحصيلات غير المسوى' : "Today's Unsettled Payout"}
                   </span>
                   <div className="tabular-nums" style={{ fontSize: '28px', fontWeight: 900, color: colors.textPrimary, marginTop: '3px' }}>
@@ -730,7 +730,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
                 </Card>
 
                 <div>
-                  <label style={{ fontSize: '11px', fontWeight: 800, color: colors.textSecondary, textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
                     {isAr ? 'أدخل الرمز السري للتاجر (٤ أرقام للاسترداد)' : 'Enter 4-Digit Merchant PIN to Refund'}
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', backgroundColor: colors.bgInset, border: `1px solid ${colors.border}`, borderRadius: radii.md, padding: '12px 14px' }}>

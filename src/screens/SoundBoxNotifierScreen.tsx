@@ -108,7 +108,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
             <Volume2 size={44} color="#00C853" />
           </div>
 
-          <span style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', marginTop: '10px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 500, color: '#94A3B8', marginTop: '10px' }}>
             SoundBox Pro v2.4
           </span>
         </div>

@@ -196,7 +196,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
           <div
             style={{
               fontSize: '11px',
-              fontWeight: 800,
+              fontWeight: 600,
               color: colors.accentGreen,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -220,7 +220,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             <span
               style={{
                 fontSize: '22px',
-                fontWeight: 900,
+                fontWeight: 600,
                 color: colors.accentGreen,
                 letterSpacing: '-0.01em',
               }}
@@ -231,7 +231,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               className="tabular-nums"
               style={{
                 fontSize: '48px',
-                fontWeight: 900,
+                fontWeight: 800,
                 color: colors.textPrimary,
                 letterSpacing: '-0.02em',
                 lineHeight: 1,
@@ -255,7 +255,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             }}
           >
             <CheckCircle2 size={13} color={colors.accentGreen} />
-            <span style={{ fontSize: '11.5px', fontWeight: 700, color: colors.textPrimary }}>
+            <span style={{ fontSize: '11.5px', fontWeight: 500, color: colors.textPrimary }}>
               {isAr ? (
                 <>شامل {vatAmount} ر.س (ضريبة زاتكا ١٥٪)</>
               ) : (
@@ -320,7 +320,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
           <div
             style={{
               fontSize: '10.5px',
-              fontWeight: 800,
+              fontWeight: 600,
               color: colors.textSecondary,
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
@@ -363,7 +363,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
                   <span
                     style={{
                       fontSize: '12px',
-                      fontWeight: 700,
+                      fontWeight: isSelected ? 600 : 500,
                       color: isSelected ? colors.textPrimary : colors.textSecondary,
                     }}
                   >
@@ -390,7 +390,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
                 border: `1px solid ${colors.border}`,
                 color: colors.textPrimary,
                 fontSize: '24px',
-                fontWeight: 800,
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -414,11 +414,12 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               border: `1px solid ${colors.border}`,
               color: colors.textPrimary,
               fontSize: '20px',
-              fontWeight: 800,
+              fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
           >
             {isAr ? '٠٠' : '00'}
@@ -436,14 +437,15 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               border: `1px solid ${colors.border}`,
               color: colors.textPrimary,
               fontSize: '24px',
-              fontWeight: 800,
+              fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
           >
-            {isAr ? '٠' : '0'}
+            {isAr ? toArabicNumerals('0') : '0'}
           </button>
 
           {/* Backspace Delete */}

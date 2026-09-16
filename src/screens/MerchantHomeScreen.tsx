@@ -173,7 +173,7 @@ export const MerchantHomeScreen: React.FC = () => {
             className="interactive-tap"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
-            <span style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, letterSpacing: '-0.01em' }}>
+            <span style={{ fontSize: '15px', fontWeight: 700, color: colors.textPrimary, letterSpacing: '-0.01em' }}>
               {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
             </span>
             <ChevronDown size={15} color={colors.textSecondary} />
@@ -217,10 +217,10 @@ export const MerchantHomeScreen: React.FC = () => {
               <Volume2 size={18} />
             </div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.textPrimary }}>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: colors.textPrimary }}>
                 Smart Soundbox Pro
               </div>
-              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600, marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 400, marginTop: '2px' }}>
                 98% {isAr ? 'البطارية' : 'Battery'} &bull; {isAr ? 'صوت عربي وإنجليزي' : 'Bilingual Voice'}
               </div>
             </div>
@@ -241,7 +241,7 @@ export const MerchantHomeScreen: React.FC = () => {
               borderRadius: radii.sm,
               padding: '6px 12px',
               fontSize: '12px',
-              fontWeight: 700,
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -264,7 +264,7 @@ export const MerchantHomeScreen: React.FC = () => {
           {/* Card Top Row: Title + Live Badge + Balance Toggle */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.space2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-              <span style={{ fontSize: '13.5px', fontWeight: 700, color: colors.textSecondary }}>
+              <span style={{ fontSize: '13.5px', fontWeight: 600, color: colors.textSecondary }}>
                 {isAr ? 'تحصيلات اليوم' : "Today's Collection"}
               </span>
               <StatusBadge
@@ -295,12 +295,12 @@ export const MerchantHomeScreen: React.FC = () => {
 
           {/* Large Hero Amount */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: spacing.space2, marginBottom: spacing.space4 }}>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: colors.accentGreen }}>SAR</span>
+            <span style={{ fontSize: '18px', fontWeight: 600, color: colors.accentGreen }}>SAR</span>
             <span
               className="tabular-nums"
               style={{
                 fontSize: '34px',
-                fontWeight: 900,
+                fontWeight: 800,
                 color: colors.textPrimary,
                 letterSpacing: '-0.02em',
               }}
@@ -325,19 +325,19 @@ export const MerchantHomeScreen: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
                 {isAr ? 'العمليات' : 'Payments'}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: colors.textPrimary, marginTop: '2px' }}>
                 {isAr ? `${formatLocalizedNumber(paymentCount, language)} عملية` : `${paymentCount} received`}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
                 {isAr ? 'متوسط العملية' : 'Avg Ticket'}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: colors.textPrimary, marginTop: '2px' }}>
                 SAR {avgTicket}
               </div>
             </div>
@@ -356,7 +356,7 @@ export const MerchantHomeScreen: React.FC = () => {
                 borderRadius: radii.md,
                 padding: '12px 14px',
                 fontSize: '13.5px',
-                fontWeight: 800,
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
