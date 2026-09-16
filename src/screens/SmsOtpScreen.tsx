@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { toArabicNumerals } from '../utils/i18n';
+import { authenticateMerchantWithAnyOtp } from '../services/supabaseClient';
 
 export const SmsOtpScreen: React.FC = () => {
-  const { navigateTo, screenParams, goBack, isRtl, language } = useApp();
+  const { navigateTo, screenParams, goBack, isRtl, language, updateUser, updateMerchantInfo } = useApp();
   const isAr = language === 'العربية';
   const mobile = screenParams.mobile || '501234567';
 
@@ -97,8 +98,15 @@ export const SmsOtpScreen: React.FC = () => {
     inputRefs.current[focusIndex]?.focus();
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (isOtpComplete) {
+      try {
+        const { user: authedUser, merchantInfo: authedInfo } = await authenticateMerchantWithAnyOtp(mobile, otp.join(''));
+        updateUser(authedUser);
+        if (authedInfo) updateMerchantInfo(authedInfo);
+      } catch (e) {
+        console.warn('Merchant auth notice:', e);
+      }
       navigateTo('PERMISSIONS');
     }
   };

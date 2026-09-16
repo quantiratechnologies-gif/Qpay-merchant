@@ -20,6 +20,7 @@ import { transactionService } from '../services/transactionService';
 import { notificationService } from '../services/notificationService';
 
 import { translateText, type SupportedLanguage } from '../utils/i18n';
+import { syncCollectionToSupabase, subscribeToMerchantCollections } from '../services/supabaseClient';
 
 interface AppContextType {
   // Localization & Translation
@@ -364,6 +365,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     bankService.getBankAccounts().then(setBankAccounts);
     transactionService.getInitialTransactions().then(setTransactions);
     notificationService.getInitialNotifications().then(setNotifications);
+
+    // Real-time Supabase collections listener (auto-updates KPIs and plays SoundBox chime)
+    const unsubscribe = subscribeToMerchantCollections((newCol) => {
+      setMerchantCollections((prev) => {
+        if (prev.some((c) => c.id === newCol.id || (newCol.orderRef && c.orderRef === newCol.orderRef))) {
+          return prev;
+        }
+        return [newCol, ...prev];
+      });
+      speakSoundBox(newCol.amount);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   // Expose global test helpers for Playwright / automation verification
@@ -615,6 +631,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setMerchantCollections((prev) => [newCollection, ...prev]);
     setLastMerchantCollection(newCollection);
+    syncCollectionToSupabase(newCollection);
 
     // Trigger SoundBox Voice Alert
     speakSoundBox(grossAmount);
