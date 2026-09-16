@@ -1,262 +1,543 @@
 import React from 'react';
 import {
-  Edit3,
-  QrCode,
   Building2,
+  Briefcase,
+  BadgeCheck,
+  QrCode,
+  Settings,
   CreditCard,
-  History,
-  ShieldCheck,
-  Bell,
-  Globe,
-  HelpCircle,
+  Users,
+  Languages,
   LogOut,
-  Lock,
-  Volume2,
-  Smartphone,
-  Link2,
+  ChevronRight,
+  Coins,
+  Bell,
+  HelpCircle,
 } from 'lucide-react';
-import { AppHeader } from '../components/AppHeader';
-import { SamaLogo } from '../components/SamaLogo';
-import { ListRow } from '../components/ListRow';
 import { useApp } from '../state/AppContext';
+import { SamaLogo } from '../components/SamaLogo';
+import { translateText } from '../utils/i18n';
 
 export const ProfileScreen: React.FC = () => {
   const {
-    user,
     merchantInfo,
     language,
     navigateTo,
     setIsLanguageModalOpen,
     setIsLogoutModalOpen,
-    setIsEditProfileModalOpen,
-    t,
+    setIsKycModalOpen,
     isRtl,
   } = useApp();
 
-  const displayName = merchantInfo.businessName || t(user.name, user.name);
+  const isAr = language === 'العربية';
+  const businessName = merchantInfo.businessName || 'Starmart Supermarket';
 
   return (
-    <div className="fade-in" style={{ backgroundColor: '#080C14', minHeight: '100%', paddingBottom: '96px' }}>
-      <AppHeader title={t('profile.title', 'Merchant Profile')} showSettings={false} showBack={true} onBack={() => navigateTo('MERCHANT_HOME')} />
-
-      {/* User Header Profile Hero Card */}
-      <div
+    <div
+      className="fade-in"
+      style={{
+        backgroundColor: '#080C14',
+        minHeight: '100vh',
+        paddingBottom: '96px',
+        color: '#FFFFFF',
+        userSelect: 'none',
+      }}
+    >
+      {/* 1. Top Store Canopy Header matching reference */}
+      <header
         style={{
-          margin: '16px 20px 24px 20px',
-          backgroundColor: '#111726',
-          border: '1px solid #1E293B',
-          borderRadius: '20px',
-          padding: '24px 20px',
-          color: '#FFFFFF',
+          backgroundColor: '#00C853',
+          padding: '16px 20px',
           display: 'flex',
-          flexDirection: 'column',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: 'none',
+          color: '#000000',
         }}
       >
-        {/* Top Verified Pill */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '16px',
-            [isRtl ? 'left' : 'right']: '16px',
-            backgroundColor: 'rgba(127, 232, 127, 0.12)',
-            border: '1px solid rgba(127, 232, 127, 0.3)',
-            borderRadius: '20px',
-            padding: '4px 10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '10px',
-            fontWeight: 800,
-            letterSpacing: '0.05em',
-            color: '#7FE87F',
-          }}
-        >
-          <SamaLogo height={10} themeMode="green" />
-          <span>{language === 'العربية' ? 'موثق عبر نفاذ وسجل تجاري' : 'VERIFIED MERCHANT'}</span>
+        <div>
+          <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', opacity: 0.85, display: 'block' }}>
+            {isAr ? 'متجري' : 'My Store'}
+          </span>
+          <h1 style={{ fontSize: '18px', fontWeight: 900, margin: '2px 0 0 0', color: '#000000', letterSpacing: '-0.01em' }}>
+            {translateText(businessName, language)}
+          </h1>
         </div>
 
-        {/* Avatar with Edit Badge */}
-        <div style={{ position: 'relative', marginBottom: '14px', marginTop: '6px' }}>
-          <div
-            onClick={() => navigateTo('MERCHANT_HOME')}
-            role="button"
-            tabIndex={0}
-            aria-label={language === 'العربية' ? 'الذهاب للرئيسية' : 'Go to Home'}
-            className="interactive-tap"
-            style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              backgroundColor: '#1A2234',
-              color: '#7FE87F',
-              fontWeight: '800',
-              fontSize: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-              border: '2px solid #7FE87F',
-              cursor: 'pointer',
-            }}
-          >
-            {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              merchantInfo.businessName ? merchantInfo.businessName.substring(0, 2).toUpperCase() : user.avatarInitials
-            )}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
-            onClick={() => setIsEditProfileModalOpen(true)}
-            aria-label={t('btn.edit_profile', 'Edit profile picture')}
+            onClick={() => navigateTo('NOTIFICATIONS')}
             className="interactive-tap"
             style={{
-              position: 'absolute',
-              bottom: '0',
-              [isRtl ? 'left' : 'right']: '-2px',
-              width: '28px',
-              height: '28px',
+              background: 'rgba(0, 0, 0, 0.1)',
+              border: 'none',
               borderRadius: '50%',
-              backgroundColor: '#1A2234',
-              border: '1px solid #1E293B',
+              width: '36px',
+              height: '36px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#7FE87F',
+              color: '#000000',
               cursor: 'pointer',
-              boxShadow: 'none',
             }}
-            title={t('btn.edit_profile', 'Edit Profile')}
+            title={isAr ? 'التنبيهات' : 'Notifications'}
           >
-            <Edit3 size={13} strokeWidth={2.5} />
+            <Bell size={18} />
+          </button>
+
+          <button
+            onClick={() => navigateTo('HELP_SUPPORT')}
+            className="interactive-tap"
+            style={{
+              background: 'rgba(0, 0, 0, 0.1)',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '6px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              color: '#000000',
+              fontSize: '12px',
+              fontWeight: 800,
+              cursor: 'pointer',
+            }}
+          >
+            <HelpCircle size={15} />
+            <span>{isAr ? 'مساعدة' : 'Help'}</span>
           </button>
         </div>
+      </header>
 
-        {/* User Details */}
-        <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#FFFFFF', margin: 0, letterSpacing: '-0.01em' }}>
-          {displayName}
-        </h2>
-        <div style={{ fontSize: '12px', color: '#7FE87F', fontWeight: '700', marginTop: '4px', letterSpacing: '0.01em' }} dir="ltr">
-          CR: {merchantInfo.crNumber || '1010892341'} • VAT: {merchantInfo.vatNumber || '310294857200003'}
-        </div>
-        <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: '600', marginTop: '3px' }}>
-          {user.email} • {merchantInfo.storePhone || user.mobile}
+      {/* Main Content Area */}
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+        {/* 2. Avail Instant Business Loan Banner matching reference */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #064E3B 0%, #0F3B2C 50%, #131B26 100%)',
+            border: '1px solid rgba(0, 200, 83, 0.35)',
+            borderRadius: '18px',
+            padding: '16px 18px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(0, 200, 83, 0.08)',
+          }}
+        >
+          <div style={{ flex: 1, zIndex: 1 }}>
+            <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0' }}>
+              {isAr ? 'تمويل فوري لنمو المتجر' : 'Avail Instant Business Loan'}
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px', color: '#CBD5E1', marginBottom: '12px', fontWeight: 600 }}>
+              <span>✔ {isAr ? 'بدون ضمانات معقدة' : 'Collateral Free'}</span>
+              <span>✔ {isAr ? 'إيداع فوري عبر سريع' : 'Instant Sarie Disbursal'}</span>
+              <span>✔ {isAr ? 'هامش ربح منافس ومنخفض' : 'Low Profit Margin'}</span>
+            </div>
+
+            <button
+              onClick={() => {
+                alert(
+                  isAr
+                    ? 'تم استلام طلب التمويل بقيمة ٥٠,٠٠٠ ر.س بنجاح! سيتم التواصل معكم فوراً.'
+                    : 'Business loan inquiry for SAR 50,000 received! A financing specialist will contact you shortly.'
+                );
+              }}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#FFFFFF',
+                color: '#064E3B',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '6px 14px',
+                fontSize: '11px',
+                fontWeight: 900,
+                cursor: 'pointer',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+              }}
+            >
+              {isAr ? 'معرفة المزيد' : 'KNOW MORE'}
+            </button>
+          </div>
+
+          {/* 3D Gold Graphic Aura */}
+          <div
+            style={{
+              width: '85px',
+              height: '85px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(234, 179, 8, 0.25) 0%, rgba(0, 200, 83, 0.1) 70%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FACC15',
+              flexShrink: 0,
+            }}
+          >
+            <Coins size={44} />
+          </div>
         </div>
 
-        {/* Action Buttons: Edit Business Info & Merchant QR Code */}
-        <div style={{ display: 'flex', gap: '10px', marginTop: '18px', width: '100%', justifyContent: 'center' }}>
-          <button
+        {/* 3. 2x2 Core Business Hub Cards Matrix matching reference */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          {/* Card 1: Bank Account */}
+          <div
+            onClick={() => navigateTo('MERCHANT_BANK_LINK')}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '16px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '110px',
+              cursor: 'pointer',
+              position: 'relative',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Building2 size={18} />
+              </div>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
+
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
+                {merchantInfo.settlementIban ? merchantInfo.settlementIban.slice(-9) : 'XXXX 5005'}
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
+                {merchantInfo.settlementBank || 'Al Rajhi Bank'}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Business Profile */}
+          <div
             onClick={() => navigateTo('MERCHANT_SETUP')}
             className="interactive-tap"
             style={{
-              flex: 1,
-              maxWidth: '160px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              padding: '10px 14px',
-              borderRadius: '12px',
-              backgroundColor: '#7FE87F',
-              border: 'none',
-              color: '#080C14',
-              fontSize: '12px',
-              fontWeight: '800',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '16px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '110px',
               cursor: 'pointer',
-              boxShadow: 'none',
+              position: 'relative',
             }}
           >
-            <Building2 size={14} color="#080C14" />
-            {language === 'العربية' ? 'بيانات المنشأة' : 'Business Info'}
-          </button>
-          <button
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#3B82F6',
+                }}
+              >
+                <Briefcase size={18} />
+              </div>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
+
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
+                {isAr ? 'ملف المنشأة' : 'Business Profile'}
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
+                {isAr ? 'عرض وتعديل بيانات السجل والضريبة' : 'View & edit store & tax info'}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: KYC */}
+          <div
+            onClick={() => setIsKycModalOpen(true)}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '16px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '110px',
+              cursor: 'pointer',
+              position: 'relative',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#F59E0B',
+                }}
+              >
+                <BadgeCheck size={18} />
+              </div>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
+
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
+                {isAr ? 'التحقق والامتثال' : 'KYC Verification'}
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
+                {isAr ? 'توثيق معتمد لرفع سقوف التحصيل' : 'Unlock exclusive tier benefits'}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Manage QR & Terminals */}
+          <div
             onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
             className="interactive-tap"
             style={{
-              flex: 1,
-              maxWidth: '160px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              padding: '10px 14px',
-              borderRadius: '12px',
-              backgroundColor: '#1A2234',
+              backgroundColor: '#111726',
               border: '1px solid #1E293B',
-              color: '#FFFFFF',
-              fontSize: '12px',
-              fontWeight: '800',
+              borderRadius: '16px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '110px',
               cursor: 'pointer',
-              boxShadow: 'none',
+              position: 'relative',
             }}
           >
-            <QrCode size={14} color="#7FE87F" />
-            {language === 'العربية' ? 'رمز المتجر QR' : 'Merchant QR'}
-          </button>
-        </div>
-      </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#8B5CF6',
+                }}
+              >
+                <QrCode size={18} />
+              </div>
+              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </div>
 
-      {/* Menu Sections */}
-      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {/* Merchant Business & Settlement */}
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'بيانات المنشأة والتسوية' : 'Business & Settlement'}
-          </div>
-          <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<Building2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'إعدادات المنشأة والسجل التجاري' : 'Business Profile & CR / VAT'} onClick={() => navigateTo('MERCHANT_SETUP')} />
-            <ListRow icon={<CreditCard size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الحساب البنكي للتسوية اليومية' : 'Daily Settlement Bank Account'} onClick={() => navigateTo('MERCHANT_BANK_LINK')} />
-            <ListRow icon={<Volume2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'إعدادات الصندوق الصوتي SoundBox' : 'SoundBox Audio Notifier'} onClick={() => navigateTo('SOUNDBOX_NOTIFIER')} />
-          </div>
-        </div>
-
-        {/* POS & Collections */}
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'نقاط البيع والتحصيل' : 'POS & Collections'}
-          </div>
-          <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<Smartphone size={18} color="#7FE87F" />} label={language === 'العربية' ? 'نقطة البيع بالجوال SoftPOS' : 'SoftPOS Terminal (NFC Tap)'} onClick={() => navigateTo('SOFTPOS_TERMINAL')} />
-            <ListRow icon={<History size={18} color="#7FE87F" />} label={language === 'العربية' ? 'سجل العمليات والتحصيلات' : 'Collections & Settlements'} onClick={() => navigateTo('MERCHANT_COLLECTIONS')} />
-            <ListRow icon={<Link2 size={18} color="#7FE87F" />} label={language === 'العربية' ? 'روابط الدفع السريعة' : 'Instant Payment Links'} onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')} />
-            <ListRow icon={<QrCode size={18} color="#7FE87F" />} label={language === 'العربية' ? 'رمز QR المتوافق مع هيئة الزكاة' : 'ZATCA Compliant QR Code'} onClick={() => navigateTo('MERCHANT_QR_GENERATOR')} />
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '8px' }}>
+                {isAr ? 'إدارة الباركود' : 'Manage QR'}
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#94A3B8', marginTop: '2px', lineHeight: 1.2 }}>
+                {isAr ? 'طباعة ومشاركة باركود المتجر' : 'Manage & order store QR'}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Security & System Settings */}
+        {/* 4. Manage Business Quick Circular Tools Grid matching reference */}
         <div>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px', marginInlineStart: '4px' }}>
-            {language === 'العربية' ? 'الإعدادات والأمان' : 'Settings & Security'}
-          </div>
-          <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow icon={<ShieldCheck size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الأمان والأجهزة المسجلة' : 'Security & Registered Devices'} onClick={() => navigateTo('SECURITY')} />
-            <ListRow icon={<Bell size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الإشعارات والتنبيهات' : 'Notifications & Alerts'} onClick={() => navigateTo('NOTIFICATIONS')} />
-            <ListRow
-              icon={<Globe size={18} color="#7FE87F" />}
-              label={language === 'العربية' ? 'لغة التطبيق' : 'App Language'}
-              rightElement={<span style={{ fontSize: '12px', fontWeight: 800, color: '#7FE87F' }}>{language}</span>}
+          <span style={{ fontSize: '12px', fontWeight: 800, color: '#FFFFFF', marginBottom: '12px', display: 'block' }}>
+            {isAr ? 'إدارة أعمال المتجر' : 'Manage Business'}
+          </span>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+            {/* 1. Payment Settings */}
+            <div
+              onClick={() => navigateTo('SECURITY')}
+              className="interactive-tap"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Settings size={20} />
+              </div>
+              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
+                {isAr ? 'إعدادات الدفع' : 'Payment settings'}
+              </span>
+            </div>
+
+            {/* 2. Payment Instruments */}
+            <div
+              onClick={() => navigateTo('SOFTPOS_TERMINAL')}
+              className="interactive-tap"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#3B82F6',
+                }}
+              >
+                <CreditCard size={20} />
+              </div>
+              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
+                {isAr ? 'أجهزة الدفع' : 'Payment Instruments'}
+              </span>
+            </div>
+
+            {/* 3. Manage Staff */}
+            <div
+              onClick={() => navigateTo('MERCHANT_WEB')}
+              className="interactive-tap"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#F59E0B',
+                }}
+              >
+                <Users size={20} />
+              </div>
+              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
+                {isAr ? 'إدارة الكاشير' : 'Manage Staff'}
+              </span>
+            </div>
+
+            {/* 4. Change Language */}
+            <div
               onClick={() => setIsLanguageModalOpen(true)}
-            />
-            <ListRow icon={<HelpCircle size={18} color="#7FE87F" />} label={language === 'العربية' ? 'المساعدة ودعم التجار' : 'Merchant Help & Support'} onClick={() => navigateTo('HELP_SUPPORT')} />
-            <ListRow icon={<Lock size={18} color="#7FE87F" />} label={language === 'العربية' ? 'الشروط والامتثال المالي' : 'Compliance & Terms'} onClick={() => navigateTo('PRIVACY')} />
+              className="interactive-tap"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+              }}
+            >
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  backgroundColor: '#111726',
+                  border: '1px solid #1E293B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#8B5CF6',
+                }}
+              >
+                <Languages size={20} />
+              </div>
+              <span style={{ fontSize: '10.5px', fontWeight: 600, color: '#94A3B8', lineHeight: 1.2 }}>
+                {isAr ? 'تغيير اللغة' : 'Change Language'}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Log Out */}
-        <div>
-          <div style={{ backgroundColor: '#111726', border: '1px solid #1E293B', borderRadius: '16px', overflow: 'hidden', padding: '6px 6px 0 6px', boxShadow: 'none' }}>
-            <ListRow
-              icon={<LogOut size={18} color="#FF4757" />}
-              label={language === 'العربية' ? 'تسجيل الخروج' : 'Log Out'}
-              danger={true}
-              onClick={() => setIsLogoutModalOpen(true)}
-            />
+        {/* 5. Log Out & Compliance Section */}
+        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              color: '#FF4757',
+              fontSize: '13px',
+              fontWeight: 800,
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <LogOut size={16} />
+              <span>{isAr ? 'تسجيل الخروج من الحساب' : 'Log Out Account'}</span>
+            </div>
+            <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
+            <span style={{ fontSize: '10.5px', color: '#64748B', fontWeight: 700 }}>
+              {isAr ? 'منصة مدفوعات تجارية مرخصة من البنك المركزي السعودي' : 'SAMA Regulated Merchant Platform'}
+            </span>
+            <SamaLogo height={13} themeMode="green" />
           </div>
         </div>
+
       </div>
     </div>
   );

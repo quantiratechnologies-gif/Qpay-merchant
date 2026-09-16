@@ -68,4 +68,16 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Voice Announcement Language')).toBeVisible();
     await expect(page.locator('text=Quick Audio Triggers')).toBeVisible();
   });
+
+  test('7. My Store Profile Hub & Business Loan Banner', async ({ page }) => {
+    await page.goto('/?screen=PROFILE');
+    await expect(page.locator('text=Starmart Supermarket')).toBeVisible();
+    await expect(page.locator('text=Avail Instant Business Loan')).toBeVisible();
+    await expect(page.locator('text=Collateral Free')).toBeVisible();
+    await expect(page.locator('text=Al Rajhi Bank')).toBeVisible();
+    await expect(page.locator('text=Business Profile')).toBeVisible();
+    await expect(page.locator('text=KYC Verification')).toBeVisible();
+    await expect(page.locator('text=Manage QR')).toBeVisible();
+    await expect(page.locator('text=Payment Settings')).toBeVisible();
+  });
 });
