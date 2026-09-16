@@ -1,70 +1,76 @@
 /**
- * alph pay — Official Mobile App Design System Tokens
- * Primary: Vibrant Lime Green (#7FE87F)
- * UI Base: Deep Navy Charcoal (#1A1A2E) & Dark Card Surfaces (#2A2A3E)
- * Secondary: Pure Black (#000000) & Pure White (#FFFFFF)
- * Typography: Inter / SF Pro / Google Sans Flex Scale
- * Border Radius: 8px (Buttons/Inputs), 12px (Cards), 16px (Modals), 24px (Hero)
- * Contrast: High contrast WCAG AA compliant (black text on green CTAs, white text on dark cards)
+ * Quantira Technologies / QtPay Merchant Design Tokens
+ * Centralized Type-Safe Design Tokens & Variables
  */
 
 export const colors = {
-  // 1. Primary Color — Vibrant Lime Green & Tiers
-  primary: '#7FE87F',
-  primaryHover: '#5FBF5F',
-  primaryActive: '#3F963F',
-  primaryLight: 'rgba(127, 232, 127, 0.12)',
-  primaryLightHover: 'rgba(127, 232, 127, 0.2)',
-  primaryBorder: '#7FE87F',
-  primaryDark: '#1F6D1F',
-  textOnPrimary: '#000000', // Black text on Lime Green for maximum readability
+  // Surface & Background Colors
+  bgPage: '#080C14',
+  bgCard: '#111726',
+  bgInset: '#161F30',
+  background: '#080C14',
+  surface: '#111726',
+  surfaceElevated: '#161F30',
+  subSurface: '#161F30',
 
-  // 2. Secondary Color — Pure Black & Grays
+  // Borders
+  border: '#1E293B',
+  borderFocus: '#334155',
+  borderHairline: '#1E293B',
+  borderStrong: '#334155',
+
+  // Accents
+  accentGreen: '#00C853',
+  accentGreenBright: '#7FE87F',
+  accentBlue: '#38BDF8',
+  accentPurple: '#A855F7',
+  accentAmber: '#F59E0B',
+
+  // Primary Theme Aliases
+  primary: '#00C853',
+  primaryHover: '#00B048',
+  primaryActive: '#00963E',
+  primaryLight: 'rgba(0, 200, 83, 0.12)',
+  primaryLightHover: 'rgba(0, 200, 83, 0.20)',
+  primaryBorder: '#00C853',
+  primaryDark: '#007A33',
+  textOnPrimary: '#000000',
+
+  // Secondary & Dark Accents
   secondary: '#000000',
-  secondaryHover: '#2A2A2A',
-  gray25: '#333333',
-  gray50: '#666666',
-  gray75: '#999999',
-  gray90: '#CCCCCC',
+  secondaryHover: '#161F30',
+  darkBg: '#080C14',
+  darkSurface: '#111726',
+  darkSurfaceElevated: '#161F30',
+  darkBorder: '#1E293B',
+  darkDisabled: '#1E293B',
+  darkPlaceholder: '#64748B',
 
-  // 3. Accent Dark — Ultra Deep Pitch Navy Charcoal UI Surfaces
-  darkBg: '#0B0B14',
-  darkSurface: '#151524',
-  darkSurfaceElevated: '#1E1E32',
-  darkBorder: '#2C2C44',
-  darkDisabled: '#2C2C44',
-  darkPlaceholder: '#9E9EB2',
-
-  // 4. Neutral — Pure White & Light Surfaces
+  // Neutral Light Surfaces
   lightBg: '#FFFFFF',
   lightSurface: '#F5F5F7',
   lightSurfaceElevated: '#FFFFFF',
   lightBorder: '#E6E6E6',
 
-  // Active App Surfaces (alph pay Signature Pitch Dark Experience)
-  surface: '#151524',
-  surfaceElevated: '#1E1E32',
-  background: '#0B0B14',
-  subSurface: '#1E1E32',
-  surfaceHover: '#222238',
-  inputFill: '#0F0F1D',
-  overlay: 'rgba(5, 5, 10, 0.85)',
-
-  // Typography Tiers
+  // Typography
   textPrimary: '#FFFFFF',
-  textSecondary: '#A2A2BA',
-  textMuted: '#6E6E85',
-  textDisabled: '#6E6E85',
+  textSecondary: '#94A3B8',
+  textMuted: '#64748B',
+  textDisabled: '#64748B',
 
-  // Borders & Dividers
-  borderHairline: '#2C2C44',
-  borderStrong: '#4A4A68',
-  borderFocus: '#7FE87F',
+  // Semantic Status Colors
+  success: '#00C853',
+  successBright: '#7FE87F',
+  successLight: 'rgba(0, 200, 83, 0.12)',
+  successText: '#00C853',
 
-  // Semantic & Feedback Colors
-  success: '#7FE87F',
-  successLight: 'rgba(127, 232, 127, 0.12)',
-  successText: '#7FE87F',
+  info: '#38BDF8',
+  infoLight: 'rgba(56, 189, 248, 0.12)',
+  infoText: '#38BDF8',
+
+  purple: '#A855F7',
+  purpleLight: 'rgba(168, 85, 247, 0.12)',
+  purpleText: '#A855F7',
 
   warning: '#F59E0B',
   warningLight: 'rgba(245, 158, 11, 0.12)',
@@ -74,9 +80,33 @@ export const colors = {
   dangerLight: 'rgba(255, 71, 87, 0.12)',
   dangerText: '#FF6B7A',
 
-  info: '#7FE87F',
-  infoLight: 'rgba(127, 232, 127, 0.12)',
-  infoText: '#000000',
+  overlay: 'rgba(8, 12, 20, 0.85)',
+} as const;
+
+export const spacing = {
+  space1: '4px',
+  space2: '8px',
+  space3: '12px',
+  space4: '16px',
+  space5: '20px',
+  space6: '24px',
+  xs: '4px',
+  sm: '8px',
+  md: '12px',
+  lg: '16px',
+  xl: '20px',
+  '2xl': '24px',
+  '3xl': '32px',
+} as const;
+
+export const radii = {
+  sm: '8px',
+  md: '12px',
+  lg: '16px',
+  xl: '20px',
+  full: '9999px',
+  none: '0px',
+  xs: '4px',
 } as const;
 
 export const typography = {
@@ -101,17 +131,6 @@ export const typography = {
   },
 } as const;
 
-export const radii = {
-  none: '0px',
-  xs: '4px',
-  sm: '8px',   // Buttons, inputs, small chips
-  md: '12px',  // Cards, list items
-  lg: '16px',  // Balance cards, modals
-  xl: '24px',  // Hero banners, large surfaces
-  full: '999px',
-} as const;
-
-// STRICT 0 DROP SHADOWS GLOBALLY
 export const shadows = {
   none: 'none',
   flat: 'none',
@@ -121,35 +140,32 @@ export const shadows = {
   xl: 'none',
 } as const;
 
-export const spacing = {
-  xs: '4px',
-  sm: '8px',
-  md: '16px',
-  lg: '24px',
-  xl: '32px',
-  '2xl': '48px',
-} as const;
-
 export const focus = {
-  ring: '2.5px solid #7FE87F',
+  ring: '2.5px solid #00C853',
   offset: '2px',
   outline: 'none',
 } as const;
 
 export const componentPresets = {
   card: {
-    backgroundColor: colors.darkSurface,
-    border: `1px solid ${colors.darkBorder}`,
+    backgroundColor: colors.bgCard,
+    border: `1px solid ${colors.border}`,
+    borderRadius: radii.md,
+    boxShadow: 'none',
+  },
+  cardInset: {
+    backgroundColor: colors.bgInset,
+    border: `1px solid ${colors.border}`,
     borderRadius: radii.md,
     boxShadow: 'none',
   },
   header: {
-    backgroundColor: colors.darkBg,
-    borderBottom: `1px solid ${colors.darkBorder}`,
+    backgroundColor: colors.bgPage,
+    borderBottom: `1px solid ${colors.border}`,
     boxShadow: 'none',
   },
   buttonPrimary: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accentGreen,
     color: colors.textOnPrimary,
     borderRadius: radii.sm,
     fontWeight: typography.weights.bold,
@@ -158,28 +174,38 @@ export const componentPresets = {
   },
   buttonSecondary: {
     backgroundColor: 'transparent',
-    color: colors.primary,
+    color: colors.accentGreenBright,
     borderRadius: radii.sm,
     fontWeight: typography.weights.semibold,
-    border: `1.5px solid ${colors.primary}`,
+    border: `1.5px solid ${colors.border}`,
     boxShadow: 'none',
   },
   input: {
-    backgroundColor: colors.darkBg,
-    border: `1px solid ${colors.darkBorder}`,
+    backgroundColor: colors.bgCard,
+    border: `1px solid ${colors.border}`,
     borderRadius: radii.sm,
     color: colors.textPrimary,
     boxShadow: 'none',
   },
 } as const;
 
-export const designSystem = {
+export const tokens = {
   colors,
-  typography,
-  radii,
-  shadows,
   spacing,
+  radii,
+  typography,
+  shadows,
   focus,
   componentPresets,
-};
+} as const;
 
+export const designSystem = tokens;
+
+export type Colors = typeof colors;
+export type Spacing = typeof spacing;
+export type Radii = typeof radii;
+export type Typography = typeof typography;
+export type Shadows = typeof shadows;
+export type Focus = typeof focus;
+export type ComponentPresets = typeof componentPresets;
+export type Tokens = typeof tokens;

@@ -10,6 +10,8 @@ import {
 import { useApp } from '../state/AppContext';
 import { AppHeader } from '../components/AppHeader';
 import { formatSaudiCurrency, formatLocalizedNumber } from '../utils/i18n';
+import { Card, MetricTile, StatusBadge, SectionHeader, ListRow, FilterPills } from '../components/ui';
+import { colors, spacing, radii } from '../design-system/tokens';
 
 export const MerchantInsightsScreen: React.FC = () => {
   const {
@@ -21,7 +23,7 @@ export const MerchantInsightsScreen: React.FC = () => {
   } = useApp();
 
   const isAr = language === 'العربية';
-  const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month'>('today');
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('today');
 
   // Compute live aggregates from collections or reference baseline
   const totalVolume = merchantCollections.reduce((sum, c) => sum + (c.status === 'settled' ? c.amount : 0), 0) || 1862.0;
@@ -36,7 +38,7 @@ export const MerchantInsightsScreen: React.FC = () => {
       shortName: 'Cards / SoftPOS',
       percent: 58,
       amount: totalVolume * 0.58,
-      color: '#00C853',
+      color: colors.accentGreen,
       icon: CreditCard,
     },
     {
@@ -44,7 +46,7 @@ export const MerchantInsightsScreen: React.FC = () => {
       shortName: 'Apple Pay',
       percent: 24,
       amount: totalVolume * 0.24,
-      color: '#38BDF8',
+      color: colors.accentBlue,
       icon: Smartphone,
     },
     {
@@ -52,7 +54,7 @@ export const MerchantInsightsScreen: React.FC = () => {
       shortName: 'ZATCA QR',
       percent: 14,
       amount: totalVolume * 0.14,
-      color: '#A855F7',
+      color: colors.accentPurple,
       icon: QrCode,
     },
     {
@@ -60,7 +62,7 @@ export const MerchantInsightsScreen: React.FC = () => {
       shortName: 'Cash Log',
       percent: 4,
       amount: totalVolume * 0.04,
-      color: '#F59E0B',
+      color: colors.accentAmber,
       icon: Banknote,
     },
   ];
@@ -79,28 +81,33 @@ export const MerchantInsightsScreen: React.FC = () => {
 
   const recentCollectionsPreview = merchantCollections.slice(0, 3);
 
-  const getMethodBadge = (method: string) => {
+  const getMethodBadge = (method: string): { label: string; status: 'success' | 'purple' | 'warning' | 'info'; icon: React.ReactNode } => {
     if (method.includes('mada') || method.includes('card') || method.startsWith('softpos')) {
-      return { label: isAr ? 'بطاقة بنكية' : 'Debit Card', bg: '#00C853', color: '#000000', icon: CreditCard };
+      return { label: isAr ? 'بطاقة بنكية' : 'Debit Card', status: 'success', icon: <CreditCard size={18} /> };
     }
     if (method === 'zatca_qr') {
-      return { label: isAr ? 'فاتورة زكاة' : 'ZATCA QR', bg: '#A855F7', color: '#ffffff', icon: QrCode };
+      return { label: isAr ? 'فاتورة زكاة' : 'ZATCA QR', status: 'purple', icon: <QrCode size={18} /> };
     }
     if (method === 'cash') {
-      return { label: isAr ? 'نقدي' : 'Cash', bg: '#F59E0B', color: '#000000', icon: Banknote };
+      return { label: isAr ? 'نقدي' : 'Cash', status: 'warning', icon: <Banknote size={18} /> };
     }
-    return { label: isAr ? 'دفع إلكتروني' : 'Payment Link', bg: '#38BDF8', color: '#000000', icon: Smartphone };
+    return { label: isAr ? 'دفع إلكتروني' : 'Payment Link', status: 'info', icon: <Smartphone size={18} /> };
   };
+
+  const filterTabs = [
+    { id: 'today', label: t('insights.tab_today', 'Today') },
+    { id: 'week', label: t('insights.tab_week', 'This Week') },
+    { id: 'month', label: t('insights.tab_month', 'This Month') },
+  ];
 
   return (
     <div
       className="fade-in"
       style={{
-        backgroundColor: '#080C14',
+        backgroundColor: colors.bgPage,
         minHeight: '100%',
         paddingBottom: '96px',
-        color: '#FFFFFF',
-        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        color: colors.textPrimary,
       }}
     >
       {/* Top Header */}
@@ -110,52 +117,15 @@ export const MerchantInsightsScreen: React.FC = () => {
         showSettings={true}
       />
 
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      <div style={{ padding: `${spacing.space4} ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space4 }}>
         {/* Period Filter Tabs */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: '#111726',
-            borderRadius: '12px',
-            padding: '4px',
-            border: '1px solid #1E293B',
-          }}
-        >
-          {(
-            [
-              { id: 'today', label: t('insights.tab_today', 'Today') },
-              { id: 'week', label: t('insights.tab_week', 'This Week') },
-              { id: 'month', label: t('insights.tab_month', 'This Month') },
-            ] as const
-          ).map((tab) => {
-            const isActive = selectedPeriod === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setSelectedPeriod(tab.id)}
-                style={{
-                  flex: 1,
-                  padding: '8px 12px',
-                  borderRadius: '9px',
-                  backgroundColor: isActive ? '#161F30' : 'transparent',
-                  color: isActive ? '#FFFFFF' : '#94A3B8',
-                  border: isActive ? '1px solid #334155' : '1px solid transparent',
-                  fontSize: '12px',
-                  fontWeight: isActive ? 700 : 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  textAlign: 'center',
-                }}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+        <FilterPills
+          tabs={filterTabs}
+          activeId={selectedPeriod}
+          onSelect={(id) => setSelectedPeriod(id)}
+        />
 
-        {/* 1. Top KPI 3-Cards Row (Exact Reference Structure) */}
+        {/* 1. Top KPI 3-Cards Row (Using MetricTile primitives) */}
         <div
           style={{
             display: 'grid',
@@ -164,169 +134,80 @@ export const MerchantInsightsScreen: React.FC = () => {
           }}
         >
           {/* Card 1: TOTAL SALES */}
-          <div
-            style={{
-              backgroundColor: '#111726',
-              borderRadius: '16px',
-              border: '1px solid #1E293B',
-              padding: '14px 12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                color: '#94A3B8',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                marginBottom: '6px',
-              }}
-            >
-              {t('insights.total_sales', 'TOTAL SALES')}
-            </span>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                {isAr ? `${formatLocalizedNumber(Math.round(totalVolume))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(totalVolume))}`}
-              </div>
-              <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px', fontWeight: 500 }}>
-                {isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
-              </div>
-            </div>
-          </div>
+          <MetricTile
+            title={t('insights.total_sales', 'TOTAL SALES')}
+            value={isAr ? `${formatLocalizedNumber(Math.round(totalVolume))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(totalVolume))}`}
+            subtitle={isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
+            style={{ padding: '14px 12px' }}
+          />
 
           {/* Card 2: AVG TICKET (Highlighted Green) */}
-          <div
-            style={{
-              backgroundColor: '#111726',
-              borderRadius: '16px',
-              border: '1px solid #1E293B',
-              padding: '14px 12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                color: '#94A3B8',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                marginBottom: '6px',
-              }}
-            >
-              {t('insights.avg_ticket', 'AVG TICKET')}
-            </span>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#00C853', letterSpacing: '-0.02em' }}>
-                {isAr ? `${formatLocalizedNumber(avgTicket.toFixed(2))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(2))}`}
-              </div>
-              <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px', fontWeight: 500 }}>
-                {isAr ? 'لكل عميل' : 'per ticket'}
-              </div>
-            </div>
-          </div>
+          <MetricTile
+            title={t('insights.avg_ticket', 'AVG TICKET')}
+            value={isAr ? `${formatLocalizedNumber(avgTicket.toFixed(2))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(2))}`}
+            subtitle={isAr ? 'لكل عميل' : 'per ticket'}
+            highlightGreen={true}
+            style={{ padding: '14px 12px' }}
+          />
 
           {/* Card 3: SETTLEMENT */}
-          <div
-            style={{
-              backgroundColor: '#111726',
-              borderRadius: '16px',
-              border: '1px solid #1E293B',
-              padding: '14px 12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                color: '#94A3B8',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                marginBottom: '6px',
-              }}
-            >
-              {t('insights.settlement', 'SETTLEMENT')}
-            </span>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                {isAr ? `${formatLocalizedNumber(Math.round(settlementReady))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(settlementReady))}`}
-              </div>
-              <div style={{ fontSize: '10px', color: '#00C853', marginTop: '2px', fontWeight: 600 }}>
-                {isAr ? 'مستحق الصرف' : 'Auto Ready'}
-              </div>
-            </div>
-          </div>
+          <MetricTile
+            title={t('insights.settlement', 'SETTLEMENT')}
+            value={isAr ? `${formatLocalizedNumber(Math.round(settlementReady))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(settlementReady))}`}
+            subtitle={<span style={{ color: colors.accentGreen, fontWeight: 600 }}>{isAr ? 'مستحق الصرف' : 'Auto Ready'}</span>}
+            style={{ padding: '14px 12px' }}
+          />
         </div>
 
-        {/* 2. Payment Rail Distribution Card (Reference Match) */}
-        <div
+        {/* 2. Payment Rail Distribution Card */}
+        <Card
+          variant="elevated"
           style={{
-            backgroundColor: '#111726',
-            borderRadius: '20px',
-            border: '1px solid #1E293B',
-            padding: '18px 18px',
+            padding: '18px',
           }}
         >
           {/* Card Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#FFFFFF' }}>
-                  {t('insights.rail_dist', 'Payment Rail Distribution')}
-                </h3>
+          <SectionHeader
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+                <span>{t('insights.rail_dist', 'Payment Rail Distribution')}</span>
                 <span
                   style={{
                     width: '7px',
                     height: '7px',
-                    borderRadius: '50%',
-                    backgroundColor: '#00C853',
+                    borderRadius: radii.full,
+                    backgroundColor: colors.accentGreen,
                     display: 'inline-block',
                     boxShadow: '0 0 8px rgba(0,200,83,0.8)',
                   }}
                 />
               </div>
-              <p style={{ margin: '3px 0 0', fontSize: '12px', color: '#94A3B8' }}>
-                {t('insights.volume_share', 'Volume share & net collection value')}
-              </p>
-            </div>
-
-            <span
-              style={{
-                padding: '4px 8px',
-                backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                border: '1px solid rgba(0, 200, 83, 0.3)',
-                borderRadius: '8px',
-                fontSize: '11px',
-                fontWeight: 700,
-                color: '#00C853',
-              }}
-            >
-              {t('insights.live_analytics', 'Live Analytics')}
-            </span>
-          </div>
+            }
+            subtitle={t('insights.volume_share', 'Volume share & net collection value')}
+            badge={
+              <StatusBadge
+                status="success"
+                size="sm"
+                label={t('insights.live_analytics', 'Live Analytics')}
+              />
+            }
+            style={{ marginBottom: spacing.space3 }}
+          />
 
           {/* Donut Chart & Legend Row */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '18px',
-              marginTop: '12px',
+              gap: spacing.space4,
+              marginTop: spacing.space3,
             }}
           >
             {/* Donut Chart (SVG) */}
             <div style={{ position: 'relative', width: '100px', height: '100px', flexShrink: 0 }}>
               <svg width="100" height="100" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
                 {/* Background Ring */}
-                <circle cx="50" cy="50" r="38" fill="none" stroke="#161F30" strokeWidth="12" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke={colors.bgInset} strokeWidth="12" />
                 
                 {/* Green Segment (58%) */}
                 <circle
@@ -334,7 +215,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   cy="50"
                   r="38"
                   fill="none"
-                  stroke="#00C853"
+                  stroke={colors.accentGreen}
                   strokeWidth="12"
                   strokeDasharray="138 238"
                   strokeDashoffset="0"
@@ -346,7 +227,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   cy="50"
                   r="38"
                   fill="none"
-                  stroke="#38BDF8"
+                  stroke={colors.accentBlue}
                   strokeWidth="12"
                   strokeDasharray="57 238"
                   strokeDashoffset="-138"
@@ -358,7 +239,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   cy="50"
                   r="38"
                   fill="none"
-                  stroke="#A855F7"
+                  stroke={colors.accentPurple}
                   strokeWidth="12"
                   strokeDasharray="33 238"
                   strokeDashoffset="-195"
@@ -370,7 +251,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   cy="50"
                   r="38"
                   fill="none"
-                  stroke="#F59E0B"
+                  stroke={colors.accentAmber}
                   strokeWidth="12"
                   strokeDasharray="10 238"
                   strokeDashoffset="-228"
@@ -389,17 +270,17 @@ export const MerchantInsightsScreen: React.FC = () => {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.1 }}>
+                <span style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, lineHeight: 1.1 }}>
                   82%
                 </span>
-                <span style={{ fontSize: '8.5px', fontWeight: 700, color: '#94A3B8', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '8.5px', fontWeight: 700, color: colors.textSecondary, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                   {t('insights.digital_share', 'DIGITAL')}
                 </span>
               </div>
             </div>
 
             {/* Legend List */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: spacing.space2 }}>
               {railStats.map((rail, idx) => (
                 <div
                   key={idx}
@@ -415,20 +296,20 @@ export const MerchantInsightsScreen: React.FC = () => {
                       style={{
                         width: '8px',
                         height: '8px',
-                        borderRadius: '50%',
+                        borderRadius: radii.full,
                         backgroundColor: rail.color,
                         flexShrink: 0,
                       }}
                     />
-                    <span style={{ color: '#FFFFFF', fontWeight: 600 }}>
+                    <span style={{ color: colors.textPrimary, fontWeight: 600 }}>
                       {rail.shortName}
                     </span>
-                    <span style={{ color: '#64748B', fontSize: '11px', fontWeight: 500 }}>
+                    <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 500 }}>
                       ({formatLocalizedNumber(rail.percent)}%)
                     </span>
                   </div>
 
-                  <div style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '12px' }}>
+                  <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '12px' }}>
                     {isAr
                       ? `${formatLocalizedNumber(rail.amount.toFixed(2))} ر.س`
                       : `SAR ${formatLocalizedNumber(rail.amount.toFixed(2))}`}
@@ -437,46 +318,45 @@ export const MerchantInsightsScreen: React.FC = () => {
               ))}
             </div>
           </div>
-        </div>
+        </Card>
 
-        {/* 3. Hourly Transaction Velocity Card (Reference Match) */}
-        <div
+        {/* 3. Hourly Transaction Velocity Card */}
+        <Card
+          variant="elevated"
           style={{
-            backgroundColor: '#111726',
-            borderRadius: '20px',
-            border: '1px solid #1E293B',
-            padding: '18px 18px',
+            padding: '18px',
           }}
         >
           {/* Card Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#FFFFFF' }}>
-                {t('insights.hourly_velocity', 'Hourly Transaction Velocity')}
-              </h3>
-              <span
-                style={{
-                  width: '7px',
-                  height: '7px',
-                  borderRadius: '50%',
-                  backgroundColor: '#00C853',
-                  display: 'inline-block',
-                }}
-              />
-            </div>
-
-            <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
-              {t('insights.peak', 'Peak: 11 AM - 1 PM')}
-            </span>
-          </div>
+          <SectionHeader
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+                <span>{t('insights.hourly_velocity', 'Hourly Transaction Velocity')}</span>
+                <span
+                  style={{
+                    width: '7px',
+                    height: '7px',
+                    borderRadius: radii.full,
+                    backgroundColor: colors.accentGreen,
+                    display: 'inline-block',
+                  }}
+                />
+              </div>
+            }
+            actionButton={
+              <span style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+                {t('insights.peak', 'Peak: 11 AM - 1 PM')}
+              </span>
+            }
+            style={{ marginBottom: spacing.space4 }}
+          />
 
           {/* Bar Chart Visualization Container */}
-          <div
+          <Card
+            variant="inset"
             style={{
-              backgroundColor: '#0B101B',
-              borderRadius: '14px',
               padding: '16px 14px 10px',
-              border: '1px solid #161F30',
+              backgroundColor: '#0B101B',
             }}
           >
             {/* Bars */}
@@ -486,8 +366,8 @@ export const MerchantInsightsScreen: React.FC = () => {
                 alignItems: 'flex-end',
                 justifyContent: 'space-between',
                 height: '96px',
-                paddingBottom: '8px',
-                borderBottom: '1px solid #1E293B',
+                paddingBottom: spacing.space2,
+                borderBottom: `1px solid ${colors.border}`,
               }}
             >
               {hourlyData.map((item, index) => {
@@ -511,8 +391,8 @@ export const MerchantInsightsScreen: React.FC = () => {
                         width: '26px',
                         height: `${barHeight}px`,
                         borderRadius: '6px 6px 2px 2px',
-                        backgroundColor: isHighlight ? '#00C853' : '#162235',
-                        border: isHighlight ? '1px solid #00E676' : '1px solid #1E293B',
+                        backgroundColor: isHighlight ? colors.accentGreen : '#162235',
+                        border: isHighlight ? `1px solid ${colors.accentGreenBright}` : `1px solid ${colors.border}`,
                         transition: 'height 0.3s ease',
                       }}
                     />
@@ -526,7 +406,7 @@ export const MerchantInsightsScreen: React.FC = () => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginTop: '8px',
+                marginTop: spacing.space2,
               }}
             >
               {hourlyData.map((item, index) => (
@@ -537,14 +417,14 @@ export const MerchantInsightsScreen: React.FC = () => {
                     textAlign: 'center',
                     fontSize: '10px',
                     fontWeight: item.isPeak ? 700 : 500,
-                    color: item.isPeak ? '#00C853' : '#64748B',
+                    color: item.isPeak ? colors.accentGreen : colors.textMuted,
                   }}
                 >
                   {isAr ? item.hourAr : item.hour}
                 </span>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Bottom Velocity KPI Stats */}
           <div
@@ -552,169 +432,129 @@ export const MerchantInsightsScreen: React.FC = () => {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginTop: '14px',
-              paddingTop: '12px',
-              borderTop: '1px solid #1E293B',
+              marginTop: spacing.space3,
+              paddingTop: spacing.space3,
+              borderTop: `1px solid ${colors.border}`,
             }}
           >
             <div>
-              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 500 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
                 {t('insights.busiest_vol', 'Busiest Hour Volume')}
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
                 {isAr ? '٦ عمليات • ٦٤٥.٠٠ ر.س' : '6 txns • SAR 645.00'}
               </div>
             </div>
 
             <div style={{ textAlign: isAr ? 'left' : 'right' }}>
-              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 500 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 500 }}>
                 {t('insights.avg_tap_speed', 'Avg Tap-to-Pay Speed')}
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#00C853', marginTop: '2px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.accentGreen, marginTop: '2px' }}>
                 {isAr ? '٣.٨ ثانية / عملية' : '3.8s / ticket'}
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
-        {/* 4. Today's Collections Preview Card (Direct link to full Collections sub-page) */}
-        <div
+        {/* 4. Today's Collections Preview Card */}
+        <Card
+          variant="elevated"
           style={{
-            backgroundColor: '#111726',
-            borderRadius: '20px',
-            border: '1px solid #1E293B',
-            padding: '18px 18px',
+            padding: '18px',
           }}
         >
           {/* Header with View Full link */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '14px',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#FFFFFF' }}>
-                {t('insights.todays_collections', "Today's Collections")}
-              </h3>
-              <span
-                style={{
-                  padding: '2px 7px',
-                  backgroundColor: '#161F30',
-                  borderRadius: '6px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: '#94A3B8',
-                }}
-              >
-                {isAr ? `${formatLocalizedNumber(settledCount)} إجمالي` : `${settledCount} total`}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#00C853',
-                fontSize: '13px',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                cursor: 'pointer',
-                padding: '4px 6px',
-              }}
-            >
-              {t('insights.view_full', 'View Full')}
-              <ArrowUpRight size={15} strokeWidth={2.5} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />
-            </button>
-          </div>
-
-          {/* Collection Rows */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {recentCollectionsPreview.map((item) => {
-              const badge = getMethodBadge(item.paymentMethod);
-              const BadgeIcon = badge.icon;
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+          <SectionHeader
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+                <span>{t('insights.todays_collections', "Today's Collections")}</span>
+                <span
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    backgroundColor: '#161F30',
-                    borderRadius: '14px',
-                    border: '1px solid #1E293B',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.15s ease',
+                    padding: '2px 7px',
+                    backgroundColor: colors.bgInset,
+                    borderRadius: radii.xs,
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: colors.textSecondary,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div
-                      style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
-                        backgroundColor: badge.bg === '#00C853' ? 'rgba(0,200,83,0.15)' : 'rgba(255,255,255,0.06)',
-                        border: `1px solid ${badge.bg === '#00C853' ? 'rgba(0,200,83,0.3)' : 'rgba(255,255,255,0.1)'}`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: badge.bg === '#00C853' ? '#00C853' : '#FFFFFF',
-                      }}
-                    >
-                      <BadgeIcon size={18} />
-                    </div>
+                  {isAr ? `${formatLocalizedNumber(settledCount)} إجمالي` : `${settledCount} total`}
+                </span>
+              </div>
+            }
+            actionButton={
+              <button
+                type="button"
+                onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+                className="interactive-tap"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: colors.accentGreen,
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  cursor: 'pointer',
+                  padding: '4px 6px',
+                }}
+              >
+                <span>{t('insights.view_full', 'View Full')}</span>
+                <ArrowUpRight size={15} strokeWidth={2.5} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />
+              </button>
+            }
+            style={{ marginBottom: spacing.space3 }}
+          />
 
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF' }}>
-                        {badge.label}
-                      </div>
-                      <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                        {item.date} • SoftPOS
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ textAlign: isAr ? 'left' : 'right' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+          {/* Collection Rows */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.space2 }}>
+            {recentCollectionsPreview.map((item) => {
+              const badge = getMethodBadge(item.paymentMethod);
+              return (
+                <ListRow
+                  key={item.id}
+                  onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+                  leftIcon={badge.icon}
+                  title={badge.label}
+                  subtitle={`${item.date} • SoftPOS`}
+                  rightAmount={
+                    <div style={{ color: colors.accentGreen, fontWeight: 800 }}>
                       +{formatSaudiCurrency(item.amount, language)}
                     </div>
-                    <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>
-                      {isAr ? 'مقبوض' : 'Paid'}
-                    </div>
-                  </div>
-                </div>
+                  }
+                  rightBadge={
+                    <StatusBadge
+                      status={badge.status}
+                      size="sm"
+                      label={isAr ? 'مقبوض' : 'Paid'}
+                    />
+                  }
+                />
               );
             })}
           </div>
-        </div>
+        </Card>
 
         {/* 5. Direct Sarie Settlement Card */}
-        <div
+        <Card
+          variant="interactive"
+          onClick={() => navigateTo('MERCHANT_BANK_LINK')}
           style={{
-            backgroundColor: '#111726',
-            borderRadius: '16px',
-            border: '1px solid #1E293B',
             padding: '14px 16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Building2 size={20} color="#38BDF8" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+            <Building2 size={20} color={colors.accentBlue} />
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#FFFFFF' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: colors.textPrimary }}>
                 {merchantInfo.settlementBank || 'Al Rajhi Bank'}
               </div>
-              <div style={{ fontSize: '10px', color: '#94A3B8' }}>
+              <div style={{ fontSize: '10px', color: colors.textSecondary }}>
                 {merchantInfo.settlementIban || 'SA55 8000 0000 6271 5005'}
               </div>
             </div>
@@ -722,13 +562,17 @@ export const MerchantInsightsScreen: React.FC = () => {
 
           <button
             type="button"
-            onClick={() => navigateTo('MERCHANT_BANK_LINK')}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateTo('MERCHANT_BANK_LINK');
+            }}
+            className="interactive-tap"
             style={{
               padding: '6px 12px',
-              borderRadius: '8px',
-              backgroundColor: '#161F30',
-              border: '1px solid #334155',
-              color: '#FFFFFF',
+              borderRadius: radii.sm,
+              backgroundColor: colors.bgInset,
+              border: `1px solid ${colors.borderStrong}`,
+              color: colors.textPrimary,
               fontSize: '11px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -736,14 +580,14 @@ export const MerchantInsightsScreen: React.FC = () => {
           >
             {isAr ? 'إدارة الحساب' : 'Manage'}
           </button>
-        </div>
+        </Card>
 
         {/* Bottom Platform Engine Signature */}
         <div
           style={{
             textAlign: 'center',
             padding: '8px 0 16px',
-            color: '#64748B',
+            color: colors.textMuted,
             fontSize: '11px',
             fontWeight: 500,
           }}

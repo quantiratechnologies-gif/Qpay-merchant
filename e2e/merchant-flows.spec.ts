@@ -45,7 +45,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
 
   test('4. My Store QR Stand Hub (Static and Dynamic)', async ({ page }) => {
     await page.goto('/?screen=MERCHANT_QR_GENERATOR');
-    await expect(page.locator('text=My Store QR Hub')).toBeVisible();
+    await expect(page.locator('text=Store QR Hub')).toBeVisible();
     await expect(page.locator('button:has-text("Store Stand QR")')).toBeVisible();
     await expect(page.locator('button:has-text("Dynamic Invoice QR")')).toBeVisible();
     await expect(page.locator('button:has-text("Download Stand Poster")')).toBeVisible();

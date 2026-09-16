@@ -22,6 +22,8 @@ import {
 import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
 import { AlphPayLogo } from '../components/AlphPayLogo';
+import { Card, StatusBadge, SectionHeader, ListRow } from '../components/ui';
+import { colors, spacing, radii } from '../design-system/tokens';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
@@ -82,15 +84,15 @@ export const MerchantHomeScreen: React.FC = () => {
     <div
       className="fade-in"
       style={{
-        backgroundColor: '#080C14',
+        backgroundColor: colors.bgPage,
         minHeight: '100vh',
         paddingBottom: '100px',
-        color: '#FFFFFF',
+        color: colors.textPrimary,
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* 1. Top Sticky Header (Left: Store Icon, Center: AlphPay Logo, Right: Notifications & Profile) */}
+      {/* 1. Top Sticky Header (Left: Store Icon, Center: Brand Logo, Right: Notifications & Profile) */}
       <div
         style={{
           position: 'sticky',
@@ -99,11 +101,11 @@ export const MerchantHomeScreen: React.FC = () => {
           backgroundColor: 'rgba(8, 12, 20, 0.94)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          padding: '14px 20px',
+          padding: `${spacing.space3} ${spacing.space5}`,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: `1px solid ${colors.border}`,
         }}
       >
         {/* Left: Store Icon Button */}
@@ -114,13 +116,13 @@ export const MerchantHomeScreen: React.FC = () => {
           style={{
             width: '40px',
             height: '40px',
-            borderRadius: '12px',
-            backgroundColor: '#161F30',
-            border: '1px solid #2A364F',
+            borderRadius: radii.md,
+            backgroundColor: colors.bgInset,
+            border: `1px solid ${colors.border}`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#FFFFFF',
+            color: colors.textPrimary,
             cursor: 'pointer',
             flexShrink: 0,
           }}
@@ -134,7 +136,7 @@ export const MerchantHomeScreen: React.FC = () => {
         </div>
 
         {/* Right: Notification & Profile Icon Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
           {/* Notification Button */}
           <button
             onClick={() => navigateTo('NOTIFICATIONS')}
@@ -143,13 +145,13 @@ export const MerchantHomeScreen: React.FC = () => {
             style={{
               width: '40px',
               height: '40px',
-              borderRadius: '50%',
-              backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
+              borderRadius: radii.full,
+              backgroundColor: colors.bgInset,
+              border: `1px solid ${colors.border}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#FFFFFF',
+              color: colors.textPrimary,
               cursor: 'pointer',
               position: 'relative',
             }}
@@ -162,9 +164,9 @@ export const MerchantHomeScreen: React.FC = () => {
                 right: '9px',
                 width: '7px',
                 height: '7px',
-                borderRadius: '50%',
-                backgroundColor: '#00C853',
-                border: '1.5px solid #161F30',
+                borderRadius: radii.full,
+                backgroundColor: colors.accentGreen,
+                border: `1.5px solid ${colors.bgInset}`,
               }}
             />
           </button>
@@ -177,13 +179,13 @@ export const MerchantHomeScreen: React.FC = () => {
             style={{
               width: '40px',
               height: '40px',
-              borderRadius: '50%',
-              backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
+              borderRadius: radii.full,
+              backgroundColor: colors.bgInset,
+              border: `1px solid ${colors.border}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#FFFFFF',
+              color: colors.textPrimary,
               cursor: 'pointer',
             }}
           >
@@ -193,7 +195,7 @@ export const MerchantHomeScreen: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ padding: `${spacing.space4} ${spacing.space5}`, display: 'flex', flexDirection: 'column', gap: spacing.space4 }}>
         {/* Store Name & Speaker Online Row */}
         <div
           style={{
@@ -208,58 +210,39 @@ export const MerchantHomeScreen: React.FC = () => {
             className="interactive-tap"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
-            <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+            <span style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, letterSpacing: '-0.01em' }}>
               {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
             </span>
-            <ChevronDown size={15} color="#94A3B8" />
+            <ChevronDown size={15} color={colors.textSecondary} />
           </div>
 
-          <div
-            onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
-            className="interactive-tap"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'rgba(0, 200, 83, 0.12)',
-              border: '1px solid rgba(0, 200, 83, 0.25)',
-              borderRadius: '20px',
-              padding: '4px 10px',
-              cursor: 'pointer',
-            }}
-          >
-            <span
-              style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                backgroundColor: '#00C853',
-                display: 'inline-block',
-                boxShadow: '0 0 6px #00C853',
-              }}
+          <div onClick={() => navigateTo('SOUNDBOX_NOTIFIER')} className="interactive-tap" style={{ cursor: 'pointer' }}>
+            <StatusBadge
+              status="success"
+              dot={true}
+              size="sm"
+              label={isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
             />
-            <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
-              {isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
-            </span>
           </div>
         </div>
+
         {/* Toast / Notification Messages */}
         {settleSuccessMsg && (
           <div
             style={{
-              backgroundColor: 'rgba(0, 200, 83, 0.15)',
-              border: '1px solid #00C853',
-              borderRadius: '12px',
+              backgroundColor: colors.successLight,
+              border: `1px solid ${colors.accentGreen}`,
+              borderRadius: radii.md,
               padding: '12px 14px',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              color: '#FFFFFF',
+              gap: spacing.space2,
+              color: colors.textPrimary,
               fontSize: '12px',
               fontWeight: 700,
             }}
           >
-            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <CheckCircle2 size={18} color={colors.accentGreen} style={{ flexShrink: 0 }} />
             <span>{settleSuccessMsg}</span>
           </div>
         )}
@@ -267,60 +250,55 @@ export const MerchantHomeScreen: React.FC = () => {
         {cashSaleSuccess && (
           <div
             style={{
-              backgroundColor: 'rgba(0, 200, 83, 0.15)',
-              border: '1px solid #00C853',
-              borderRadius: '12px',
+              backgroundColor: colors.successLight,
+              border: `1px solid ${colors.accentGreen}`,
+              borderRadius: radii.md,
               padding: '12px 14px',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              color: '#FFFFFF',
+              gap: spacing.space2,
+              color: colors.textPrimary,
               fontSize: '12px',
               fontWeight: 700,
             }}
           >
-            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <CheckCircle2 size={18} color={colors.accentGreen} style={{ flexShrink: 0 }} />
             <span>{cashSaleSuccess}</span>
           </div>
         )}
 
         {/* 2. Smart Soundbox Pro Banner */}
-        <div
+        <Card
+          variant="interactive"
           onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
-          className="interactive-tap"
           style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '16px',
             padding: '12px 16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-            cursor: 'pointer',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space3 }}>
             <div
               style={{
                 width: '36px',
                 height: '36px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                borderRadius: radii.full,
+                backgroundColor: colors.primaryLight,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#00C853',
+                color: colors.accentGreen,
                 flexShrink: 0,
               }}
             >
               <Volume2 size={18} />
             </div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.textPrimary }}>
                 Smart Soundbox Pro
               </div>
-              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600, marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600, marginTop: '2px' }}>
                 98% {isAr ? 'البطارية' : 'Battery'} &bull; {isAr ? 'صوت عربي وإنجليزي' : 'Bilingual Voice'}
               </div>
             </div>
@@ -335,10 +313,10 @@ export const MerchantHomeScreen: React.FC = () => {
             }}
             className="interactive-tap"
             style={{
-              backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
-              color: '#FFFFFF',
-              borderRadius: '10px',
+              backgroundColor: colors.bgInset,
+              border: `1px solid ${colors.border}`,
+              color: colors.textPrimary,
+              borderRadius: radii.sm,
               padding: '6px 12px',
               fontSize: '12px',
               fontWeight: 700,
@@ -348,53 +326,31 @@ export const MerchantHomeScreen: React.FC = () => {
               gap: '5px',
             }}
           >
-            <Megaphone size={14} color="#00C853" />
+            <Megaphone size={14} color={colors.accentGreen} />
             <span>{isAr ? 'اختبار' : 'Test'}</span>
           </button>
-        </div>
+        </Card>
 
         {/* 3. Hero Today's Collection Card */}
-        <div
+        <Card
+          variant="elevated"
           style={{
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
-            borderRadius: '20px',
-            padding: '20px',
+            padding: spacing.space5,
             position: 'relative',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
           }}
         >
           {/* Card Top Row: Title + Live Badge + Balance Toggle */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#94A3B8' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.space2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
+              <span style={{ fontSize: '13.5px', fontWeight: 700, color: colors.textSecondary }}>
                 {isAr ? 'تحصيلات اليوم' : "Today's Collection"}
               </span>
-              <span
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                  border: '1px solid rgba(0, 200, 83, 0.3)',
-                  borderRadius: '12px',
-                  padding: '2px 8px',
-                  fontSize: '10.5px',
-                  fontWeight: 800,
-                  color: '#00C853',
-                }}
-              >
-                <span
-                  style={{
-                    width: '5px',
-                    height: '5px',
-                    borderRadius: '50%',
-                    backgroundColor: '#00C853',
-                    display: 'inline-block',
-                  }}
-                />
-                {isAr ? 'مباشر' : 'Live'}
-              </span>
+              <StatusBadge
+                status="success"
+                dot={true}
+                size="sm"
+                label={isAr ? 'مباشر' : 'Live'}
+              />
             </div>
 
             <button
@@ -404,7 +360,7 @@ export const MerchantHomeScreen: React.FC = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#94A3B8',
+                color: colors.textSecondary,
                 cursor: 'pointer',
                 padding: '4px',
                 display: 'flex',
@@ -416,14 +372,14 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
 
           {/* Large Hero Amount */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#00C853' }}>SAR</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: spacing.space2, marginBottom: spacing.space4 }}>
+            <span style={{ fontSize: '18px', fontWeight: 800, color: colors.accentGreen }}>SAR</span>
             <span
               className="tabular-nums"
               style={{
                 fontSize: '34px',
                 fontWeight: 900,
-                color: '#FFFFFF',
+                color: colors.textPrimary,
                 letterSpacing: '-0.02em',
               }}
             >
@@ -434,39 +390,36 @@ export const MerchantHomeScreen: React.FC = () => {
           </div>
 
           {/* Inset Sub-Card: Payments Count & Avg Ticket */}
-          <div
+          <Card
+            variant="inset"
             onClick={() => navigateTo('MERCHANT_INSIGHTS')}
-            className="interactive-tap"
             style={{
-              backgroundColor: '#161F30',
-              border: '1px solid #2A364F',
-              borderRadius: '14px',
               padding: '12px 16px',
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '12px',
-              marginBottom: '16px',
+              gap: spacing.space3,
+              marginBottom: spacing.space4,
               cursor: 'pointer',
             }}
           >
             <div>
-              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
                 {isAr ? 'العمليات' : 'Payments'}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
                 {isAr ? `${formatLocalizedNumber(paymentCount, language)} عملية` : `${paymentCount} received`}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
                 {isAr ? 'متوسط العملية' : 'Avg Ticket'}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
                 SAR {avgTicket}
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Bottom Dual Action Buttons: Settle Now + Statement */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
@@ -475,10 +428,10 @@ export const MerchantHomeScreen: React.FC = () => {
               disabled={isSettling}
               className="interactive-tap"
               style={{
-                backgroundColor: '#00C853',
+                backgroundColor: colors.accentGreen,
                 color: '#080C14',
                 border: 'none',
-                borderRadius: '12px',
+                borderRadius: radii.md,
                 padding: '12px 14px',
                 fontSize: '13.5px',
                 fontWeight: 800,
@@ -498,10 +451,10 @@ export const MerchantHomeScreen: React.FC = () => {
               onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
               className="interactive-tap"
               style={{
-                backgroundColor: '#161F30',
-                border: '1px solid #2A364F',
-                color: '#FFFFFF',
-                borderRadius: '12px',
+                backgroundColor: colors.bgInset,
+                border: `1px solid ${colors.border}`,
+                color: colors.textPrimary,
+                borderRadius: radii.md,
                 padding: '12px 14px',
                 fontSize: '13.5px',
                 fontWeight: 700,
@@ -516,38 +469,26 @@ export const MerchantHomeScreen: React.FC = () => {
               <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
             </button>
           </div>
-        </div>
+        </Card>
 
         {/* 4. Accept Payment Section (4 Grid Tiles) */}
         <div>
-          <h2
-            style={{
-              fontSize: '15px',
-              fontWeight: 800,
-              color: '#FFFFFF',
-              margin: '0 0 12px 0',
-              textAlign: isRtl ? 'right' : 'left',
-            }}
-          >
-            {isAr ? 'قبول المدفوعات' : 'Accept Payment'}
-          </h2>
+          <SectionHeader
+            title={isAr ? 'قبول المدفوعات' : 'Accept Payment'}
+          />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
             {/* Tile 1: Show QR */}
-            <div
+            <Card
+              variant="interactive"
               onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-              className="interactive-tap"
               style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
                 padding: '16px 8px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer',
+                gap: spacing.space2,
                 textAlign: 'center',
               }}
             >
@@ -555,37 +496,33 @@ export const MerchantHomeScreen: React.FC = () => {
                 style={{
                   width: '42px',
                   height: '42px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  borderRadius: radii.full,
+                  backgroundColor: colors.primaryLight,
                   border: '1px solid rgba(0, 200, 83, 0.3)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#00C853',
+                  color: colors.accentGreen,
                 }}
               >
                 <QrCode size={20} />
               </div>
-              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: colors.textPrimary, lineHeight: 1.2 }}>
                 {isAr ? 'عرض الرمز' : 'Show QR'}
               </span>
-            </div>
+            </Card>
 
             {/* Tile 2: Tap to Pay */}
-            <div
+            <Card
+              variant="interactive"
               onClick={() => navigateTo('SOFTPOS_TERMINAL')}
-              className="interactive-tap"
               style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
                 padding: '16px 8px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer',
+                gap: spacing.space2,
                 textAlign: 'center',
               }}
             >
@@ -593,37 +530,33 @@ export const MerchantHomeScreen: React.FC = () => {
                 style={{
                   width: '42px',
                   height: '42px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  borderRadius: radii.full,
+                  backgroundColor: colors.primaryLight,
                   border: '1px solid rgba(0, 200, 83, 0.3)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#00C853',
+                  color: colors.accentGreen,
                 }}
               >
                 <SmartphoneNfc size={20} />
               </div>
-              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: colors.textPrimary, lineHeight: 1.2 }}>
                 {isAr ? 'الدفع باللمس' : 'Tap to Pay'}
               </span>
-            </div>
+            </Card>
 
             {/* Tile 3: Send Link */}
-            <div
+            <Card
+              variant="interactive"
               onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')}
-              className="interactive-tap"
               style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
                 padding: '16px 8px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer',
+                gap: spacing.space2,
                 textAlign: 'center',
               }}
             >
@@ -631,37 +564,33 @@ export const MerchantHomeScreen: React.FC = () => {
                 style={{
                   width: '42px',
                   height: '42px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  borderRadius: radii.full,
+                  backgroundColor: colors.primaryLight,
                   border: '1px solid rgba(0, 200, 83, 0.3)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#00C853',
+                  color: colors.accentGreen,
                 }}
               >
                 <Share2 size={19} />
               </div>
-              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: colors.textPrimary, lineHeight: 1.2 }}>
                 {isAr ? 'إرسال رابط' : 'Send Link'}
               </span>
-            </div>
+            </Card>
 
             {/* Tile 4: Cash Sale */}
-            <div
+            <Card
+              variant="interactive"
               onClick={handleCashSale}
-              className="interactive-tap"
               style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
                 padding: '16px 8px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer',
+                gap: spacing.space2,
                 textAlign: 'center',
               }}
             >
@@ -669,264 +598,140 @@ export const MerchantHomeScreen: React.FC = () => {
                 style={{
                   width: '42px',
                   height: '42px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  borderRadius: radii.full,
+                  backgroundColor: colors.primaryLight,
                   border: '1px solid rgba(0, 200, 83, 0.3)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#00C853',
+                  color: colors.accentGreen,
                 }}
               >
                 <Banknote size={20} />
               </div>
-              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: colors.textPrimary, lineHeight: 1.2 }}>
                 {isAr ? 'بيع نقدي' : 'Cash Sale'}
               </span>
-            </div>
+            </Card>
           </div>
         </div>
 
         {/* 5. Recent Payments Section */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                {isAr ? 'المدفوعات الأخيرة' : 'Recent Payments'}
-              </h2>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#00C853' }} />
-            </div>
-
-            <button
-              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              className="interactive-tap"
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#00C853',
-                fontSize: '12.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-                padding: 0,
-              }}
-            >
-              <span>{isAr ? `عرض الكل (${paymentCount})` : `See All (${paymentCount})`}</span>
-              <ChevronRight size={15} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </button>
-          </div>
-
-          {/* Payment List Rows matching mockup */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {/* Row 1: mada */}
-            <div
-              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
-                padding: '14px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00C853',
-                    flexShrink: 0,
-                  }}
-                >
-                  <CreditCard size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    Debit Card &bull; ****4021
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                    {isAr ? 'تموينات • منذ دقيقتين' : 'Grocery • 2 mins ago'}
-                  </div>
-                </div>
+          <SectionHeader
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>{isAr ? 'المدفوعات الأخيرة' : 'Recent Payments'}</span>
+                <span style={{ width: '6px', height: '6px', borderRadius: radii.full, backgroundColor: colors.accentGreen }} />
               </div>
+            }
+            actionButton={{
+              label: isAr ? `عرض الكل (${paymentCount})` : `See All (${paymentCount})`,
+              onClick: () => navigateTo('MERCHANT_COLLECTIONS'),
+            }}
+          />
 
-              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+          {/* Payment List Rows using ListRow primitive */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.space2 }}>
+            {/* Row 1: Debit Card */}
+            <ListRow
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              leftIcon={<CreditCard size={18} />}
+              title="Debit Card • ****4021"
+              subtitle={isAr ? 'تموينات • منذ دقيقتين' : 'Grocery • 2 mins ago'}
+              rightAmount={
+                <div style={{ color: colors.accentGreen, fontWeight: 800 }}>
                   + SAR 245.00
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
-                  <Check size={11} strokeWidth={3} />
-                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
-                </div>
-              </div>
-            </div>
+              }
+              rightBadge={
+                <StatusBadge
+                  status="success"
+                  size="sm"
+                  label={
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Check size={11} strokeWidth={3} />
+                      {isAr ? 'مدفوع' : 'Paid'}
+                    </span>
+                  }
+                />
+              }
+            />
 
             {/* Row 2: Apple Pay */}
-            <div
+            <ListRow
               onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
-                padding: '14px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: '#161F30',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#94A3B8',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Smartphone size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    Apple Pay
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                    {isAr ? 'مشروبات • منذ ١٢ دقيقة' : 'Beverages • 12 mins ago'}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+              leftIcon={<Smartphone size={18} />}
+              title="Apple Pay"
+              subtitle={isAr ? 'مشروبات • منذ ١٢ دقيقة' : 'Beverages • 12 mins ago'}
+              rightAmount={
+                <div style={{ color: colors.accentGreen, fontWeight: 800 }}>
                   + SAR 89.50
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
-                  <Check size={11} strokeWidth={3} />
-                  <span>{isAr ? 'تم الإشعار' : 'Announced'}</span>
-                </div>
-              </div>
-            </div>
+              }
+              rightBadge={
+                <StatusBadge
+                  status="info"
+                  size="sm"
+                  label={
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Check size={11} strokeWidth={3} />
+                      {isAr ? 'تم الإشعار' : 'Announced'}
+                    </span>
+                  }
+                />
+              }
+            />
 
             {/* Row 3: Counter QR Code */}
-            <div
+            <ListRow
               onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
-                padding: '14px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00C853',
-                    flexShrink: 0,
-                  }}
-                >
-                  <QrCode size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    {isAr ? 'رمز QR المنضدة' : 'Counter QR Code'}
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                    {isAr ? 'نقطة بيع #٠٢ • منذ ٢٤ دقيقة' : 'Register #02 • 24 mins ago'}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+              leftIcon={<QrCode size={18} />}
+              title={isAr ? 'رمز QR المنضدة' : 'Counter QR Code'}
+              subtitle={isAr ? 'نقطة بيع #٠٢ • منذ ٢٤ دقيقة' : 'Register #02 • 24 mins ago'}
+              rightAmount={
+                <div style={{ color: colors.accentGreen, fontWeight: 800 }}>
                   + SAR 512.00
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
-                  <Check size={11} strokeWidth={3} />
-                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
-                </div>
-              </div>
-            </div>
+              }
+              rightBadge={
+                <StatusBadge
+                  status="purple"
+                  size="sm"
+                  label={
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Check size={11} strokeWidth={3} />
+                      {isAr ? 'مدفوع' : 'Paid'}
+                    </span>
+                  }
+                />
+              }
+            />
 
             {/* Row 4: STC Pay Link */}
-            <div
+            <ListRow
               onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#111726',
-                border: '1px solid #1E293B',
-                borderRadius: '16px',
-                padding: '14px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: '#161F30',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#94A3B8',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Share2 size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    STC Pay Link
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                    {isAr ? 'توصيل واتساب • منذ ٤١ دقيقة' : 'WhatsApp Delivery • 41 mins ago'}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+              leftIcon={<Share2 size={18} />}
+              title="STC Pay Link"
+              subtitle={isAr ? 'توصيل واتساب • منذ ٤١ دقيقة' : 'WhatsApp Delivery • 41 mins ago'}
+              rightAmount={
+                <div style={{ color: colors.accentGreen, fontWeight: 800 }}>
                   + SAR 130.00
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
-                  <Check size={11} strokeWidth={3} />
-                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
-                </div>
-              </div>
-            </div>
+              }
+              rightBadge={
+                <StatusBadge
+                  status="warning"
+                  size="sm"
+                  label={
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Check size={11} strokeWidth={3} />
+                      {isAr ? 'مدفوع' : 'Paid'}
+                    </span>
+                  }
+                />
+              }
+            />
           </div>
         </div>
       </div>
