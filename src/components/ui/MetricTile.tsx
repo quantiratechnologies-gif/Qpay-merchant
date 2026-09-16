@@ -45,15 +45,20 @@ export const MetricTile: React.FC<MetricTileProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 'var(--space-2, 8px)',
+          gap: '4px',
+          minWidth: 0,
         }}
       >
         <div
           style={{
-            fontSize: '13px',
-            fontWeight: 600,
+            fontSize: '11px',
+            fontWeight: 700,
             color: 'var(--text-secondary, #94A3B8)',
-            letterSpacing: '0.01em',
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}
         >
           {title}
@@ -76,7 +81,7 @@ export const MetricTile: React.FC<MetricTileProps> = ({
       <div
         className="tabular-nums"
         style={{
-          fontSize: 'clamp(14px, 3.8vw, 18px)',
+          fontSize: '16px',
           fontWeight: 800,
           color: highlightGreen
             ? 'var(--accent-green-bright, #7FE87F)'
@@ -96,10 +101,13 @@ export const MetricTile: React.FC<MetricTileProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 'var(--space-2, 8px)',
-            fontSize: '12px',
+            gap: '4px',
+            fontSize: '11px',
             color: 'var(--text-muted, #64748B)',
-            marginTop: '2px',
+            marginTop: '1px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}
         >
           {trend && (

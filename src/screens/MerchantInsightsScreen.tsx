@@ -6,16 +6,13 @@ import {
   Smartphone,
   Banknote,
   Building2,
-  TrendingUp,
   Receipt,
   ShieldCheck,
   Zap,
   Activity,
-  ShoppingBag,
   Clock,
   CalendarRange,
   CalendarDays,
-  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { AppHeader } from '../components/AppHeader';
@@ -135,7 +132,7 @@ export const MerchantInsightsScreen: React.FC = () => {
           onSelect={(id) => setSelectedPeriod(id)}
         />
 
-        {/* 1. Top KPI 3-Cards Row (Using MetricTile primitives with icons) */}
+        {/* 1. Top KPI 3-Cards Row (Clean, unclipped, proportional) */}
         <div
           style={{
             display: 'grid',
@@ -146,86 +143,90 @@ export const MerchantInsightsScreen: React.FC = () => {
           {/* Card 1: TOTAL SALES */}
           <MetricTile
             title={t('insights.total_sales', 'SALES')}
-            icon={<TrendingUp size={14} color={colors.accentGreen} />}
             value={isAr ? `${formatLocalizedNumber(Math.round(totalVolume))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(totalVolume))}`}
-            subtitle={
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: colors.textSecondary }}>
-                <CheckCircle2 size={11} color={colors.accentGreen} />
-                {isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
-              </span>
-            }
-            style={{ padding: '12px 10px', minWidth: 0 }}
+            subtitle={isAr ? `${formatLocalizedNumber(settledCount)} عملية` : `${settledCount} txns`}
+            style={{ padding: '12px 10px', minWidth: 0, overflow: 'hidden' }}
           />
 
           {/* Card 2: AVG TICKET (Highlighted Green) */}
           <MetricTile
             title={t('insights.avg_ticket', 'AVG TICKET')}
-            icon={<Receipt size={14} color={colors.accentGreen} />}
             value={isAr ? `${formatLocalizedNumber(avgTicket.toFixed(1))} ر.س` : `SAR ${formatLocalizedNumber(avgTicket.toFixed(1))}`}
-            subtitle={
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: colors.accentGreenBright }}>
-                <Zap size={11} />
-                {isAr ? 'لكل عميل' : 'per ticket'}
-              </span>
-            }
+            subtitle={isAr ? 'لكل عملية' : 'per ticket'}
             highlightGreen={true}
-            style={{ padding: '12px 10px', minWidth: 0 }}
+            style={{ padding: '12px 10px', minWidth: 0, overflow: 'hidden' }}
           />
 
           {/* Card 3: SETTLEMENT */}
           <MetricTile
-            title={t('insights.settlement', 'PAYOUT')}
-            icon={<ShieldCheck size={14} color={colors.accentGreen} />}
+            title={t('insights.settlement', 'SETTLEMENT')}
             value={isAr ? `${formatLocalizedNumber(Math.round(settlementReady))} ر.س` : `SAR ${formatLocalizedNumber(Math.round(settlementReady))}`}
             subtitle={
-              <span style={{ color: colors.accentGreen, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                <CheckCircle2 size={11} />
+              <span style={{ color: colors.accentGreen, fontWeight: 700 }}>
                 {isAr ? 'جاهز للصرف' : 'Auto Ready'}
               </span>
             }
-            style={{ padding: '12px 10px', minWidth: 0 }}
+            style={{ padding: '12px 10px', minWidth: 0, overflow: 'hidden' }}
           />
         </div>
 
-        {/* 2. Payment Rail Distribution Card */}
+        {/* 2. Payment Rail Distribution Card (Centered Donut & Clean Inset Legend) */}
         <Card
           variant="elevated"
           style={{
-            padding: '16px',
+            padding: '18px',
           }}
         >
           {/* Card Header */}
-          <SectionHeader
-            title={
-              <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                <Activity size={15} color={colors.accentGreen} />
-                <span>{t('insights.rail_dist', 'Payment Rails')}</span>
-              </div>
-            }
-            badge={
-              <StatusBadge
-                status="success"
-                size="sm"
-                label={t('insights.live_analytics', 'Live')}
-              />
-            }
-            style={{ marginBottom: spacing.space3 }}
-          />
-
-          {/* Donut Chart & Legend Row */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '14px',
-              marginTop: spacing.space2,
+              justifyContent: 'space-between',
+              marginBottom: '16px',
             }}
           >
-            {/* Donut Chart (SVG) */}
-            <div style={{ position: 'relative', width: '84px', height: '84px', flexShrink: 0 }}>
-              <svg width="84" height="84" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  backgroundColor: colors.bgInset,
+                  border: `1px solid ${colors.border}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: colors.accentGreen,
+                }}
+              >
+                <Activity size={18} />
+              </div>
+              <span style={{ fontSize: '16px', fontWeight: 800, color: colors.textPrimary }}>
+                {t('insights.rail_dist', 'Payment Rail')}
+              </span>
+            </div>
+
+            <StatusBadge
+              status="success"
+              size="sm"
+              label={t('insights.live_analytics', 'Live Analytics')}
+            />
+          </div>
+
+          {/* Centered Donut Chart */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '10px 0 20px',
+            }}
+          >
+            <div style={{ position: 'relative', width: '130px', height: '130px' }}>
+              <svg width="130" height="130" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
                 {/* Background Ring */}
-                <circle cx="50" cy="50" r="38" fill="none" stroke={colors.bgInset} strokeWidth="13" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke={colors.bgInset} strokeWidth="12" />
                 
                 {/* Green Segment (58%) */}
                 <circle
@@ -234,7 +235,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentGreen}
-                  strokeWidth="13"
+                  strokeWidth="12"
                   strokeDasharray="138 238"
                   strokeDashoffset="0"
                 />
@@ -246,7 +247,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentBlue}
-                  strokeWidth="13"
+                  strokeWidth="12"
                   strokeDasharray="57 238"
                   strokeDashoffset="-138"
                 />
@@ -258,7 +259,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentPurple}
-                  strokeWidth="13"
+                  strokeWidth="12"
                   strokeDasharray="33 238"
                   strokeDashoffset="-195"
                 />
@@ -270,7 +271,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                   r="38"
                   fill="none"
                   stroke={colors.accentAmber}
-                  strokeWidth="13"
+                  strokeWidth="12"
                   strokeDasharray="10 238"
                   strokeDashoffset="-228"
                 />
@@ -288,67 +289,73 @@ export const MerchantInsightsScreen: React.FC = () => {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.1 }}>
+                <span style={{ fontSize: '24px', fontWeight: 900, color: '#FFFFFF', lineHeight: 1 }}>
                   82%
                 </span>
-                <span style={{ fontSize: '8px', fontWeight: 800, color: '#94A3B8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '9px', fontWeight: 800, color: colors.textSecondary, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '3px' }}>
                   {t('insights.digital_share', 'DIGITAL')}
                 </span>
               </div>
             </div>
+          </div>
 
-            {/* Legend 3-Column Grid */}
-            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {railStats.map((rail, idx) => {
-                const RailIcon = rail.icon;
-                return (
-                  <div
-                    key={idx}
+          {/* Inset Legend Box */}
+          <Card
+            variant="inset"
+            style={{
+              padding: '14px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            {railStats.map((rail, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  fontSize: '13px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                  <span
                     style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'minmax(0, 1fr) auto auto',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontSize: '11.5px',
-                      whiteSpace: 'nowrap',
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: radii.full,
+                      backgroundColor: rail.color,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ color: colors.textPrimary, fontWeight: 600 }}>
+                    {rail.shortName}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <span style={{ color: colors.textSecondary, fontSize: '12px', fontWeight: 600 }}>
+                    {formatLocalizedNumber(rail.percent)}%
+                  </span>
+
+                  <span
+                    className="tabular-nums"
+                    style={{
+                      color: colors.textPrimary,
+                      fontWeight: 800,
+                      minWidth: '65px',
+                      textAlign: isAr ? 'left' : 'right',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: radii.xs,
-                          backgroundColor: colors.bgInset,
-                          border: `1px solid ${rail.color}40`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: rail.color,
-                          flexShrink: 0,
-                        }}
-                      >
-                        <RailIcon size={11} strokeWidth={2.4} />
-                      </div>
-                      <span style={{ color: colors.textPrimary, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '11.5px' }}>
-                        {rail.shortName}
-                      </span>
-                    </div>
-
-                    <span style={{ color: colors.textMuted, fontSize: '11px', fontWeight: 600 }}>
-                      {formatLocalizedNumber(rail.percent)}%
-                    </span>
-
-                    <div style={{ color: colors.textPrimary, fontWeight: 700, fontSize: '11.5px', textAlign: isAr ? 'left' : 'right' }}>
-                      {isAr
-                        ? `${formatLocalizedNumber(Math.round(rail.amount))} ر.س`
-                        : `SAR ${formatLocalizedNumber(Math.round(rail.amount))}`}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                    {isAr
+                      ? `${formatLocalizedNumber(Math.round(rail.amount))} ر.س`
+                      : `SAR ${formatLocalizedNumber(Math.round(rail.amount))}`}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </Card>
         </Card>
 
         {/* 3. Hourly Transaction Velocity Card */}
@@ -360,12 +367,7 @@ export const MerchantInsightsScreen: React.FC = () => {
         >
           {/* Card Header */}
           <SectionHeader
-            title={
-              <div style={{ display: 'flex', alignItems: 'center', gap: spacing.space2 }}>
-                <Clock size={15} color={colors.accentGreen} />
-                <span>{t('insights.hourly_velocity', 'Activity Velocity')}</span>
-              </div>
-            }
+            title={t('insights.hourly_velocity', 'Hourly Velocity')}
             actionButton={
               <div
                 style={{
@@ -385,7 +387,7 @@ export const MerchantInsightsScreen: React.FC = () => {
                 <span>{t('insights.peak', 'Peak: 11 AM - 1 PM')}</span>
               </div>
             }
-            style={{ marginBottom: spacing.space4 }}
+            style={{ marginBottom: spacing.space3 }}
           />
 
           {/* Bar Chart Visualization Container */}
@@ -475,22 +477,20 @@ export const MerchantInsightsScreen: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
-                <ShoppingBag size={12} color={colors.accentBlue} />
-                <span>{t('insights.busiest_vol', 'Busiest Hour')}</span>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+                {t('insights.busiest_vol', 'Busiest Hour')}
               </div>
-              <div style={{ fontSize: '12.5px', fontWeight: 800, color: colors.textPrimary, marginTop: '3px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.textPrimary, marginTop: '2px' }}>
                 {isAr ? '٦ عمليات • ٦٤٥ ر.س' : '6 txns • SAR 645'}
               </div>
             </div>
 
             <div style={{ textAlign: isAr ? 'left' : 'right' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: isAr ? 'flex-start' : 'flex-end', gap: '5px', fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
-                <Zap size={12} color={colors.accentGreen} />
-                <span>{t('insights.avg_tap_speed', 'Tap Speed')}</span>
+              <div style={{ fontSize: '11px', color: colors.textSecondary, fontWeight: 600 }}>
+                {t('insights.avg_tap_speed', 'Tap Speed')}
               </div>
-              <div style={{ fontSize: '12.5px', fontWeight: 800, color: colors.accentGreen, marginTop: '3px' }}>
-                {isAr ? '٣.٨ ثانية / عملية' : '3.8s / ticket'}
+              <div style={{ fontSize: '13px', fontWeight: 800, color: colors.accentGreen, marginTop: '2px' }}>
+                {isAr ? '٣.٨ ثانية' : '3.8s / ticket'}
               </div>
             </div>
           </div>
