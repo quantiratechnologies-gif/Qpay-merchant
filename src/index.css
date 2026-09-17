@@ -373,3 +373,19 @@ button:disabled {
   background: var(--border-color);
   border-radius: 4px;
 }
+
+/* Responsive Dashboard Grid for Merchant Home */
+.merchant-home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .merchant-home-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr);
+    gap: 24px;
+  }
+}
+

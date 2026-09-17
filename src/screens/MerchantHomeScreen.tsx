@@ -166,15 +166,8 @@ export const MerchantHomeScreen: React.FC = () => {
         </Card>
       </div>
 
-      {/* 2. Main Desktop 2-Column Dashboard Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1.1fr)',
-          gap: '24px',
-          alignItems: 'start',
-        }}
-      >
+      {/* 2. Responsive Dashboard Grid */}
+      <div className="merchant-home-grid">
         {/* Left Column (65%): SoundBox Alert, Quick Action Hub & Recent Collections Table */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Smart SoundBox Pro Status Card */}
