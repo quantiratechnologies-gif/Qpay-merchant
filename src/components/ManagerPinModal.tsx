@@ -67,36 +67,74 @@ export const ManagerPinModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(8px)',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
       <div
-        className="w-full max-w-sm rounded-2xl p-6 relative flex flex-col items-center animate-in fade-in zoom-in-95 duration-200"
+        className="slide-up"
         style={{
+          width: '100%',
+          maxWidth: '360px',
+          borderRadius: '24px',
+          padding: '24px 20px',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           backgroundColor: '#0F172A',
-          border: '1px solid rgba(0, 255, 36, 0.25)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 255, 36, 0.1)',
+          border: '1px solid rgba(0, 255, 36, 0.3)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 255, 36, 0.15)',
+          boxSizing: 'border-box',
         }}
       >
         {/* Close button */}
         <button
           onClick={handleClose}
           disabled={isSuccess}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+          aria-label="Close"
+          style={{
+            position: 'absolute',
+            top: '16px',
+            [isRtl ? 'left' : 'right']: '16px',
+            color: '#94A3B8',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: 'none',
+            padding: '6px',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {/* Security Icon */}
         <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-colors"
           style={{
-            backgroundColor: isSuccess ? 'rgba(0, 255, 36, 0.15)' : 'rgba(30, 41, 59, 0.8)',
-            border: `1px solid ${isSuccess ? '#00FF24' : 'rgba(255, 255, 255, 0.1)'}`,
+            width: '56px',
+            height: '56px',
+            borderRadius: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '12px',
+            backgroundColor: isSuccess ? 'rgba(0, 255, 36, 0.18)' : 'rgba(30, 41, 59, 0.8)',
+            border: `1.5px solid ${isSuccess ? '#00FF24' : 'rgba(255, 255, 255, 0.1)'}`,
             color: '#00FF24',
           }}
         >
@@ -104,10 +142,10 @@ export const ManagerPinModal: React.FC = () => {
         </div>
 
         {/* Title & Subtitle */}
-        <h3 className="text-lg font-bold text-white text-center mb-1">
+        <h3 style={{ fontSize: '17px', fontWeight: 900, color: '#FFFFFF', textAlign: 'center', margin: '0 0 4px 0' }}>
           {managerPinModalData.title}
         </h3>
-        <p className="text-xs text-slate-400 text-center mb-6 px-2">
+        <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', margin: '0 0 20px 0', padding: '0 8px', lineHeight: 1.4 }}>
           {managerPinModalData.subtitle ||
             (isAr
               ? 'أدخل رمز المدير السري المكون من ٤ أرقام للمتابعة'
@@ -115,18 +153,21 @@ export const ManagerPinModal: React.FC = () => {
         </p>
 
         {/* 4-digit Pin Dots */}
-        <div className="flex gap-4 mb-4" dir="ltr">
+        <div style={{ display: 'flex', gap: '14px', marginBottom: '18px' }} dir="ltr">
           {[0, 1, 2, 3].map((idx) => {
             const isFilled = pin.length > idx;
             return (
               <div
                 key={idx}
-                className="w-4 h-4 rounded-full transition-all duration-150"
                 style={{
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
                   backgroundColor: isFilled ? '#00FF24' : 'transparent',
                   border: isFilled ? '2px solid #00FF24' : '2px solid rgba(255, 255, 255, 0.25)',
-                  boxShadow: isFilled ? '0 0 10px rgba(0, 255, 36, 0.5)' : 'none',
+                  boxShadow: isFilled ? '0 0 12px rgba(0, 255, 36, 0.6)' : 'none',
                   transform: isFilled ? 'scale(1.2)' : 'scale(1)',
+                  transition: 'all 0.15s ease',
                 }}
               />
             );
@@ -135,21 +176,57 @@ export const ManagerPinModal: React.FC = () => {
 
         {/* Error Message */}
         {errorMsg && (
-          <div className="flex items-center gap-1.5 text-xs text-rose-400 font-semibold mb-3 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '11.5px',
+              color: '#FB7185',
+              fontWeight: 700,
+              marginBottom: '12px',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(244, 63, 94, 0.12)',
+              border: '1px solid rgba(244, 63, 94, 0.25)',
+            }}
+          >
             <ShieldAlert size={14} />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* Keypad */}
-        <div className="w-full grid grid-cols-3 gap-2.5 mt-2 max-w-[260px]">
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '260px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '10px',
+            marginTop: '8px',
+          }}
+        >
           {digits.map((d) => (
             <button
               key={d}
               type="button"
               disabled={isSuccess}
               onClick={() => handleKeyPress(d)}
-              className="h-12 rounded-xl text-lg font-bold text-white bg-slate-800/80 hover:bg-slate-700/80 active:bg-[#00FF24]/20 active:border-[#00FF24] border border-slate-700/60 flex items-center justify-center transition-all cursor-pointer"
+              style={{
+                height: '48px',
+                borderRadius: '12px',
+                fontSize: '18px',
+                fontWeight: 800,
+                color: '#FFFFFF',
+                backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                border: '1px solid rgba(51, 65, 85, 0.7)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
             >
               {isAr ? toArabicNumerals(d) : d}
             </button>
@@ -163,7 +240,20 @@ export const ManagerPinModal: React.FC = () => {
             type="button"
             disabled={isSuccess}
             onClick={() => handleKeyPress('0')}
-            className="h-12 rounded-xl text-lg font-bold text-white bg-slate-800/80 hover:bg-slate-700/80 active:bg-[#00FF24]/20 active:border-[#00FF24] border border-slate-700/60 flex items-center justify-center transition-all cursor-pointer"
+            style={{
+              height: '48px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              backgroundColor: 'rgba(30, 41, 59, 0.85)',
+              border: '1px solid rgba(51, 65, 85, 0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              userSelect: 'none',
+            }}
           >
             {isAr ? toArabicNumerals('0') : '0'}
           </button>
@@ -173,14 +263,25 @@ export const ManagerPinModal: React.FC = () => {
             type="button"
             disabled={isSuccess}
             onClick={handleDelete}
-            className="h-12 rounded-xl text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 active:bg-rose-500/20 active:border-rose-500 border border-slate-700/60 flex items-center justify-center transition-all cursor-pointer"
+            style={{
+              height: '48px',
+              borderRadius: '12px',
+              color: '#94A3B8',
+              backgroundColor: 'rgba(30, 41, 59, 0.85)',
+              border: '1px solid rgba(51, 65, 85, 0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              userSelect: 'none',
+            }}
           >
             <Delete size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </div>
 
         {/* Helper Footer */}
-        <div className="mt-5 text-[11px] text-slate-500 font-medium">
+        <div style={{ marginTop: '16px', fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
           {isAr ? 'الرمز الافتراضي للتجربة: 1234' : 'Default Demo PIN: 1234'}
         </div>
       </div>
