@@ -5,8 +5,9 @@ import { AppHeader } from '../components/AppHeader';
 import { toArabicNumerals } from '../utils/i18n';
 
 export const MerchantPinSetupScreen: React.FC = () => {
-  const { updateMerchantInfo, setUserRole, navigateTo, language, isRtl } = useApp();
+  const { updateMerchantInfo, setUserRole, navigateTo, goBack, screenParams, language, isRtl } = useApp();
   const isAr = language === 'العربية';
+  const fromSettings = screenParams?.fromSettings === true;
   const [pin, setPin] = useState<string>('');
   const [confirmPin, setConfirmPin] = useState<string>('');
   const [step, setStep] = useState<'create' | 'confirm'>('create');
@@ -35,7 +36,11 @@ export const MerchantPinSetupScreen: React.FC = () => {
             updateMerchantInfo({ merchantPin: pin });
             setUserRole('merchant');
             setTimeout(() => {
-              navigateTo('MERCHANT_HOME');
+              if (fromSettings) {
+                goBack();
+              } else {
+                navigateTo('MERCHANT_HOME');
+              }
             }, 1200);
           } else {
             setErrorMsg(isAr ? 'الرمز غير متطابق. يرجى إعادة الإدخال.' : 'PINs do not match. Please re-enter.');
@@ -102,7 +107,7 @@ export const MerchantPinSetupScreen: React.FC = () => {
             margin: '0 auto 12px auto',
           }}
         >
-          <Lock size={28} color="#00C853" />
+          <Lock size={28} color="#00FF24" />
         </div>
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
           {step === 'create'
@@ -128,8 +133,8 @@ export const MerchantPinSetupScreen: React.FC = () => {
                   width: '18px',
                   height: '18px',
                   borderRadius: '50%',
-                  backgroundColor: isFilled ? '#00C853' : '#111726',
-                  border: isFilled ? '2px solid #00C853' : '2px solid #1E293B',
+                  backgroundColor: isFilled ? '#00FF24' : '#111726',
+                  border: isFilled ? '2px solid #00FF24' : '2px solid #1E293B',
                   transition: 'all 0.15s ease',
                   transform: isFilled ? 'scale(1.15)' : 'scale(1)',
                 }}
@@ -145,7 +150,7 @@ export const MerchantPinSetupScreen: React.FC = () => {
         )}
 
         {isSuccess && (
-          <div style={{ fontSize: '13px', color: '#00C853', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ fontSize: '13px', color: '#00FF24', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <CheckCircle2 size={16} /> {isAr ? 'تم تعيين الرمز السري للتاجر بنجاح' : 'Merchant PIN Created Successfully'}
           </div>
         )}

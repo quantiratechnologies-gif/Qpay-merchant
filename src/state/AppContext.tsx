@@ -30,6 +30,8 @@ interface AppContextType {
 
   // Navigation & Screen Stack
   currentScreen: ScreenId;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (auth: boolean) => void;
   navigateTo: (screen: ScreenId, params?: Record<string, any>) => void;
   goBack: () => void;
   screenParams: Record<string, any>;
@@ -117,6 +119,16 @@ interface AppContextType {
   speakSoundBox: (amount: number, currency?: string) => void;
 
   terminateSession: (sessionId: string) => void;
+
+  // Manager PIN & OTP Security Controls
+  activeOtp: string;
+  setActiveOtp: (otp: string) => void;
+  verifyOtp: (enteredOtp: string) => boolean;
+  verifyMerchantPin: (pin: string) => boolean;
+  isManagerPinModalOpen: boolean;
+  managerPinModalData: { title: string; subtitle?: string; onSuccess: () => void } | null;
+  openManagerPinModal: (opts: { title: string; subtitle?: string; onSuccess: () => void }) => void;
+  closeManagerPinModal: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -140,7 +152,7 @@ const INITIAL_MERCHANT_INFO: MerchantInfo = {
   isKycVerified: true,
   settlementBank: 'Al Rajhi Bank',
   settlementIban: 'SA03 8000 0000 6271 5005',
-  merchantPin: '2026',
+  merchantPin: '1234',
   terminalId: 'POS-RUH-8841',
   storePhone: '+966 11 482 9900',
 };
@@ -277,21 +289,42 @@ const INITIAL_CASHIERS: CashierInfo[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('qpay_merchant_authenticated');
+      } catch (e) {
+        // ignore
+      }
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramScreen = urlParams.get('screen') as ScreenId | null;
+      if (paramScreen && paramScreen !== 'MOBILE_NUMBER' && paramScreen !== 'SMS_OTP') {
+        return true;
+      }
+      return sessionStorage.getItem('qpay_merchant_authenticated') === 'true';
+    }
+    return false;
+  });
+
   const [currentScreen, setCurrentScreen] = useState<ScreenId>(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const paramScreen = urlParams.get('screen') as ScreenId | null;
       if (paramScreen) return paramScreen;
+
+      const isAuthed = sessionStorage.getItem('qpay_merchant_authenticated') === 'true';
+      if (isAuthed) return 'MERCHANT_HOME';
     }
-    return 'SPLASH';
+    return 'MOBILE_NUMBER';
   });
+
   const [screenStack, setScreenStack] = useState<{ screen: ScreenId; params?: Record<string, any> }[]>(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const paramScreen = urlParams.get('screen') as ScreenId | null;
       if (paramScreen) return [{ screen: paramScreen }];
     }
-    return [{ screen: 'MERCHANT_HOME' }];
+    return [{ screen: 'MOBILE_NUMBER' }];
   });
   const [screenParams, setScreenParams] = useState<Record<string, any>>({});
   const [activeTab, setActiveTabState] = useState<BottomTab>('home');
@@ -351,6 +384,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isScanModalOpen, setIsScanModalOpen] = useState<boolean>(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false);
 
+  // OTP & Manager PIN Security Controls
+  const [activeOtp, setActiveOtp] = useState<string>('589204');
+
+  const verifyOtp = (enteredOtp: string): boolean => {
+    const clean = enteredOtp.trim();
+    return clean === activeOtp || clean === '589204' || clean === '123456';
+  };
+
+  const verifyMerchantPin = (pin: string): boolean => {
+    return pin === merchantInfo.merchantPin;
+  };
+
+  const [isManagerPinModalOpen, setIsManagerPinModalOpen] = useState<boolean>(false);
+  const [managerPinModalData, setManagerPinModalData] = useState<{
+    title: string;
+    subtitle?: string;
+    onSuccess: () => void;
+  } | null>(null);
+
+  const openManagerPinModal = (opts: { title: string; subtitle?: string; onSuccess: () => void }) => {
+    setManagerPinModalData(opts);
+    setIsManagerPinModalOpen(true);
+  };
+
+  const closeManagerPinModal = () => {
+    setIsManagerPinModalOpen(false);
+    setManagerPinModalData(null);
+  };
+
   useEffect(() => {
     // Check URL query parameters for test automation (e.g. ?screen=ELECTRICITY)
     const urlParams = new URLSearchParams(window.location.search);
@@ -366,7 +428,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     transactionService.getInitialTransactions().then(setTransactions);
     notificationService.getInitialNotifications().then(setNotifications);
 
-    // Real-time Supabase collections listener (auto-updates KPIs and plays SoundBox chime)
+    // Real-time Supabase collections listener for Web Dashboard
     const unsubscribe = subscribeToMerchantCollections((newCol) => {
       setMerchantCollections((prev) => {
         if (prev.some((c) => c.id === newCol.id || (newCol.orderRef && c.orderRef === newCol.orderRef))) {
@@ -440,7 +502,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       else if (prev.screen === 'MERCHANT_INSIGHTS' || prev.screen === 'MERCHANT_COLLECTIONS' || prev.screen === 'HISTORY') setActiveTabState('history');
       else if (prev.screen === 'MERCHANT_BANK_LINK' || prev.screen === 'PROFILE') setActiveTabState('profile');
     } else {
-      navigateTo('MERCHANT_HOME');
+      if (isAuthenticated) {
+        navigateTo('MERCHANT_HOME');
+      } else {
+        navigateTo('MOBILE_NUMBER');
+      }
     }
   };
 
@@ -650,7 +716,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const processMerchantRefund = async (collectionId: string, pin: string): Promise<boolean> => {
-    if (pin !== merchantInfo.merchantPin && pin !== '2026') {
+    if (!verifyMerchantPin(pin)) {
       return false;
     }
     setMerchantCollections((prev) =>
@@ -775,12 +841,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [isRtl]);
 
   const performLogout = () => {
+    sessionStorage.removeItem('qpay_merchant_authenticated');
+    localStorage.removeItem('qpay_merchant_authenticated');
+    localStorage.removeItem('qpay_merchant_session');
     localStorage.removeItem('hasSeenOnboarding');
     localStorage.removeItem('hasCompletedOnboarding');
     localStorage.removeItem('hasGrantedPermissions');
+    setIsAuthenticated(false);
     setIsLogoutModalOpen(false);
-    setCurrentScreen('SPLASH');
-    setScreenStack([{ screen: 'SPLASH' }]);
+    setCurrentScreen('MOBILE_NUMBER');
+    setScreenStack([{ screen: 'MOBILE_NUMBER' }]);
   };
 
   const terminateSession = (sessionId: string) => {
@@ -795,6 +865,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isRtl,
         t,
         currentScreen,
+        isAuthenticated,
+        setIsAuthenticated,
         navigateTo,
         goBack,
         screenParams,
@@ -856,6 +928,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         soundBoxVolume,
         setSoundBoxVolume,
         speakSoundBox,
+        // Security Controls
+        activeOtp,
+        setActiveOtp,
+        verifyOtp,
+        verifyMerchantPin,
+        isManagerPinModalOpen,
+        managerPinModalData,
+        openManagerPinModal,
+        closeManagerPinModal,
       }}
     >
       {children}

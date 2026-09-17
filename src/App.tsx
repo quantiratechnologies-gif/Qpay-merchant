@@ -38,6 +38,7 @@ import { LogoutModal } from './screens/LogoutModal';
 import { AddBankModal } from './screens/AddBankModal';
 import { EditProfileModal } from './screens/EditProfileModal';
 import { KycModal } from './screens/KycModal';
+import { ManagerPinModal } from './components/ManagerPinModal';
 
 const AppContent: React.FC = () => {
   const { currentScreen, isRtl } = useApp();
@@ -129,6 +130,7 @@ const AppContent: React.FC = () => {
       <AddBankModal />
       <EditProfileModal />
       <KycModal />
+      <ManagerPinModal />
     </div>
   );
 };
