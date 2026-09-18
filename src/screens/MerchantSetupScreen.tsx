@@ -45,7 +45,7 @@ export const MerchantSetupScreen: React.FC = () => {
   const [category, setCategory] = useState(merchantInfo.category || 'Grocery & Daily Essentials');
   const [city, setCity] = useState(merchantInfo.city || 'Riyadh');
   const [postalCode, setPostalCode] = useState(merchantInfo.postalCode || '12211');
-  const [vatNumber] = useState(merchantInfo.vatNumber || '310948201900003');
+  const [vatNumber, setVatNumber] = useState(merchantInfo.vatNumber || '310948201900003');
   const [hasLogo, setHasLogo] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -359,10 +359,14 @@ export const MerchantSetupScreen: React.FC = () => {
             >
               <Hash size={17} color="#00C853" style={{ flexShrink: 0 }} />
               <input
-                type="text"
+                type="tel"
+                maxLength={15}
                 value={vatNumber}
-                readOnly
-                disabled
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '');
+                  setVatNumber(digits);
+                }}
+                placeholder="310948201900003"
                 style={{
                   background: 'none',
                   border: 'none',

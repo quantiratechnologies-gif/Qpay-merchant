@@ -19,12 +19,15 @@ import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber } from '../utils/i18n';
 import { Card, StatusBadge, SectionHeader } from '../components/ui';
 import { colors } from '../design-system/tokens';
+import { X, CheckCircle2, FileText } from 'lucide-react';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
     merchantCollections,
+    merchantSettlements,
     merchantInfo,
     triggerSettleNow,
+    processMerchantCollection,
     navigateTo,
     speakSoundBox,
     openManagerPinModal,
@@ -34,6 +37,17 @@ export const MerchantHomeScreen: React.FC = () => {
 
   const [isSettling, setIsSettling] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
+  const [settlementReceipt, setSettlementReceipt] = useState<any | null>(null);
+  const [isCashSaleModalOpen, setIsCashSaleModalOpen] = useState(false);
+  const [cashAmount, setCashAmount] = useState('');
+  const [cashNote, setCashNote] = useState('');
+  const [cashSuccess, setCashSuccess] = useState(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3500);
+  };
 
   const isAr = language === 'العربية';
   const totalToday = merchantCollections.reduce(
@@ -53,12 +67,86 @@ export const MerchantHomeScreen: React.FC = () => {
       onSuccess: async () => {
         setIsSettling(true);
         try {
-          await triggerSettleNow();
+          const settlement = await triggerSettleNow();
+          setSettlementReceipt(settlement);
+          showToast(
+            isAr
+              ? `تمت التسوية بنجاح! رقم الدفعة: ${settlement.id} عبر نظام سريع (SAMA IPS)`
+              : `Settlement ${settlement.id} successfully dispatched via SAMA IPS Clearing`
+          );
         } finally {
           setIsSettling(false);
         }
       },
     });
+  };
+
+  const handleRecordCashSale = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const amount = parseFloat(cashAmount);
+    if (isNaN(amount) || amount <= 0) return;
+
+    await processMerchantCollection({
+      amount,
+      paymentMethod: 'cash',
+      orderRef: 'CSH-' + Math.floor(1000 + Math.random() * 9000).toString(),
+      customerMasked: cashNote ? `${cashNote} (Cash)` : (isAr ? 'بيع نقدي مباشر' : 'Direct Cash Sale'),
+    });
+
+    setCashSuccess(true);
+    setTimeout(() => {
+      setCashSuccess(false);
+      setIsCashSaleModalOpen(false);
+      setCashAmount('');
+      setCashNote('');
+      showToast(isAr ? 'تم تسجيل العملية النقدية بنجاح' : 'Cash sale recorded successfully');
+    }, 1200);
+  };
+
+  const handleDownloadSettlementReport = () => {
+    const dateStr = new Date().toLocaleDateString('en-GB');
+    const html = `<!DOCTYPE html>
+<html>
+<head><title>SAMA Settlement Report - ${merchantInfo.businessName}</title>
+<style>
+  body { font-family: -apple-system, sans-serif; padding: 32px; color: #111; }
+  .header { border-bottom: 2px solid #00C853; padding-bottom: 12px; margin-bottom: 20px; }
+  .box { background: #F8FAFC; border: 1px solid #E2E8F0; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th, td { padding: 10px; border-bottom: 1px solid #E2E8F0; text-align: left; font-size: 13px; }
+  th { background: #EDF2F7; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h2>QTPay Merchant • SAMA Sarie Settlement Report</h2>
+    <div>Merchant: <strong>${merchantInfo.businessName}</strong> | CR: <strong>${merchantInfo.crNumber}</strong> | VAT: <strong>${merchantInfo.vatNumber}</strong></div>
+    <div>Generated: ${dateStr} | SAMA IPS Clearing Rail</div>
+  </div>
+  <div class="box">
+    <div><strong>Settlement Destination:</strong> ${merchantInfo.settlementBank}</div>
+    <div><strong>IBAN:</strong> ${merchantInfo.settlementIban}</div>
+    <div><strong>Today's Settled Volume:</strong> SAR ${displayTotal.toFixed(2)}</div>
+    <div><strong>Status:</strong> Dispatched via SAMA IPS Clearing</div>
+  </div>
+  <table>
+    <thead><tr><th>Settlement Ref</th><th>Sarie UTR</th><th>Gross (SAR)</th><th>15% VAT (SAR)</th><th>Status</th></tr></thead>
+    <tbody>
+      ${merchantSettlements.slice(0, 10).map(s => `<tr><td>${s.id}</td><td>${s.utr}</td><td>${s.amount.toFixed(2)}</td><td>${s.vatAmount.toFixed(2)}</td><td><strong style="color: #00C853;">DISPATCHED</strong></td></tr>`).join('')}
+    </tbody>
+  </table>
+</body>
+</html>`;
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `QTPay_Settlement_Report_${new Date().toISOString().slice(0, 10)}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(isAr ? 'تم تنزيل تقرير التسويات بنجاح' : 'Settlement report downloaded');
   };
 
   const handleTestSoundBox = () => {
@@ -345,7 +433,7 @@ export const MerchantHomeScreen: React.FC = () => {
               {/* Tile 4: Cash Sale */}
               <Card
                 variant="interactive"
-                onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+                onClick={() => setIsCashSaleModalOpen(true)}
                 style={{
                   padding: '18px 12px',
                   display: 'flex',
@@ -552,6 +640,29 @@ export const MerchantHomeScreen: React.FC = () => {
                   : (isAr ? `تسوية ${displayTotal.toFixed(2)} ر.س للبنك` : `Settle SAR ${displayTotal.toFixed(2)} Now`)}
               </span>
             </button>
+
+            <button
+              onClick={handleDownloadSettlementReport}
+              className="interactive-tap cursor-pointer"
+              style={{
+                width: '100%',
+                marginTop: '10px',
+                padding: '10px',
+                borderRadius: '10px',
+                backgroundColor: '#151C2C',
+                border: '1px solid #1E293B',
+                color: '#00FF24',
+                fontSize: '12px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}
+            >
+              <Download size={14} />
+              <span>{isAr ? 'تنزيل تقرير التسويات (SAMA)' : 'Download Settlement Report'}</span>
+            </button>
           </Card>
 
           {/* Store Stand QR Card Preview */}
@@ -573,7 +684,7 @@ export const MerchantHomeScreen: React.FC = () => {
               }}
             >
               <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://qtpay-merchant.vercel.app"
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`sarie://pay?pa=${merchantInfo.vatNumber || '300012345600003'}&pn=${encodeURIComponent(merchantInfo.businessName || 'Merchant')}`)}`}
                 alt="Store QR"
                 style={{ width: '150px', height: '150px', display: 'block' }}
               />
@@ -631,6 +742,165 @@ export const MerchantHomeScreen: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Cash Sale Modal */}
+      {isCashSaleModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(5, 8, 15, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 2600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+          }}
+          onClick={() => setIsCashSaleModalOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: '#111726',
+              border: '1px solid rgba(0, 255, 36, 0.3)',
+              borderRadius: '20px',
+              width: '100%',
+              maxWidth: '420px',
+              padding: '24px',
+              animation: 'scaleUp 0.2s ease',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Banknote size={22} color="#00FF24" />
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                  {isAr ? 'تسجيل عملية بيع نقدي' : 'Record Cash Sale'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsCashSaleModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleRecordCashSale} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', marginBottom: '6px', display: 'block' }}>
+                  {isAr ? 'المبلغ المستلم نقداً (ر.س)' : 'Cash Amount Received (SAR)'}
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  autoFocus
+                  required
+                  value={cashAmount}
+                  onChange={(e) => setCashAmount(e.target.value)}
+                  placeholder="0.00"
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    backgroundColor: '#182236',
+                    border: '1px solid #1E293B',
+                    borderRadius: '12px',
+                    color: '#00FF24',
+                    fontSize: '22px',
+                    fontWeight: 900,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', marginBottom: '6px', display: 'block' }}>
+                  {isAr ? 'ملاحظة العملية / رقم الطلب' : 'Order Note / Register #'}
+                </label>
+                <input
+                  type="text"
+                  value={cashNote}
+                  onChange={(e) => setCashNote(e.target.value)}
+                  placeholder={isAr ? 'كاشير ١ • مبيعات إفطار' : 'Cashier 1 • Store order'}
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    backgroundColor: '#182236',
+                    border: '1px solid #1E293B',
+                    borderRadius: '12px',
+                    color: '#FFFFFF',
+                    fontSize: '13.5px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div style={{ backgroundColor: '#0A0E1A', padding: '12px 14px', borderRadius: '10px', fontSize: '12px', color: '#94A3B8' }}>
+                {isAr ? 'سيتم احتساب ١٥٪ ضريبة القيمة المضافة زاتكا وإضافتها لتقرير التحصيلات اليومي.' : '15% ZATCA VAT will be calculated and logged into daily tax ledger.'}
+              </div>
+
+              <button
+                type="submit"
+                disabled={cashSuccess || !cashAmount}
+                className="interactive-tap cursor-pointer"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '12px',
+                  backgroundColor: '#00FF24',
+                  color: '#080C14',
+                  fontWeight: 900,
+                  fontSize: '14px',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  marginTop: '6px',
+                }}
+              >
+                {cashSuccess ? (
+                  <>
+                    <CheckCircle2 size={18} />
+                    <span>{isAr ? 'تم تسجيل البيع والنطق الصوتي!' : 'Recorded & SoundBox Announced!'}</span>
+                  </>
+                ) : (
+                  <span>{isAr ? 'تأكيد وحفظ البيع النقدي' : 'Confirm & Record Cash Sale'}</span>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Alert */}
+      {toastMsg && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: isRtl ? 'auto' : '24px',
+            left: isRtl ? '24px' : 'auto',
+            backgroundColor: '#00FF24',
+            color: '#080C14',
+            padding: '14px 20px',
+            borderRadius: '14px',
+            fontWeight: 800,
+            fontSize: '13.5px',
+            zIndex: 3000,
+            boxShadow: '0 8px 30px rgba(0, 255, 36, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          <CheckCircle2 size={18} />
+          <span>{toastMsg}</span>
+        </div>
+      )}
     </div>
   );
 };

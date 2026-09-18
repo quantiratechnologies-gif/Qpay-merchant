@@ -19,6 +19,7 @@ import {
   Clock,
   FileText,
   Download,
+  Search,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
@@ -44,6 +45,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
   const isAr = language === 'العربية';
   const [activeMainTab, setActiveMainTab] = useState<'transactions' | 'settlements'>('transactions');
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedTxn, setSelectedTxn] = useState<MerchantCollection | null>(null);
   const [refundPin, setRefundPin] = useState('');
   const [isRefunding, setIsRefunding] = useState(false);
@@ -72,12 +74,24 @@ export const MerchantCollectionsScreen: React.FC = () => {
       ];
 
   const filtered = allCollections.filter((c) => {
-    if (activeFilter === 'card') return c.paymentMethod === 'softpos_mada' || c.paymentMethod.includes('card') || c.paymentMethod.includes('mada');
-    if (activeFilter === 'applepay') return c.paymentMethod === 'softpos_applepay' || c.paymentMethod.includes('apple');
-    if (activeFilter === 'zatca') return c.paymentMethod === 'zatca_qr';
-    if (activeFilter === 'cash') return c.paymentMethod === 'cash';
-    if (activeFilter === 'link') return c.paymentMethod === 'payment_link';
-    return true;
+    let matchCat = true;
+    if (activeFilter === 'card') matchCat = c.paymentMethod === 'softpos_mada' || c.paymentMethod.includes('card') || c.paymentMethod.includes('mada');
+    else if (activeFilter === 'applepay') matchCat = c.paymentMethod === 'softpos_applepay' || c.paymentMethod.includes('apple');
+    else if (activeFilter === 'zatca') matchCat = c.paymentMethod === 'zatca_qr';
+    else if (activeFilter === 'cash') matchCat = c.paymentMethod === 'cash';
+    else if (activeFilter === 'link') matchCat = c.paymentMethod === 'payment_link';
+
+    if (!matchCat) return false;
+
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return (
+      c.id.toLowerCase().includes(q) ||
+      (c.orderRef && c.orderRef.toLowerCase().includes(q)) ||
+      (c.customerMasked && c.customerMasked.toLowerCase().includes(q)) ||
+      c.amount.toString().includes(q) ||
+      c.paymentMethod.toLowerCase().includes(q)
+    );
   });
 
   const totalSales = filtered.reduce((acc, c) => acc + (c.status === 'settled' ? c.amount : 0), 0);
@@ -133,8 +147,88 @@ export const MerchantCollectionsScreen: React.FC = () => {
     });
   };
 
-  const handleDownloadTaxInvoice = (_settlementRef: string) => {
-    // No-op clean action
+  const handleDownloadTaxInvoice = (settlementRef?: string, customAmount?: number, customVat?: number) => {
+    const invRef = settlementRef || `INV-SA-${Date.now().toString().slice(-6)}`;
+    const gross = customAmount ?? (unsettledTotal > 0 ? unsettledTotal : 1845.50);
+    const vatVal = customVat ?? Number((gross * 0.15 / 1.15).toFixed(2));
+    const net = Number((gross - vatVal).toFixed(2));
+    const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+    const htmlContent = `<!DOCTYPE html>
+<html lang="${isAr ? 'ar' : 'en'}" dir="${isRtl ? 'rtl' : 'ltr'}">
+<head>
+  <meta charset="UTF-8">
+  <title>ZATCA Tax Invoice - ${invRef}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 32px; background: #fff; color: #0F172A; max-width: 680px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; border-bottom: 2px solid #00C853; padding-bottom: 16px; margin-bottom: 24px; }
+    .badge { background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 12px; }
+    .table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .table th, .table td { padding: 10px 12px; text-align: ${isRtl ? 'right' : 'left'}; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
+    .table th { background: #F8FAFC; color: #64748B; font-weight: 600; }
+    .total-row { font-size: 16px; font-weight: 800; color: #0F172A; }
+    .qr-box { text-align: center; margin: 24px 0; padding: 16px; background: #F8FAFC; border-radius: 8px; border: 1px dashed #CBD5E1; }
+    .footer { font-size: 11px; color: #94A3B8; text-align: center; border-top: 1px solid #E2E8F0; padding-top: 16px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h2 style="margin:0; color:#00C853;">${merchantInfo.businessName || 'QTPay Merchant Store'}</h2>
+      <p style="margin:4px 0 0 0; color:#64748B; font-size:12px;">CR: ${merchantInfo.crNumber || '1010849201'} | VAT: ${merchantInfo.vatNumber || '310948201900003'}</p>
+    </div>
+    <div style="text-align:${isRtl ? 'left' : 'right'};">
+      <span class="badge">ZATCA Compliant • فاتورة ضريبية مبسطة</span>
+      <p style="margin:6px 0 0 0; font-weight:bold; font-size:13px;">#${invRef}</p>
+      <p style="margin:2px 0 0 0; color:#64748B; font-size:11px;">${dateStr}</p>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Description / الوصف</th>
+        <th style="text-align:right;">Net (SAR)</th>
+        <th style="text-align:right;">VAT 15% (SAR)</th>
+        <th style="text-align:right;">Total (SAR)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Merchant Point of Sale Settlement / مبيعات متجر معتمدة</td>
+        <td style="text-align:right;">${net.toFixed(2)}</td>
+        <td style="text-align:right;">${vatVal.toFixed(2)}</td>
+        <td style="text-align:right;">${gross.toFixed(2)}</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Payable / المجموع الإجمالي</td>
+        <td style="text-align:right;">${net.toFixed(2)}</td>
+        <td style="text-align:right; color:#059669;">${vatVal.toFixed(2)}</td>
+        <td style="text-align:right; color:#00C853;">SAR ${gross.toFixed(2)}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="qr-box">
+    <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:#475569;">ZATCA Fatoora Phase-2 Cryptographic Stamp</div>
+    <div style="font-family:monospace; font-size:11px; color:#0284C7; word-break:break-all;">AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=</div>
+  </div>
+
+  <div class="footer">
+    Approved by ZATCA & SAMA IPS (Sarie) Clearing System. This electronic invoice complies with KSA VAT Regulation.
+  </div>
+</body>
+</html>`;
+
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ZATCA_Tax_Invoice_${invRef}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const getPaymentMethodIcon = (method: string) => {
@@ -228,6 +322,7 @@ export const MerchantCollectionsScreen: React.FC = () => {
             </button>
             <button
               type="button"
+              onClick={() => handleDownloadTaxInvoice('SUMMARY-TODAY')}
               className="interactive-tap"
               style={{
                 display: 'flex', alignItems: 'center', gap: '7px',
@@ -294,6 +389,81 @@ export const MerchantCollectionsScreen: React.FC = () => {
       ═══════════════════════════════════════════════════════ */}
       {activeMainTab === 'transactions' && (
         <>
+          {/* Search Bar with Dedicated Search Button (Bug 19) */}
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <Search
+                size={16}
+                style={{
+                  position: 'absolute',
+                  left: isRtl ? 'auto' : '14px',
+                  right: isRtl ? '14px' : 'auto',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: colors.textMuted,
+                }}
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={isAr ? 'بحث برقم المعاملة، العميل، أو المبلغ...' : 'Search by ID, customer name, or amount...'}
+                style={{
+                  width: '100%',
+                  backgroundColor: colors.bgCard,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: radii.md,
+                  padding: isRtl ? '10px 38px 10px 14px' : '10px 14px 10px 38px',
+                  color: colors.textPrimary,
+                  fontSize: '13px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: isRtl ? 'auto' : '12px',
+                    left: isRtl ? '12px' : 'auto',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: colors.textMuted,
+                    cursor: 'pointer',
+                    padding: '4px',
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              className="interactive-tap"
+              style={{
+                backgroundColor: colors.accentGreen,
+                color: '#080C14',
+                border: 'none',
+                borderRadius: radii.md,
+                padding: '0 20px',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                flexShrink: 0,
+              }}
+            >
+              <Search size={14} />
+              {isAr ? 'بحث' : 'Search'}
+            </button>
+          </div>
+
           {/* Filter Chips */}
           <FilterPills
             tabs={collectionFilterTabs}
@@ -454,10 +624,33 @@ export const MerchantCollectionsScreen: React.FC = () => {
                   </div>
 
                   {/* Col 7: Action */}
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                    <button
+                      type="button"
+                      title={isAr ? 'تحميل الفاتورة الضريبية' : 'Download Tax Invoice'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDownloadTaxInvoice(c.id, c.amount, c.vatAmount);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: `1px solid ${colors.borderStrong}`,
+                        borderRadius: radii.sm,
+                        padding: '4px 6px',
+                        color: colors.accentGreen,
+                        cursor: 'pointer',
+                        display: 'inline-flex', alignItems: 'center',
+                      }}
+                    >
+                      <FileText size={12} />
+                    </button>
                     {c.status !== 'refunded' && (
                       <button
                         type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenRefundModal(c);
+                        }}
                         style={{
                           background: 'transparent',
                           border: `1px solid ${colors.borderStrong}`,

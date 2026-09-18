@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Delete, CheckCircle2, Wifi, ArrowLeft } from 'lucide-react';
+import { Delete, CheckCircle2, Wifi, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { toArabicNumerals } from '../utils/i18n';
 import { Card } from '../components/ui';
@@ -178,6 +178,36 @@ export const SoftPOSTerminalScreen: React.FC = () => {
         </span>
 
         <div style={{ width: '38px' }} />
+      </div>
+
+      {/* TID & SAMA Certification Header Badge (Bug 22) */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: '#111726',
+          border: '1px solid #1E293B',
+          borderRadius: radii.md,
+          padding: '7px 12px',
+          maxWidth: '380px',
+          margin: '0 auto 8px auto',
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#00C853', display: 'inline-block' }} />
+          <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: '#FFFFFF' }}>
+            TID: SA-POS-98124
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <ShieldCheck size={13} color="#00C853" />
+          <span style={{ fontSize: '10.5px', fontWeight: 700, color: '#00C853' }}>
+            {isAr ? 'معتمد من ساما • PCI CPoC' : 'SAMA Certified • PCI CPoC'}
+          </span>
+        </div>
       </div>
 
       <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: spacing.space3 }}>

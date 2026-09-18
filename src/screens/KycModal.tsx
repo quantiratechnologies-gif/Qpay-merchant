@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, ShieldCheck, CheckCircle2, FileText, UserCheck, ArrowRight, Loader2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, ShieldCheck, CheckCircle2, FileText, UserCheck, ArrowRight, Loader2, UploadCloud, Paperclip } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { ZatcaLogo } from '../components/ZatcaLogo';
 import { PrimaryButton } from '../components/PrimaryButton';
@@ -7,7 +7,10 @@ import { PrimaryButton } from '../components/PrimaryButton';
 export const KycModal: React.FC = () => {
   const { isKycModalOpen, setIsKycModalOpen, merchantInfo, updateMerchantInfo, navigateTo, t, isRtl, language } = useApp();
   const [nationalId, setNationalId] = useState(merchantInfo.nationalId || '1098472910');
-  const [crNumber, setCrNumber] = useState(merchantInfo.crNumber || 'CR-1010849201');
+  const [crNumber, setCrNumber] = useState((merchantInfo.crNumber || '1010849201').replace(/^CR-?/i, ''));
+  const [docName, setDocName] = useState('Commercial_Registration_Certificate.pdf');
+  const [docUploaded, setDocUploaded] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verifiedSuccess, setVerifiedSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,8 +23,8 @@ export const KycModal: React.FC = () => {
       setErrorMsg(language === 'العربية' ? 'يرجى إدخال رقم هوية وطنية أو إقامة صحيح من ١٠ أرقام.' : 'Please enter a valid 10-digit National ID or Iqama Number.');
       return;
     }
-    if (!crNumber.trim()) {
-      setErrorMsg(language === 'العربية' ? 'يرجى إدخال رقم السجل التجاري للمنشأة.' : 'Please enter your Commercial Registration (CR) Number.');
+    if (!crNumber.trim() || crNumber.trim().length < 10) {
+      setErrorMsg(language === 'العربية' ? 'يرجى إدخال رقم السجل التجاري المكون من ١٠ أرقام.' : 'Please enter your 10-digit Commercial Registration (CR) Number.');
       return;
     }
 
@@ -34,7 +37,7 @@ export const KycModal: React.FC = () => {
       setVerifiedSuccess(true);
       updateMerchantInfo({
         nationalId,
-        crNumber: crNumber.toUpperCase().startsWith('CR-') ? crNumber.toUpperCase() : `CR-${crNumber.toUpperCase()}`,
+        crNumber: crNumber.replace(/\D/g, ''),
         isKycVerified: true,
       });
 
@@ -52,7 +55,7 @@ export const KycModal: React.FC = () => {
         inset: 0,
         backgroundColor: 'rgba(5, 8, 15, 0.85)',
         backdropFilter: 'blur(10px)',
-        zIndex: 110,
+        zIndex: 2600,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -218,10 +221,11 @@ export const KycModal: React.FC = () => {
               >
                 <FileText size={18} color="#00C853" />
                 <input
-                  type="text"
+                  type="tel"
+                  maxLength={10}
                   value={crNumber}
-                  onChange={(e) => setCrNumber(e.target.value)}
-                  placeholder="CR-1010XXXXXX"
+                  onChange={(e) => setCrNumber(e.target.value.replace(/\D/g, ''))}
+                  placeholder="1010849201"
                   style={{
                     backgroundColor: 'transparent',
                     border: 'none',
@@ -230,8 +234,79 @@ export const KycModal: React.FC = () => {
                     fontSize: '14px',
                     fontWeight: 700,
                     width: '100%',
+                    fontFamily: 'monospace',
                   }}
                 />
+              </div>
+            </div>
+
+            {/* Commercial License Document Attachment Upload (Bug 23) */}
+            <div>
+              <label
+                style={{
+                  fontSize: '12px', fontWeight: 500, color: '#94A3B8',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '6px',
+                }}
+              >
+                {language === 'العربية' ? 'وثيقة السجل التجاري / رخصة البلدية' : 'Commercial License Document Attachment'}
+              </label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept=".pdf,.png,.jpg,.jpeg"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setDocName(file.name);
+                    setDocUploaded(true);
+                  }
+                }}
+              />
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="interactive-tap"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  backgroundColor: '#161F30',
+                  border: '1px dashed #00C853',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                  cursor: 'pointer',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+                  <Paperclip size={18} color="#00C853" style={{ flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {docName}
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#64748B' }}>
+                      {docUploaded ? (language === 'العربية' ? 'مرفق ومتحقق منه (PDF • 1.4 MB)' : 'Attached & Verified (PDF • 1.4 MB)') : (language === 'العربية' ? 'انقر لرفع المستند' : 'Tap to browse document')}
+                    </div>
+                  </div>
+                </div>
+                <span
+                  style={{
+                    backgroundColor: 'rgba(0, 200, 83, 0.15)',
+                    color: '#00C853',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    flexShrink: 0,
+                  }}
+                >
+                  <UploadCloud size={13} />
+                  {language === 'العربية' ? 'تغيير' : 'Change'}
+                </span>
               </div>
             </div>
 
@@ -264,7 +339,7 @@ export const KycModal: React.FC = () => {
 
             {/* Submit Button */}
             <div style={{ marginTop: '8px' }}>
-              <PrimaryButton type="submit" disabled={isVerifying || nationalId.length < 10 || !crNumber.trim()}>
+              <PrimaryButton type="submit" disabled={isVerifying || nationalId.length < 10 || crNumber.trim().length < 10}>
                 {isVerifying ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />{' '}

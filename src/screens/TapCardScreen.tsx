@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, CheckCircle2 } from 'lucide-react';
+import { Wifi, CheckCircle2, AlertCircle, RotateCcw, XCircle, Clock } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatCurrency } from '../utils/formatters';
 import { formatLocalizedNumber } from '../utils/i18n';
@@ -13,6 +13,7 @@ export const TapCardScreen: React.FC = () => {
     softPosCardScheme,
     processMerchantCollection,
     navigateTo,
+    goBack,
     merchantInfo,
     language,
   } = useApp();
@@ -21,47 +22,69 @@ export const TapCardScreen: React.FC = () => {
   const amount = screenParams.amount || softPosAmount || 67.0;
   const scheme = screenParams.cardScheme || softPosCardScheme || 'mada';
 
-  const [step, setStep] = useState<'waiting' | 'reading' | 'authorizing' | 'success'>('waiting');
+  const [step, setStep] = useState<'waiting' | 'reading' | 'authorizing' | 'success' | 'timeout'>('waiting');
+  const [countdown, setCountdown] = useState(15);
+
+  const startTapFlow = () => {
+    setStep('waiting');
+    setCountdown(15);
+  };
 
   useEffect(() => {
-    // 1. Simulate NFC Card Tap after 1.2s
-    const t1 = setTimeout(() => {
-      setStep('reading');
-    }, 1200);
+    if (step === 'timeout' || step === 'success') return;
 
-    // 2. Authorizing with SAMA after 2.0s
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setStep('timeout');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // 1. Simulate NFC Card Tap after 1.8s
+    const t1 = setTimeout(() => {
+      if (step !== 'timeout') setStep('reading');
+    }, 1800);
+
+    // 2. Authorizing with SAMA after 3.2s
     const t2 = setTimeout(() => {
-      setStep('authorizing');
-    }, 2000);
+      if (step !== 'timeout') setStep('authorizing');
+    }, 3200);
 
     // 3. Complete and record collection
     const t3 = setTimeout(async () => {
-      setStep('success');
+      if (step !== 'timeout') {
+        setStep('success');
 
-      let paymentMethod: PaymentAcceptanceMethod = 'softpos_mada';
-      if (scheme === 'applepay') paymentMethod = 'softpos_applepay';
-      else if (scheme === 'visa') paymentMethod = 'softpos_visa';
-      else if (scheme === 'mastercard') paymentMethod = 'softpos_mastercard';
+        let paymentMethod: PaymentAcceptanceMethod = 'softpos_mada';
+        if (scheme === 'applepay') paymentMethod = 'softpos_applepay';
+        else if (scheme === 'visa') paymentMethod = 'softpos_visa';
+        else if (scheme === 'mastercard') paymentMethod = 'softpos_mastercard';
 
-      await processMerchantCollection({
-        amount,
-        paymentMethod,
-        cardLast4: Math.floor(1000 + Math.random() * 9000).toString(),
-        orderRef: 'ORD-' + Math.floor(1000 + Math.random() * 9000).toString(),
-        customerMasked: '+966 5' + Math.floor(10 + Math.random() * 90) + ' ••• ' + Math.floor(1000 + Math.random() * 9000),
-      });
+        await processMerchantCollection({
+          amount,
+          paymentMethod,
+          cardLast4: Math.floor(1000 + Math.random() * 9000).toString(),
+          orderRef: 'ORD-' + Math.floor(1000 + Math.random() * 9000).toString(),
+          customerMasked: '+966 5' + Math.floor(10 + Math.random() * 90) + ' ••• ' + Math.floor(1000 + Math.random() * 9000),
+        });
 
-      setTimeout(() => {
-        navigateTo('MERCHANT_PAYMENT_SUCCESS');
-      }, 800);
-    }, 2800);
+        setTimeout(() => {
+          navigateTo('MERCHANT_PAYMENT_SUCCESS');
+        }, 800);
+      }
+    }, 4200);
 
     return () => {
+      clearInterval(timer);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
     };
-  }, [amount, scheme]);
+  }, [step, amount, scheme]);
 
   return (
     <div
@@ -147,16 +170,18 @@ export const TapCardScreen: React.FC = () => {
               height: '90px',
               borderRadius: '26px',
               backgroundColor: '#111726',
-              border: '2px solid #00C853',
+              border: step === 'timeout' ? '2px solid #EF4444' : '2px solid #00C853',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00C853',
+              color: step === 'timeout' ? '#EF4444' : '#00C853',
               zIndex: 2,
-              boxShadow: '0 0 30px rgba(0, 200, 83, 0.25)',
+              boxShadow: step === 'timeout' ? '0 0 30px rgba(239, 68, 68, 0.25)' : '0 0 30px rgba(0, 200, 83, 0.25)',
             }}
           >
-            {step === 'success' ? (
+            {step === 'timeout' ? (
+              <AlertCircle size={44} color="#EF4444" />
+            ) : step === 'success' ? (
               <CheckCircle2 size={44} color="#00C853" />
             ) : (
               <Wifi size={44} style={{ transform: 'rotate(90deg)' }} />
@@ -175,13 +200,66 @@ export const TapCardScreen: React.FC = () => {
           {step === 'reading' && (isAr ? 'جاري قراءة الشريحة اللاتلامسية...' : 'Reading Contactless Chip...')}
           {step === 'authorizing' && (isAr ? 'جاري التفويض مع الشبكة البنكية...' : 'Authorizing with Banking Network...')}
           {step === 'success' && (isAr ? 'تمت العملية بنجاح!' : 'Payment Approved!')}
+          {step === 'timeout' && (isAr ? 'انتهت مهلة قراءة البطاقة (NFC)' : 'NFC Read Timeout')}
         </div>
 
-        <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', maxWidth: '280px', margin: 0 }}>
-          {step === 'waiting'
-            ? (isAr ? 'يدعم البطاقات البنكية وأبل باي وفيزا وماستركارد اللاتلامسية' : 'Accepts Contactless Debit Cards, Apple Pay, Visa, and Mastercard')
-            : (isAr ? 'يرجى إبقاء البطاقة ثابتة حتى انتهاء التفويض' : 'Please keep the card still until authorization finishes')}
+        <p style={{ fontSize: '12px', color: '#94A3B8', textAlign: 'center', maxWidth: '280px', margin: '0 0 16px 0' }}>
+          {step === 'waiting' && (isAr ? 'يدعم البطاقات البنكية وأبل باي وفيزا وماستركارد اللاتلامسية' : 'Accepts Contactless Debit Cards, Apple Pay, Visa, and Mastercard')}
+          {(step === 'reading' || step === 'authorizing') && (isAr ? 'يرجى إبقاء البطاقة ثابتة حتى انتهاء التفويض' : 'Please keep the card still until authorization finishes')}
+          {step === 'timeout' && (isAr ? 'تعذر الاتصال بالشريحة اللاتلامسية أو تم إبعادها سريعاً. يرجى إعادة المحاولة.' : 'Could not read card chip or it was moved away too quickly. Please try tapping again.')}
         </p>
+
+        {step !== 'timeout' && step !== 'success' && (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(0, 200, 83, 0.1)', border: '1px solid rgba(0, 200, 83, 0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
+            <Clock size={12} />
+            <span>{isAr ? `مهلة القراءة: ${countdown} ث` : `NFC Timeout: ${countdown}s`}</span>
+          </div>
+        )}
+
+        {step === 'timeout' && (
+          <div style={{ display: 'flex', gap: '10px', marginTop: '8px', width: '100%', maxWidth: '280px' }}>
+            <button
+              type="button"
+              onClick={startTapFlow}
+              className="interactive-tap"
+              style={{
+                flex: 1,
+                backgroundColor: '#00C853',
+                color: '#080C14',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '12px',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}
+            >
+              <RotateCcw size={14} />
+              {isAr ? 'إعادة التمرير' : 'Retry Tap'}
+            </button>
+            <button
+              type="button"
+              onClick={goBack}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#1E293B',
+                color: '#FFFFFF',
+                border: '1px solid #334155',
+                borderRadius: '12px',
+                padding: '12px 18px',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              {isAr ? 'إلغاء' : 'Cancel'}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Footer Support Badges */}

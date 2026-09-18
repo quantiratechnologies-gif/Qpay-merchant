@@ -130,7 +130,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen: prop
         inset: 0,
         backgroundColor: 'rgba(5, 8, 15, 0.85)',
         backdropFilter: 'blur(10px)',
-        zIndex: 50,
+        zIndex: 2600,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

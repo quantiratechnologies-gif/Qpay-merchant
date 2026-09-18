@@ -49,6 +49,13 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleWhatsAppShare = () => {
+    const text = isAr
+      ? `*إيصال فاتورة زاتكا الإلكترونية - كيو تي باي*\nالمتجر: ${merchantInfo.businessName}\nالسجل التجاري: ${merchantInfo.crNumber}\nالرقم الضريبي: ${merchantInfo.vatNumber}\nالمرجع: ${collection.id}\nالمبلغ: ${collection.amount.toFixed(2)} ر.س (شامل الضريبة: ${collection.vatAmount.toFixed(2)} ر.س)\nتمت التسوية المباشرة عبر شبكة سريع المدعومة بتقنيات كوانتيرا.`
+      : `*ZATCA E-INVOICE RECEIPT - QTPAY*\nStore: ${merchantInfo.businessName}\nCR: ${merchantInfo.crNumber}\nVAT ID: ${merchantInfo.vatNumber}\nRef: ${collection.id}\nAmount: SAR ${collection.amount.toFixed(2)} (Incl. 15% VAT: SAR ${collection.vatAmount.toFixed(2)})\nSettled via Sarie Network • Powered by Quantira Technologies.`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
   return (
     <div
       className="fade-in"
@@ -202,7 +209,30 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
               }}
             >
               {copied ? <Check size={15} color="#00C853" /> : <Share2 size={15} color="#00C853" />}
-              {copied ? (isAr ? 'تم نسخ الإيصال' : 'Copied Receipt') : (isAr ? 'مشاركة الإيصال' : 'Share Receipt')}
+              {copied ? (isAr ? 'تم نسخ الإيصال' : 'Copied Receipt') : (isAr ? 'نسخ الإيصال' : 'Copy Receipt')}
+            </button>
+
+            <button
+              onClick={handleWhatsAppShare}
+              className="interactive-tap"
+              style={{
+                flex: 1,
+                backgroundColor: '#25D366',
+                border: 'none',
+                color: '#080C14',
+                borderRadius: '10px',
+                padding: '9px 12px',
+                fontSize: '11.5px',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              <span>💬</span>
+              <span>{isAr ? 'إرسال بالواتساب' : 'WhatsApp'}</span>
             </button>
           </div>
         </div>

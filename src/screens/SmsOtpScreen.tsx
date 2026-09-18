@@ -63,6 +63,9 @@ export const SmsOtpScreen: React.FC = () => {
       setOtp(newOtp);
       const nextIndex = Math.min(pasteDigits.length, 5);
       inputRefs.current[nextIndex]?.focus();
+      if (pasteDigits.length === 6) {
+        triggerVerifyWithCode(newOtp.join(''));
+      }
       return;
     }
 
@@ -73,6 +76,10 @@ export const SmsOtpScreen: React.FC = () => {
 
     if (digit && index < 5) {
       inputRefs.current[index + 1]?.focus();
+    } else if (digit && index === 5) {
+      if (newOtp.every((d) => d.trim().length > 0)) {
+        triggerVerifyWithCode(newOtp.join(''));
+      }
     }
   };
 
@@ -110,21 +117,15 @@ export const SmsOtpScreen: React.FC = () => {
     setOtp(newOtp);
     const focusIndex = Math.min(pastedData.length, 5);
     inputRefs.current[focusIndex]?.focus();
+    if (pastedData.length === 6) {
+      triggerVerifyWithCode(pastedData);
+    }
   };
 
-  const handleQuickFill = (codeToFill?: string) => {
-    const targetCode = codeToFill || activeOtp || '589204';
-    const digits = targetCode.slice(0, 6).split('');
-    setOtp(digits);
-    setErrorMsg('');
-    inputRefs.current[5]?.focus();
-  };
-
-  const handleVerify = async () => {
-    if (!isOtpComplete || isVerifying) return;
+  const triggerVerifyWithCode = async (enteredCode: string) => {
+    if (isVerifying) return;
     setErrorMsg('');
 
-    const enteredCode = otp.join('');
     const isValid = verifyOtp(enteredCode);
 
     if (!isValid) {
@@ -153,13 +154,28 @@ export const SmsOtpScreen: React.FC = () => {
     localStorage.setItem('qpay_merchant_authenticated', 'true');
     setIsAuthenticated(true);
 
-    // If merchant PIN has not been set by the user, route to MERCHANT_PIN_SETUP
     const hasPin = typeof window !== 'undefined' ? localStorage.getItem('qpay_merchant_pin') : null;
     if (!hasPin) {
       navigateTo('MERCHANT_PIN_SETUP');
     } else {
       navigateTo('MERCHANT_HOME');
     }
+  };
+
+  const handleQuickFill = (codeToFill?: string) => {
+    const targetCode = codeToFill || activeOtp || '589204';
+    const digits = targetCode.slice(0, 6).split('');
+    setOtp(digits);
+    setErrorMsg('');
+    inputRefs.current[5]?.focus();
+    setTimeout(() => {
+      triggerVerifyWithCode(targetCode);
+    }, 120);
+  };
+
+  const handleVerify = async () => {
+    if (!isOtpComplete || isVerifying) return;
+    await triggerVerifyWithCode(otp.join(''));
   };
 
   const handleResend = () => {

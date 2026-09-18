@@ -1,5 +1,5 @@
-import React from 'react';
-import { Smartphone, Monitor, ShieldCheck, LogOut, Lock, UserCheck, Key } from 'lucide-react';
+import React, { useState } from 'react';
+import { Smartphone, Monitor, ShieldCheck, LogOut, Lock, UserCheck, Key, Fingerprint, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber, translateText } from '../utils/i18n';
 import { Card, StatusBadge } from '../components/ui';
@@ -8,6 +8,38 @@ import { colors, radii } from '../design-system/tokens';
 export const SecurityScreen: React.FC = () => {
   const { deviceSessions, terminateSession, navigateTo, language, isRtl } = useApp();
   const isAr = language === 'العربية';
+
+  const [biometricsEnabled, setBiometricsEnabled] = useState<boolean>(() => {
+    return localStorage.getItem('qtpay_merchant_biometrics') !== 'false';
+  });
+  const [terminalLockEnabled, setTerminalLockEnabled] = useState<boolean>(() => {
+    return localStorage.getItem('qtpay_merchant_terminal_lock') === 'true';
+  });
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleToggleBiometrics = () => {
+    const next = !biometricsEnabled;
+    setBiometricsEnabled(next);
+    localStorage.setItem('qtpay_merchant_biometrics', String(next));
+    setToastMessage(
+      next
+        ? (isAr ? 'تم تفعيل المصادقة البيومترية (Face ID / البصمة)' : 'Hardware Biometrics (Face ID / Touch ID) enabled')
+        : (isAr ? 'تم تعطيل المصادقة البيومترية' : 'Hardware Biometrics disabled')
+    );
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleToggleTerminalLock = () => {
+    const next = !terminalLockEnabled;
+    setTerminalLockEnabled(next);
+    localStorage.setItem('qtpay_merchant_terminal_lock', String(next));
+    setToastMessage(
+      next
+        ? (isAr ? 'تم تفعيل قفل جهاز نقطة البيع' : 'SoftPOS Terminal Lock enabled')
+        : (isAr ? 'تم إلغاء قفل جهاز نقطة البيع' : 'SoftPOS Terminal Lock disabled')
+    );
+    setTimeout(() => setToastMessage(null), 2500);
+  };
 
   return (
     <div
@@ -30,6 +62,28 @@ export const SecurityScreen: React.FC = () => {
             : 'Manage active sessions and configure security settings'}
         </p>
       </div>
+
+      {toastMessage && (
+        <div
+          className="fade-in"
+          style={{
+            backgroundColor: 'rgba(0, 200, 83, 0.15)',
+            border: '1px solid #00C853',
+            borderRadius: radii.md,
+            padding: '10px 16px',
+            color: '#00C853',
+            fontSize: '13px',
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '20px',
+          }}
+        >
+          <CheckCircle2 size={16} />
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
       {/* ── 2-Column Layout ──────────────────────────────────── */}
       <div
@@ -84,23 +138,47 @@ export const SecurityScreen: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => navigateTo('MERCHANT_PIN_SETUP', { fromSettings: true })}
-              className="interactive-tap cursor-pointer"
-              style={{
-                backgroundColor: 'rgba(0, 255, 36, 0.1)',
-                border: '1px solid rgba(0, 255, 36, 0.4)',
-                color: '#00FF24',
-                padding: '8px 16px',
-                borderRadius: '10px',
-                fontSize: '12px',
-                fontWeight: 800,
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {isAr ? 'تغيير الرمز السري' : 'Change PIN'}
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { fromSettings: true })}
+                className="interactive-tap cursor-pointer"
+                style={{
+                  backgroundColor: 'rgba(0, 255, 36, 0.1)',
+                  border: '1px solid rgba(0, 255, 36, 0.4)',
+                  color: '#00FF24',
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {isAr ? 'تغيير الرمز' : 'Change PIN'}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { reset: true })}
+                className="interactive-tap cursor-pointer"
+                style={{
+                  backgroundColor: colors.bgInset,
+                  border: `1px solid ${colors.borderStrong}`,
+                  color: colors.textSecondary,
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <RefreshCw size={12} />
+                {isAr ? 'إعادة ضبط' : 'Reset PIN'}
+              </button>
+            </div>
           </Card>
 
           {/* Section Label */}
@@ -264,40 +342,144 @@ export const SecurityScreen: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {[
-                { icon: <ShieldCheck size={14} />, label: isAr ? 'تشفير AES-256' : 'AES-256 Encryption', active: true },
-                { icon: <Key size={14} />, label: isAr ? 'المصادقة الثنائية' : '2FA Authentication', active: true },
-                { icon: <UserCheck size={14} />, label: isAr ? 'بيومتريكس الجهاز' : 'Device Biometrics', active: true },
-                { icon: <Lock size={14} />, label: isAr ? 'قفل الجلسة التلقائي' : 'Auto Session Lock', active: true },
-              ].map(({ icon, label, active }) => (
-                <div
-                  key={label}
+              {/* AES-256 */}
+              <div
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 0',
+                  borderBottom: `1px solid ${colors.border}`,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: colors.textSecondary, fontSize: '13px' }}>
+                  <ShieldCheck size={14} color={colors.accentGreen} />
+                  {isAr ? 'تشفير AES-256' : 'AES-256 Encryption'}
+                </div>
+                <span
                   style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '9px 0',
-                    borderBottom: `1px solid ${colors.border}`,
+                    fontSize: '10px', fontWeight: 800,
+                    color: colors.accentGreen,
+                    backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                    padding: '2px 8px',
+                    borderRadius: radii.full,
+                    border: '1px solid rgba(0, 200, 83, 0.25)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: colors.textSecondary, fontSize: '13px' }}>
-                    {icon}
-                    {label}
-                  </div>
-                  {active && (
-                    <span
-                      style={{
-                        fontSize: '10px', fontWeight: 800,
-                        color: colors.accentGreen,
-                        backgroundColor: 'rgba(0, 200, 83, 0.1)',
-                        padding: '2px 8px',
-                        borderRadius: radii.full,
-                        border: '1px solid rgba(0, 200, 83, 0.25)',
-                      }}
-                    >
-                      ON
-                    </span>
-                  )}
+                  ACTIVE
+                </span>
+              </div>
+
+              {/* Hardware Biometrics Toggle (Bug 26) */}
+              <div
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 0',
+                  borderBottom: `1px solid ${colors.border}`,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: colors.textSecondary, fontSize: '13px' }}>
+                  <Fingerprint size={14} color="#38BDF8" />
+                  {isAr ? 'المصادقة البيومترية (Face ID / البصمة)' : 'Hardware Biometrics'}
                 </div>
-              ))}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={biometricsEnabled}
+                  onClick={handleToggleBiometrics}
+                  style={{
+                    width: '38px',
+                    height: '22px',
+                    borderRadius: '11px',
+                    backgroundColor: biometricsEnabled ? '#00C853' : '#334155',
+                    border: 'none',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'background-color 0.2s',
+                    padding: 0,
+                  }}
+                >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '2px',
+                      left: biometricsEnabled ? '18px' : '2px',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '50%',
+                      backgroundColor: '#FFFFFF',
+                      transition: 'left 0.2s',
+                    }}
+                  />
+                </button>
+              </div>
+
+              {/* SoftPOS Terminal Lock Toggle */}
+              <div
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 0',
+                  borderBottom: `1px solid ${colors.border}`,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: colors.textSecondary, fontSize: '13px' }}>
+                  <Lock size={14} color="#F59E0B" />
+                  {isAr ? 'قفل جهاز نقطة البيع' : 'SoftPOS Terminal Lock'}
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={terminalLockEnabled}
+                  onClick={handleToggleTerminalLock}
+                  style={{
+                    width: '38px',
+                    height: '22px',
+                    borderRadius: '11px',
+                    backgroundColor: terminalLockEnabled ? '#00C853' : '#334155',
+                    border: 'none',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'background-color 0.2s',
+                    padding: 0,
+                  }}
+                >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '2px',
+                      left: terminalLockEnabled ? '18px' : '2px',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '50%',
+                      backgroundColor: '#FFFFFF',
+                      transition: 'left 0.2s',
+                    }}
+                  />
+                </button>
+              </div>
+
+              {/* 2FA Authentication */}
+              <div
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 0',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: colors.textSecondary, fontSize: '13px' }}>
+                  <Key size={14} color="#A855F7" />
+                  {isAr ? 'المصادقة الثنائية (OTP)' : '2FA Authentication'}
+                </div>
+                <span
+                  style={{
+                    fontSize: '10px', fontWeight: 800,
+                    color: colors.accentGreen,
+                    backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                    padding: '2px 8px',
+                    borderRadius: radii.full,
+                    border: '1px solid rgba(0, 200, 83, 0.25)',
+                  }}
+                >
+                  ON
+                </span>
+              </div>
             </div>
           </Card>
 
