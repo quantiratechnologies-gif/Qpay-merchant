@@ -12,8 +12,29 @@ interface PinPadProps {
 export const PinPad: React.FC<PinPadProps> = ({ length = 4, onComplete, error }) => {
   const { language } = useApp();
   const [pin, setPin] = useState<string>('');
+  const [localError, setLocalError] = useState<string | undefined>(error);
+  const resetTimerRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    setLocalError(error);
+    if (error) {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setPin('');
+      }, 500);
+    }
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, [error]);
 
   const handleKeyPress = (num: string) => {
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+    setLocalError(undefined);
+
     if (pin.length < length) {
       const nextPin = pin + num;
       setPin(nextPin);
@@ -27,6 +48,12 @@ export const PinPad: React.FC<PinPadProps> = ({ length = 4, onComplete, error })
   };
 
   const handleDelete = () => {
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+    setLocalError(undefined);
+
     if (pin.length > 0) {
       setPin(pin.slice(0, -1));
     }
@@ -75,9 +102,9 @@ export const PinPad: React.FC<PinPadProps> = ({ length = 4, onComplete, error })
         })}
       </div>
 
-      {error && (
+      {localError && (
         <div role="alert" style={{ color: '#FF4757', fontSize: '13px', marginBottom: '20px', fontWeight: 700 }}>
-          {error}
+          {localError}
         </div>
       )}
 
