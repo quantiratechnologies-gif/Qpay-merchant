@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Delete, CheckCircle2, Wifi, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Delete, CheckCircle2, Wifi, ArrowLeft } from 'lucide-react';
 import { useApp } from '../state/AppContext';
 import { toArabicNumerals } from '../utils/i18n';
-import { Card } from '../components/ui';
-import { colors, spacing, radii } from '../design-system/tokens';
 
 interface PaymentRail {
   id: string;
@@ -21,8 +19,8 @@ const PAYMENT_RAILS: PaymentRail[] = [
           display: 'inline-block',
           width: '7px',
           height: '7px',
-          borderRadius: radii.full,
-          backgroundColor: colors.accentGreen,
+          borderRadius: '50%',
+          backgroundColor: '#00C853',
         }}
       />
     ),
@@ -41,7 +39,7 @@ const PAYMENT_RAILS: PaymentRail[] = [
           fontSize: '11px',
           fontWeight: 900,
           fontStyle: 'italic',
-          color: colors.accentBlue,
+          color: '#3B82F6',
           letterSpacing: '0.05em',
         }}
       >
@@ -60,7 +58,7 @@ const PAYMENT_RAILS: PaymentRail[] = [
             left: 0,
             width: '11px',
             height: '11px',
-            borderRadius: radii.full,
+            borderRadius: '50%',
             backgroundColor: '#EB001B',
             opacity: 0.9,
           }}
@@ -71,7 +69,7 @@ const PAYMENT_RAILS: PaymentRail[] = [
             right: 0,
             width: '11px',
             height: '11px',
-            borderRadius: radii.full,
+            borderRadius: '50%',
             backgroundColor: '#F79E1B',
             opacity: 0.9,
           }}
@@ -139,20 +137,20 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     <div
       className="fade-in"
       style={{
-        minHeight: '100%',
-        backgroundColor: colors.bgPage,
-        color: colors.textPrimary,
+        minHeight: '100vh',
+        backgroundColor: '#080C14',
+        color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: `${spacing.space4} ${spacing.space5} 96px ${spacing.space5}`,
+        padding: '16px 20px 24px 20px',
         boxSizing: 'border-box',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
       {/* Top Bar with Back Button */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.space2 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
         <button
           onClick={goBack}
           aria-label="Go Back"
@@ -160,65 +158,38 @@ export const SoftPOSTerminalScreen: React.FC = () => {
           style={{
             width: '38px',
             height: '38px',
-            borderRadius: radii.md,
-            backgroundColor: colors.bgCard,
-            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: colors.textPrimary,
+            color: '#FFFFFF',
             cursor: 'pointer',
           }}
         >
           <ArrowLeft size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
         </button>
 
-        <span style={{ fontSize: '14px', fontWeight: 700, color: colors.textSecondary }}>
+        <span style={{ fontSize: '14px', fontWeight: 700, color: '#94A3B8' }}>
           {isAr ? 'نقطة بيع بالجوال' : 'SoftPOS Terminal'}
         </span>
 
         <div style={{ width: '38px' }} />
       </div>
 
-      {/* TID & SAMA Certification Header Badge (Bug 22) */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: '#111726',
-          border: '1px solid #1E293B',
-          borderRadius: radii.md,
-          padding: '7px 12px',
-          maxWidth: '380px',
-          margin: '0 auto 8px auto',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#00C853', display: 'inline-block' }} />
-          <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: '#FFFFFF' }}>
-            TID: SA-POS-98124
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <ShieldCheck size={13} color="#00C853" />
-          <span style={{ fontSize: '10.5px', fontWeight: 700, color: '#00C853' }}>
-            {isAr ? 'معتمد من ساما • PCI CPoC' : 'SAMA Certified • PCI CPoC'}
-          </span>
-        </div>
-      </div>
-
-      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: spacing.space3 }}>
+      <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         {/* Top Amount Display Card */}
-        <Card
-          variant="elevated"
+        <div
           style={{
-            padding: `${spacing.space5} ${spacing.space4}`,
+            backgroundColor: '#0D1424',
+            border: '1px solid #1A263D',
+            borderRadius: '24px',
+            padding: '20px 16px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
             background: 'radial-gradient(ellipse at top, rgba(0, 200, 83, 0.08) 0%, #0D1424 70%)',
           }}
         >
@@ -226,8 +197,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
           <div
             style={{
               fontSize: '11px',
-              fontWeight: 600,
-              color: colors.accentGreen,
+              fontWeight: 800,
+              color: '#00C853',
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               marginBottom: '6px',
@@ -242,7 +213,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               display: 'flex',
               alignItems: 'baseline',
               justifyContent: 'center',
-              gap: spacing.space2,
+              gap: '8px',
               margin: '2px 0 10px 0',
               direction: 'ltr',
             }}
@@ -250,8 +221,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             <span
               style={{
                 fontSize: '22px',
-                fontWeight: 600,
-                color: colors.accentGreen,
+                fontWeight: 900,
+                color: '#00C853',
                 letterSpacing: '-0.01em',
               }}
             >
@@ -261,8 +232,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               className="tabular-nums"
               style={{
                 fontSize: '48px',
-                fontWeight: 800,
-                color: colors.textPrimary,
+                fontWeight: 900,
+                color: '#FFFFFF',
                 letterSpacing: '-0.02em',
                 lineHeight: 1,
               }}
@@ -277,15 +248,15 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              backgroundColor: colors.bgInset,
-              border: `1px solid ${colors.border}`,
-              borderRadius: radii.full,
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '20px',
               padding: '5px 14px',
-              marginBottom: spacing.space4,
+              marginBottom: '16px',
             }}
           >
-            <CheckCircle2 size={13} color={colors.accentGreen} />
-            <span style={{ fontSize: '11.5px', fontWeight: 500, color: colors.textPrimary }}>
+            <CheckCircle2 size={13} color="#00C853" />
+            <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#E2E8F0' }}>
               {isAr ? (
                 <>شامل {vatAmount} ر.س (ضريبة زاتكا ١٥٪)</>
               ) : (
@@ -312,10 +283,10 @@ export const SoftPOSTerminalScreen: React.FC = () => {
                 onClick={() => handleQuickAdd(sar)}
                 className="interactive-tap"
                 style={{
-                  backgroundColor: colors.bgInset,
-                  border: `1px solid ${colors.borderStrong}`,
-                  color: colors.textPrimary,
-                  borderRadius: radii.md,
+                  backgroundColor: '#161F30',
+                  border: '1px solid #2A364F',
+                  color: '#FFFFFF',
+                  borderRadius: '12px',
                   padding: '6px 12px',
                   fontSize: '12.5px',
                   fontWeight: 700,
@@ -330,10 +301,10 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               onClick={handleClear}
               className="interactive-tap"
               style={{
-                backgroundColor: colors.dangerLight,
-                border: '1px solid rgba(255, 71, 87, 0.35)',
-                color: colors.dangerText,
-                borderRadius: radii.md,
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#FF6B81',
+                borderRadius: '12px',
                 padding: '6px 14px',
                 fontSize: '12.5px',
                 fontWeight: 700,
@@ -343,19 +314,19 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               {isAr ? 'مسح' : 'Clear'}
             </button>
           </div>
-        </Card>
+        </div>
 
         {/* Accepted Payment Rails Section */}
         <div>
           <div
             style={{
               fontSize: '10.5px',
-              fontWeight: 600,
-              color: colors.textSecondary,
+              fontWeight: 800,
+              color: '#94A3B8',
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               textAlign: 'center',
-              marginBottom: spacing.space2,
+              marginBottom: '8px',
             }}
           >
             {isAr ? 'طرق الدفع المقبولة' : 'ACCEPTED PAYMENT RAILS'}
@@ -365,7 +336,7 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: spacing.space2,
+              gap: '8px',
             }}
           >
             {PAYMENT_RAILS.map((rail) => {
@@ -377,9 +348,9 @@ export const SoftPOSTerminalScreen: React.FC = () => {
                   onClick={() => setSoftPosCardScheme(rail.id)}
                   className="interactive-tap"
                   style={{
-                    backgroundColor: isSelected ? colors.primaryLight : colors.bgCard,
-                    border: isSelected ? `1.5px solid ${colors.accentGreen}` : `1px solid ${colors.border}`,
-                    borderRadius: radii.md,
+                    backgroundColor: isSelected ? 'rgba(0, 200, 83, 0.12)' : '#111726',
+                    border: isSelected ? '1.5px solid #00C853' : '1px solid #1E293B',
+                    borderRadius: '14px',
                     padding: '8px 4px',
                     display: 'flex',
                     alignItems: 'center',
@@ -393,8 +364,8 @@ export const SoftPOSTerminalScreen: React.FC = () => {
                   <span
                     style={{
                       fontSize: '12px',
-                      fontWeight: isSelected ? 600 : 500,
-                      color: isSelected ? colors.textPrimary : colors.textSecondary,
+                      fontWeight: 700,
+                      color: isSelected ? '#FFFFFF' : '#CBD5E1',
                     }}
                   >
                     {rail.id === 'visa' ? rail.renderIcon() : rail.name}
@@ -415,12 +386,12 @@ export const SoftPOSTerminalScreen: React.FC = () => {
               className="interactive-tap"
               style={{
                 height: '56px',
-                borderRadius: radii.lg,
+                borderRadius: '16px',
                 backgroundColor: '#151B28',
-                border: `1px solid ${colors.border}`,
-                color: colors.textPrimary,
+                border: '1px solid #1E293B',
+                color: '#FFFFFF',
                 fontSize: '24px',
-                fontWeight: 700,
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -439,17 +410,16 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             className="interactive-tap"
             style={{
               height: '56px',
-              borderRadius: radii.lg,
+              borderRadius: '16px',
               backgroundColor: '#151B28',
-              border: `1px solid ${colors.border}`,
-              color: colors.textPrimary,
+              border: '1px solid #1E293B',
+              color: '#FFFFFF',
               fontSize: '20px',
-              fontWeight: 700,
+              fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
           >
             {isAr ? '٠٠' : '00'}
@@ -462,20 +432,19 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             className="interactive-tap"
             style={{
               height: '56px',
-              borderRadius: radii.lg,
+              borderRadius: '16px',
               backgroundColor: '#151B28',
-              border: `1px solid ${colors.border}`,
-              color: colors.textPrimary,
+              border: '1px solid #1E293B',
+              color: '#FFFFFF',
               fontSize: '24px',
-              fontWeight: 700,
+              fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
           >
-            {isAr ? toArabicNumerals('0') : '0'}
+            {isAr ? '٠' : '0'}
           </button>
 
           {/* Backspace Delete */}
@@ -485,10 +454,10 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             className="interactive-tap"
             style={{
               height: '56px',
-              borderRadius: radii.lg,
+              borderRadius: '16px',
               backgroundColor: '#151B28',
-              border: `1px solid ${colors.border}`,
-              color: colors.textSecondary,
+              border: '1px solid #1E293B',
+              color: '#94A3B8',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -509,10 +478,10 @@ export const SoftPOSTerminalScreen: React.FC = () => {
             marginTop: '4px',
             width: '100%',
             height: '54px',
-            backgroundColor: colors.accentGreen,
+            backgroundColor: '#00C853',
             color: '#080C14',
             border: 'none',
-            borderRadius: radii.lg,
+            borderRadius: '16px',
             fontSize: '16px',
             fontWeight: 900,
             cursor: numericValue <= 0 ? 'not-allowed' : 'pointer',
@@ -536,3 +505,5 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     </div>
   );
 };
+
+

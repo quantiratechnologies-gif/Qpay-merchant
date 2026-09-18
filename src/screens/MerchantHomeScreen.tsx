@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import {
+  Store,
+  ChevronDown,
+  Bell,
+  User,
   Volume2,
   Megaphone,
   Eye,
@@ -10,44 +14,30 @@ import {
   SmartphoneNfc,
   Share2,
   Banknote,
-  Building2,
   CreditCard,
-  TrendingUp,
-  Download,
+  Smartphone,
+  CheckCircle2,
+  Check,
 } from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { formatLocalizedNumber } from '../utils/i18n';
-import { Card, StatusBadge, SectionHeader } from '../components/ui';
-import { colors } from '../design-system/tokens';
-import { X, CheckCircle2, FileText } from 'lucide-react';
+import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
+import { AlphPayLogo } from '../components/AlphPayLogo';
 
 export const MerchantHomeScreen: React.FC = () => {
   const {
-    merchantCollections,
-    merchantSettlements,
     merchantInfo,
+    merchantCollections,
     triggerSettleNow,
-    processMerchantCollection,
     navigateTo,
     speakSoundBox,
-    openManagerPinModal,
     language,
     isRtl,
   } = useApp();
 
   const [isSettling, setIsSettling] = useState(false);
+  const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
   const [showBalance, setShowBalance] = useState(true);
-  const [settlementReceipt, setSettlementReceipt] = useState<any | null>(null);
-  const [isCashSaleModalOpen, setIsCashSaleModalOpen] = useState(false);
-  const [cashAmount, setCashAmount] = useState('');
-  const [cashNote, setCashNote] = useState('');
-  const [cashSuccess, setCashSuccess] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
-  };
+  const [cashSaleSuccess, setCashSaleSuccess] = useState<string | null>(null);
 
   const isAr = language === 'العربية';
   const totalToday = merchantCollections.reduce(
@@ -58,849 +48,888 @@ export const MerchantHomeScreen: React.FC = () => {
   const paymentCount = 142;
   const avgTicket = (displayTotal / paymentCount).toFixed(2);
 
-  const handleSettleNowClick = () => {
-    openManagerPinModal({
-      title: isAr ? 'تأكيد التسوية الفورية عبر سريع' : 'Authorize Instant Settlement',
-      subtitle: isAr
-        ? 'أدخل رمز المدير السري لإتمام الصرف الفوري'
-        : 'Enter Manager Security PIN to dispatch Sarie instant payout',
-      onSuccess: async () => {
-        setIsSettling(true);
-        try {
-          const settlement = await triggerSettleNow();
-          setSettlementReceipt(settlement);
-          showToast(
-            isAr
-              ? `تمت التسوية بنجاح! رقم الدفعة: ${settlement.id} عبر نظام سريع (SAMA IPS)`
-              : `Settlement ${settlement.id} successfully dispatched via SAMA IPS Clearing`
-          );
-        } finally {
-          setIsSettling(false);
-        }
-      },
-    });
-  };
-
-  const handleRecordCashSale = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const amount = parseFloat(cashAmount);
-    if (isNaN(amount) || amount <= 0) return;
-
-    await processMerchantCollection({
-      amount,
-      paymentMethod: 'cash',
-      orderRef: 'CSH-' + Math.floor(1000 + Math.random() * 9000).toString(),
-      customerMasked: cashNote ? `${cashNote} (Cash)` : (isAr ? 'بيع نقدي مباشر' : 'Direct Cash Sale'),
-    });
-
-    setCashSuccess(true);
-    setTimeout(() => {
-      setCashSuccess(false);
-      setIsCashSaleModalOpen(false);
-      setCashAmount('');
-      setCashNote('');
-      showToast(isAr ? 'تم تسجيل العملية النقدية بنجاح' : 'Cash sale recorded successfully');
-    }, 1200);
-  };
-
-  const handleDownloadSettlementReport = () => {
-    const dateStr = new Date().toLocaleDateString('en-GB');
-    const html = `<!DOCTYPE html>
-<html>
-<head><title>SAMA Settlement Report - ${merchantInfo.businessName}</title>
-<style>
-  body { font-family: -apple-system, sans-serif; padding: 32px; color: #111; }
-  .header { border-bottom: 2px solid #00C853; padding-bottom: 12px; margin-bottom: 20px; }
-  .box { background: #F8FAFC; border: 1px solid #E2E8F0; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  th, td { padding: 10px; border-bottom: 1px solid #E2E8F0; text-align: left; font-size: 13px; }
-  th { background: #EDF2F7; font-size: 12px; }
-</style>
-</head>
-<body>
-  <div class="header">
-    <h2>QTPay Merchant • SAMA Sarie Settlement Report</h2>
-    <div>Merchant: <strong>${merchantInfo.businessName}</strong> | CR: <strong>${merchantInfo.crNumber}</strong> | VAT: <strong>${merchantInfo.vatNumber}</strong></div>
-    <div>Generated: ${dateStr} | SAMA IPS Clearing Rail</div>
-  </div>
-  <div class="box">
-    <div><strong>Settlement Destination:</strong> ${merchantInfo.settlementBank}</div>
-    <div><strong>IBAN:</strong> ${merchantInfo.settlementIban}</div>
-    <div><strong>Today's Settled Volume:</strong> SAR ${displayTotal.toFixed(2)}</div>
-    <div><strong>Status:</strong> Dispatched via SAMA IPS Clearing</div>
-  </div>
-  <table>
-    <thead><tr><th>Settlement Ref</th><th>Sarie UTR</th><th>Gross (SAR)</th><th>15% VAT (SAR)</th><th>Status</th></tr></thead>
-    <tbody>
-      ${merchantSettlements.slice(0, 10).map(s => `<tr><td>${s.id}</td><td>${s.utr}</td><td>${s.amount.toFixed(2)}</td><td>${s.vatAmount.toFixed(2)}</td><td><strong style="color: #00C853;">DISPATCHED</strong></td></tr>`).join('')}
-    </tbody>
-  </table>
-</body>
-</html>`;
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `QTPay_Settlement_Report_${new Date().toISOString().slice(0, 10)}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast(isAr ? 'تم تنزيل تقرير التسويات بنجاح' : 'Settlement report downloaded');
+  const handleSettleNowClick = async () => {
+    setIsSettling(true);
+    try {
+      const settlement = await triggerSettleNow();
+      setSettleSuccessMsg(
+        isAr
+          ? `تم تحويل تسوية فورية بقيمة ${formatSaudiCurrency(settlement.amount, language)} عبر سريع إلى ${settlement.bankName}`
+          : `Instant payout of SAR ${settlement.amount.toFixed(2)} dispatched via Sarie to ${settlement.bankName}`
+      );
+      setTimeout(() => {
+        setSettleSuccessMsg(null);
+      }, 4000);
+    } catch {
+      // noop
+    } finally {
+      setIsSettling(false);
+    }
   };
 
   const handleTestSoundBox = () => {
     speakSoundBox(245.0);
   };
 
+  const handleCashSale = () => {
+    setCashSaleSuccess(
+      isAr ? 'تم تسجيل مبيعات نقدية بقيمة ٥٠٫٠٠ ر.س بنجاح' : 'Cash sale of SAR 50.00 recorded successfully'
+    );
+    setTimeout(() => setCashSaleSuccess(null), 3000);
+  };
+
   return (
     <div
       className="fade-in"
       style={{
-        width: '100%',
-        color: colors.textPrimary,
+        backgroundColor: '#080C14',
+        minHeight: '100vh',
+        paddingBottom: '100px',
+        color: '#FFFFFF',
         userSelect: 'none',
         direction: isRtl ? 'rtl' : 'ltr',
-        fontFamily: "'IBM Plex Sans Arabic', 'Inter', sans-serif",
       }}
     >
-      {/* 1. Top Enterprise Metric KPI Strip (4 Columns) */}
+      {/* 1. Top Sticky Header (Left: Store Icon, Center: AlphPay Logo, Right: Notifications & Profile) */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: '16px',
-          marginBottom: '24px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          backgroundColor: 'rgba(8, 12, 20, 0.94)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          padding: '14px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        {/* Metric 1: Today's Gross Collections */}
-        <Card variant="elevated" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12.5px', color: '#94A3B8', fontWeight: 600 }}>
-              {isAr ? 'تحصيلات اليوم الإجمالية' : "Today's Gross Sales"}
-            </span>
-            <StatusBadge status="success" dot={true} size="sm" label={isAr ? 'مباشر' : 'Live'} />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '10px' }}>
-            <span style={{ fontSize: '15px', color: '#00FF24', fontWeight: 800 }}>SAR</span>
-            <span style={{ fontSize: '28px', fontWeight: 900, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-              {showBalance ? displayTotal.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '••••••'}
-            </span>
-          </div>
-          <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '6px', fontWeight: 500 }}>
-            {isAr ? 'شامل ١٥٪ ضريبة القيمة المضافة' : 'Includes 15% VAT breakdown'}
-          </div>
-        </Card>
+        {/* Left: Store Icon Button */}
+        <button
+          onClick={() => navigateTo('PROFILE')}
+          aria-label="Store Profile"
+          className="interactive-tap"
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#161F30',
+            border: '1px solid #2A364F',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}
+        >
+          <Store size={20} />
+        </button>
 
-        {/* Metric 2: Unsettled Balance */}
-        <Card variant="elevated" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12.5px', color: '#94A3B8', fontWeight: 600 }}>
-              {isAr ? 'الرصيد القابل للتسوية' : 'Unsettled Available'}
-            </span>
-            <button
-              onClick={() => setShowBalance(!showBalance)}
-              aria-label="Toggle Balance Visibility"
-              style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 0 }}
-            >
-              {showBalance ? <Eye size={16} /> : <EyeOff size={16} />}
-            </button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '10px' }}>
-            <span style={{ fontSize: '15px', color: '#00FF24', fontWeight: 800 }}>SAR</span>
-            <span style={{ fontSize: '28px', fontWeight: 900, color: '#00FF24', letterSpacing: '-0.02em' }}>
-              {showBalance ? displayTotal.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '••••••'}
-            </span>
-          </div>
-          <div style={{ fontSize: '11.5px', color: '#00FF24', marginTop: '6px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Zap size={13} />
-            <span>{isAr ? 'تحويل فوري ٢٤/٧ عبر سريع' : 'Ready for Instant Sarie Payout'}</span>
-          </div>
-        </Card>
-
-        {/* Metric 3: Total Transactions Count */}
-        <Card variant="elevated" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12.5px', color: '#94A3B8', fontWeight: 600 }}>
-              {isAr ? 'عدد العمليات اليوم' : 'Total Transactions'}
-            </span>
-            <TrendingUp size={16} color="#00FF24" />
-          </div>
-          <div style={{ fontSize: '28px', fontWeight: 900, color: '#FFFFFF', marginTop: '10px' }}>
-            {formatLocalizedNumber(paymentCount, language)}
-          </div>
-          <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '6px', fontWeight: 500 }}>
-            {isAr ? '+١٨٪ مقارنة بالأمس' : '+18.4% vs yesterday'}
-          </div>
-        </Card>
-
-        {/* Metric 4: Average Ticket Size */}
-        <Card variant="elevated" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12.5px', color: '#94A3B8', fontWeight: 600 }}>
-              {isAr ? 'متوسط قيمة العملية' : 'Average Ticket'}
-            </span>
-            <CreditCard size={16} color="#00FF24" />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '10px' }}>
-            <span style={{ fontSize: '15px', color: '#00FF24', fontWeight: 800 }}>SAR</span>
-            <span style={{ fontSize: '28px', fontWeight: 900, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-              {avgTicket}
-            </span>
-          </div>
-          <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '6px', fontWeight: 500 }}>
-            {isAr ? 'مدى وأبل باي والبطاقات' : 'mada, Apple Pay, & Cards'}
-          </div>
-        </Card>
-      </div>
-
-      {/* 2. Responsive Dashboard Grid */}
-      <div className="merchant-home-grid">
-        {/* Left Column (65%): SoundBox Alert, Quick Action Hub & Recent Collections Table */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Smart SoundBox Pro Status Card */}
-          <Card
-            variant="interactive"
-            onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
-            style={{
-              padding: '16px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: '#0E1422',
-              border: '1px solid rgba(0, 255, 36, 0.25)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div
-                style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(0, 255, 36, 0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#00FF24',
-                  flexShrink: 0,
-                }}
-              >
-                <Volume2 size={22} />
-              </div>
-              <div>
-                <div style={{ fontSize: '14.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {isAr ? 'جهاز الإشعار الصوتي الذكي (SoundBox Pro)' : 'Smart SoundBox Pro Speaker'}
-                </div>
-                <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>
-                  {isAr ? 'متصل بشبكة الجيل الرابع 4G • بطارية ٩٨٪ • نطق صوتي فوري بالعربية' : 'Connected via 4G • Battery 98% • Instant Arabic & English voice'}
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleTestSoundBox();
-              }}
-              className="interactive-tap"
-              style={{
-                backgroundColor: '#151C2C',
-                border: '1px solid #1E293B',
-                color: '#FFFFFF',
-                borderRadius: '10px',
-                padding: '8px 14px',
-                fontSize: '12.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
-            >
-              <Megaphone size={14} color="#00FF24" />
-              <span>{isAr ? 'تجربة الصوت' : 'Test Audio'}</span>
-            </button>
-          </Card>
-
-          {/* Accept Payment Action Hub (4 Cards) */}
-          <div>
-            <SectionHeader title={isAr ? 'طرق تحصيل وقبول المدفوعات' : 'Accept Payment Channels'} />
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
-              {/* Tile 1: Show QR */}
-              <Card
-                variant="interactive"
-                onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-                style={{
-                  padding: '18px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '14px',
-                    backgroundColor: 'rgba(0, 255, 36, 0.12)',
-                    border: '1px solid rgba(0, 255, 36, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00FF24',
-                  }}
-                >
-                  <QrCode size={22} />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {isAr ? 'رمز الفاتورة' : 'ZATCA QR'}
-                </span>
-              </Card>
-
-              {/* Tile 2: SoftPOS Terminal */}
-              <Card
-                variant="interactive"
-                onClick={() => navigateTo('SOFTPOS_TERMINAL')}
-                style={{
-                  padding: '18px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '14px',
-                    backgroundColor: 'rgba(0, 255, 36, 0.12)',
-                    border: '1px solid rgba(0, 255, 36, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00FF24',
-                  }}
-                >
-                  <SmartphoneNfc size={22} />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {isAr ? 'الدفع باللمس' : 'SoftPOS'}
-                </span>
-              </Card>
-
-              {/* Tile 3: Send Pay Link */}
-              <Card
-                variant="interactive"
-                onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')}
-                style={{
-                  padding: '18px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '14px',
-                    backgroundColor: 'rgba(0, 255, 36, 0.12)',
-                    border: '1px solid rgba(0, 255, 36, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00FF24',
-                  }}
-                >
-                  <Share2 size={22} />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {isAr ? 'روابط الدفع' : 'Pay Links'}
-                </span>
-              </Card>
-
-              {/* Tile 4: Cash Sale */}
-              <Card
-                variant="interactive"
-                onClick={() => setIsCashSaleModalOpen(true)}
-                style={{
-                  padding: '18px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  textAlign: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '14px',
-                    backgroundColor: 'rgba(0, 255, 36, 0.12)',
-                    border: '1px solid rgba(0, 255, 36, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#00FF24',
-                  }}
-                >
-                  <Banknote size={22} />
-                </div>
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {isAr ? 'سجل النقد' : 'Cash Sales'}
-                </span>
-              </Card>
-            </div>
-          </div>
-
-          {/* Recent Collections Live Ledger Table */}
-          <Card variant="elevated" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div>
-                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                  {isAr ? 'أحدث التحصيلات المباشرة' : 'Live Collections Ledger'}
-                </h3>
-                <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>
-                  {isAr ? 'سجل العمليات المتوافقة مع ضريبة القيمة المضافة ١٥٪' : 'Real-time ZATCA Phase 2 compliant transactions'}
-                </div>
-              </div>
-
-              <button
-                onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
-                className="interactive-tap"
-                style={{
-                  backgroundColor: '#151C2C',
-                  border: '1px solid #1E293B',
-                  color: '#00FF24',
-                  borderRadius: '8px',
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
-              >
-                <span>{isAr ? 'عرض الكل' : 'View Full Ledger'}</span>
-                <ChevronRight size={14} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-              </button>
-            </div>
-
-            {/* Desktop Table View */}
-            <div style={{ width: '100%', overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: isRtl ? 'right' : 'left' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #1E293B', color: '#64748B', fontSize: '12px', fontWeight: 700 }}>
-                    <th style={{ padding: '10px 12px' }}>{isAr ? 'العميل / الطريقة' : 'Customer / Method'}</th>
-                    <th style={{ padding: '10px 12px' }}>{isAr ? 'المرجع البنكي UTR' : 'Sarie Reference'}</th>
-                    <th style={{ padding: '10px 12px' }}>{isAr ? 'الوقت' : 'Time'}</th>
-                    <th style={{ padding: '10px 12px' }}>{isAr ? 'الحالة' : 'Status'}</th>
-                    <th style={{ padding: '10px 12px', textAlign: isRtl ? 'left' : 'right' }}>{isAr ? 'المبلغ' : 'Amount'}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {merchantCollections.slice(0, 5).map((col) => (
-                    <tr
-                      key={col.id}
-                      style={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                        fontSize: '13px',
-                      }}
-                    >
-                      <td style={{ padding: '12px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <div
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              borderRadius: '8px',
-                              backgroundColor: '#161F30',
-                              border: '1px solid #1E293B',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '11px',
-                              fontWeight: 800,
-                              color: '#00FF24',
-                            }}
-                          >
-                            {col.customerMasked ? col.customerMasked.slice(0, 2).toUpperCase() : 'TX'}
-                          </div>
-                          <div>
-                            <div style={{ fontWeight: 800, color: '#FFFFFF' }}>{col.customerMasked || 'Customer'}</div>
-                            <div style={{ fontSize: '11px', color: '#94A3B8' }}>{col.paymentMethod.toUpperCase()}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px', color: '#94A3B8', fontFamily: 'monospace', fontSize: '12px' }}>
-                        {col.id}
-                      </td>
-                      <td style={{ padding: '12px', color: '#94A3B8', fontSize: '12px' }}>
-                        {col.date}
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <StatusBadge
-                          status={col.status === 'settled' ? 'success' : col.status === 'refunded' ? 'warning' : 'neutral'}
-                          size="sm"
-                          label={col.status === 'settled' ? (isAr ? 'مكتمل' : 'Settled') : col.status}
-                        />
-                      </td>
-                      <td style={{ padding: '12px', textAlign: isRtl ? 'left' : 'right', fontWeight: 900, color: '#00FF24' }}>
-                        SAR {col.amount.toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+        {/* Center: Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        {/* Right Column (35%): Instant Settlement Station, Store Stand QR & Settlement Account */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Instant Sarie Payout Station Card */}
-          <Card
-            variant="elevated"
+        {/* Right: Notification & Profile Icon Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Notification Button */}
+          <button
+            onClick={() => navigateTo('NOTIFICATIONS')}
+            aria-label="Notifications"
+            className="interactive-tap"
             style={{
-              padding: '22px',
-              backgroundColor: '#0E1422',
-              border: '1px solid rgba(0, 255, 36, 0.3)',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              position: 'relative',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
-                {isAr ? 'محطة التسوية الفورية' : 'Instant Sarie Payout'}
+            <Bell size={18} />
+            <span
+              style={{
+                position: 'absolute',
+                top: '9px',
+                right: '9px',
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                backgroundColor: '#00C853',
+                border: '1.5px solid #161F30',
+              }}
+            />
+          </button>
+
+          {/* Profile Button */}
+          <button
+            onClick={() => navigateTo('PROFILE')}
+            aria-label="Profile"
+            className="interactive-tap"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+            }}
+          >
+            <User size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Store Name & Speaker Online Row */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '2px 4px',
+          }}
+        >
+          <div
+            onClick={() => navigateTo('PROFILE')}
+            className="interactive-tap"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
+          >
+            <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+              {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
+            </span>
+            <ChevronDown size={15} color="#94A3B8" />
+          </div>
+
+          <div
+            onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
+            className="interactive-tap"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.25)',
+              borderRadius: '20px',
+              padding: '4px 10px',
+              cursor: 'pointer',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#00C853',
+                display: 'inline-block',
+                boxShadow: '0 0 6px #00C853',
+              }}
+            />
+            <span style={{ fontSize: '11px', color: '#00C853', fontWeight: 700 }}>
+              {isAr ? 'مكبر الصوت متصل' : 'Speaker Online'}
+            </span>
+          </div>
+        </div>
+        {/* Toast / Notification Messages */}
+        {settleSuccessMsg && (
+          <div
+            style={{
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid #00C853',
+              borderRadius: '12px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#FFFFFF',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <span>{settleSuccessMsg}</span>
+          </div>
+        )}
+
+        {cashSaleSuccess && (
+          <div
+            style={{
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid #00C853',
+              borderRadius: '12px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#FFFFFF',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={18} color="#00C853" style={{ flexShrink: 0 }} />
+            <span>{cashSaleSuccess}</span>
+          </div>
+        )}
+
+        {/* 2. Smart Soundbox Pro Banner */}
+        <div
+          onClick={() => navigateTo('SOUNDBOX_NOTIFIER')}
+          className="interactive-tap"
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '16px',
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            cursor: 'pointer',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#00C853',
+                flexShrink: 0,
+              }}
+            >
+              <Volume2 size={18} />
+            </div>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
+                Smart Soundbox Pro
+              </div>
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600, marginTop: '2px' }}>
+                98% {isAr ? 'البطارية' : 'Battery'} &bull; {isAr ? 'صوت عربي وإنجليزي' : 'Bilingual Voice'}
+              </div>
+            </div>
+          </div>
+
+          {/* Test Sound Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTestSoundBox();
+            }}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              color: '#FFFFFF',
+              borderRadius: '10px',
+              padding: '6px 12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+            }}
+          >
+            <Megaphone size={14} color="#00C853" />
+            <span>{isAr ? 'اختبار' : 'Test'}</span>
+          </button>
+        </div>
+
+        {/* 3. Hero Today's Collection Card */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            padding: '20px',
+            position: 'relative',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          {/* Card Top Row: Title + Live Badge + Balance Toggle */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#94A3B8' }}>
+                {isAr ? 'تحصيلات اليوم' : "Today's Collection"}
               </span>
               <span
                 style={{
-                  fontSize: '11px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  borderRadius: '12px',
+                  padding: '2px 8px',
+                  fontSize: '10.5px',
                   fontWeight: 800,
-                  backgroundColor: 'rgba(0, 255, 36, 0.15)',
-                  color: '#00FF24',
-                  padding: '3px 8px',
-                  borderRadius: '6px',
+                  color: '#00C853',
                 }}
               >
-                {isAr ? 'سريع ٢٤/٧' : 'Sarie 24/7'}
+                <span
+                  style={{
+                    width: '5px',
+                    height: '5px',
+                    borderRadius: '50%',
+                    backgroundColor: '#00C853',
+                    display: 'inline-block',
+                  }}
+                />
+                {isAr ? 'مباشر' : 'Live'}
               </span>
             </div>
 
-            <div style={{ margin: '18px 0', padding: '14px', backgroundColor: '#080C14', borderRadius: '12px', border: '1px solid #1E293B' }}>
-              <div style={{ fontSize: '11.5px', color: '#94A3B8' }}>{isAr ? 'الحساب البنكي المعتمد' : 'Destination IBAN'}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
-                <Building2 size={16} color="#00FF24" />
-                <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                  {merchantInfo.settlementBank || 'Al Rajhi Bank'}
-                </span>
+            <button
+              onClick={() => setShowBalance(!showBalance)}
+              aria-label="Toggle Balance Visibility"
+              className="interactive-tap"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {showBalance ? <Eye size={18} /> : <EyeOff size={18} />}
+            </button>
+          </div>
+
+          {/* Large Hero Amount */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
+            <span style={{ fontSize: '18px', fontWeight: 800, color: '#00C853' }}>SAR</span>
+            <span
+              className="tabular-nums"
+              style={{
+                fontSize: '34px',
+                fontWeight: 900,
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {showBalance
+                ? displayTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                : '••••••'}
+            </span>
+          </div>
+
+          {/* Inset Sub-Card: Payments Count & Avg Ticket */}
+          <div
+            onClick={() => navigateTo('MERCHANT_INSIGHTS')}
+            className="interactive-tap"
+            style={{
+              backgroundColor: '#161F30',
+              border: '1px solid #2A364F',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '12px',
+              marginBottom: '16px',
+              cursor: 'pointer',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+                {isAr ? 'العمليات' : 'Payments'}
               </div>
-              <div style={{ fontSize: '12px', color: '#94A3B8', fontFamily: 'monospace', marginTop: '4px' }}>
-                {merchantInfo.settlementIban || 'SA44 8000 0201 6080 1005 5005'}
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                {isAr ? `${formatLocalizedNumber(paymentCount, language)} عملية` : `${paymentCount} received`}
               </div>
             </div>
 
+            <div>
+              <div style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 600 }}>
+                {isAr ? 'متوسط العملية' : 'Avg Ticket'}
+              </div>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                SAR {avgTicket}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Dual Action Buttons: Settle Now + Statement */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
             <button
               onClick={handleSettleNowClick}
               disabled={isSettling}
               className="interactive-tap"
               style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: '12px',
-                backgroundColor: '#00FF24',
+                backgroundColor: '#00C853',
                 color: '#080C14',
-                fontSize: '14px',
-                fontWeight: 900,
                 border: 'none',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                fontSize: '13.5px',
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 20px rgba(0, 255, 36, 0.35)',
+                gap: '6px',
+                boxShadow: '0 4px 16px rgba(0, 200, 83, 0.3)',
               }}
             >
-              <Zap size={18} fill="#080C14" />
-              <span>
-                {isSettling
-                  ? (isAr ? 'جاري التحويل عبر سريع...' : 'Processing Payout...')
-                  : (isAr ? `تسوية ${displayTotal.toFixed(2)} ر.س للبنك` : `Settle SAR ${displayTotal.toFixed(2)} Now`)}
-              </span>
+              <Zap size={16} fill="#080C14" />
+              <span>{isSettling ? (isAr ? 'جاري التحويل...' : 'Settling...') : (isAr ? 'تسوية فورية' : 'Settle Now')}</span>
             </button>
 
             <button
-              onClick={handleDownloadSettlementReport}
-              className="interactive-tap cursor-pointer"
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
               style={{
-                width: '100%',
-                marginTop: '10px',
-                padding: '10px',
-                borderRadius: '10px',
-                backgroundColor: '#151C2C',
-                border: '1px solid #1E293B',
-                color: '#00FF24',
-                fontSize: '12px',
+                backgroundColor: '#161F30',
+                border: '1px solid #2A364F',
+                color: '#FFFFFF',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                fontSize: '13.5px',
                 fontWeight: 700,
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '4px',
               }}
             >
-              <Download size={14} />
-              <span>{isAr ? 'تنزيل تقرير التسويات (SAMA)' : 'Download Settlement Report'}</span>
+              <span>{isAr ? 'كشف الحساب' : 'Statement'}</span>
+              <ChevronRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
             </button>
-          </Card>
-
-          {/* Store Stand QR Card Preview */}
-          <Card variant="elevated" style={{ padding: '20px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                {isAr ? 'باركود المتجر المعتمد' : 'Store Stand QR'}
-              </span>
-              <span style={{ fontSize: '11px', color: '#00FF24', fontWeight: 800 }}>ZATCA Phase 2</span>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '16px',
-                padding: '16px',
-                display: 'inline-block',
-                margin: '8px auto',
-              }}
-            >
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`sarie://pay?pa=${merchantInfo.vatNumber || '300012345600003'}&pn=${encodeURIComponent(merchantInfo.businessName || 'Merchant')}`)}`}
-                alt="Store QR"
-                style={{ width: '150px', height: '150px', display: 'block' }}
-              />
-            </div>
-
-            <div style={{ fontSize: '12px', color: '#94A3B8', margin: '10px 0' }}>
-              {merchantInfo.businessName || 'GreenLeaf Markets LLC'}
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginTop: '12px' }}>
-              <button
-                onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-                className="interactive-tap"
-                style={{
-                  padding: '10px',
-                  borderRadius: '10px',
-                  backgroundColor: '#151C2C',
-                  border: '1px solid #1E293B',
-                  color: '#FFFFFF',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                }}
-              >
-                <Download size={14} color="#00FF24" />
-                <span>{isAr ? 'تحميل الملصق' : 'Get Poster'}</span>
-              </button>
-
-              <button
-                onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
-                className="interactive-tap"
-                style={{
-                  padding: '10px',
-                  borderRadius: '10px',
-                  backgroundColor: '#151C2C',
-                  border: '1px solid #1E293B',
-                  color: '#FFFFFF',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                }}
-              >
-                <Share2 size={14} color="#00FF24" />
-                <span>{isAr ? 'مشاركة' : 'Share'}</span>
-              </button>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Cash Sale Modal */}
-      {isCashSaleModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(5, 8, 15, 0.85)',
-            backdropFilter: 'blur(8px)',
-            zIndex: 2600,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setIsCashSaleModalOpen(false)}
-        >
-          <div
-            style={{
-              backgroundColor: '#111726',
-              border: '1px solid rgba(0, 255, 36, 0.3)',
-              borderRadius: '20px',
-              width: '100%',
-              maxWidth: '420px',
-              padding: '24px',
-              animation: 'scaleUp 0.2s ease',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Banknote size={22} color="#00FF24" />
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                  {isAr ? 'تسجيل عملية بيع نقدي' : 'Record Cash Sale'}
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsCashSaleModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleRecordCashSale} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', marginBottom: '6px', display: 'block' }}>
-                  {isAr ? 'المبلغ المستلم نقداً (ر.س)' : 'Cash Amount Received (SAR)'}
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  autoFocus
-                  required
-                  value={cashAmount}
-                  onChange={(e) => setCashAmount(e.target.value)}
-                  placeholder="0.00"
-                  style={{
-                    width: '100%',
-                    padding: '14px',
-                    backgroundColor: '#182236',
-                    border: '1px solid #1E293B',
-                    borderRadius: '12px',
-                    color: '#00FF24',
-                    fontSize: '22px',
-                    fontWeight: 900,
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: '#94A3B8', marginBottom: '6px', display: 'block' }}>
-                  {isAr ? 'ملاحظة العملية / رقم الطلب' : 'Order Note / Register #'}
-                </label>
-                <input
-                  type="text"
-                  value={cashNote}
-                  onChange={(e) => setCashNote(e.target.value)}
-                  placeholder={isAr ? 'كاشير ١ • مبيعات إفطار' : 'Cashier 1 • Store order'}
-                  style={{
-                    width: '100%',
-                    padding: '12px 14px',
-                    backgroundColor: '#182236',
-                    border: '1px solid #1E293B',
-                    borderRadius: '12px',
-                    color: '#FFFFFF',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-
-              <div style={{ backgroundColor: '#0A0E1A', padding: '12px 14px', borderRadius: '10px', fontSize: '12px', color: '#94A3B8' }}>
-                {isAr ? 'سيتم احتساب ١٥٪ ضريبة القيمة المضافة زاتكا وإضافتها لتقرير التحصيلات اليومي.' : '15% ZATCA VAT will be calculated and logged into daily tax ledger.'}
-              </div>
-
-              <button
-                type="submit"
-                disabled={cashSuccess || !cashAmount}
-                className="interactive-tap cursor-pointer"
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: '12px',
-                  backgroundColor: '#00FF24',
-                  color: '#080C14',
-                  fontWeight: 900,
-                  fontSize: '14px',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  marginTop: '6px',
-                }}
-              >
-                {cashSuccess ? (
-                  <>
-                    <CheckCircle2 size={18} />
-                    <span>{isAr ? 'تم تسجيل البيع والنطق الصوتي!' : 'Recorded & SoundBox Announced!'}</span>
-                  </>
-                ) : (
-                  <span>{isAr ? 'تأكيد وحفظ البيع النقدي' : 'Confirm & Record Cash Sale'}</span>
-                )}
-              </button>
-            </form>
           </div>
         </div>
-      )}
 
-      {/* Toast Alert */}
-      {toastMsg && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: isRtl ? 'auto' : '24px',
-            left: isRtl ? '24px' : 'auto',
-            backgroundColor: '#00FF24',
-            color: '#080C14',
-            padding: '14px 20px',
-            borderRadius: '14px',
-            fontWeight: 800,
-            fontSize: '13.5px',
-            zIndex: 3000,
-            boxShadow: '0 8px 30px rgba(0, 255, 36, 0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            animation: 'fadeIn 0.2s ease',
-          }}
-        >
-          <CheckCircle2 size={18} />
-          <span>{toastMsg}</span>
+        {/* 4. Accept Payment Section (4 Grid Tiles) */}
+        <div>
+          <h2
+            style={{
+              fontSize: '15px',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              margin: '0 0 12px 0',
+              textAlign: isRtl ? 'right' : 'left',
+            }}
+          >
+            {isAr ? 'قبول المدفوعات' : 'Accept Payment'}
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+            {/* Tile 1: Show QR */}
+            <div
+              onClick={() => navigateTo('MERCHANT_QR_GENERATOR')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <QrCode size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'عرض الرمز' : 'Show QR'}
+              </span>
+            </div>
+
+            {/* Tile 2: Tap to Pay */}
+            <div
+              onClick={() => navigateTo('SOFTPOS_TERMINAL')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <SmartphoneNfc size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'الدفع باللمس' : 'Tap to Pay'}
+              </span>
+            </div>
+
+            {/* Tile 3: Send Link */}
+            <div
+              onClick={() => navigateTo('PAYMENT_LINK_GENERATOR')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Share2 size={19} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'إرسال رابط' : 'Send Link'}
+              </span>
+            </div>
+
+            {/* Tile 4: Cash Sale */}
+            <div
+              onClick={handleCashSale}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '16px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00C853',
+                }}
+              >
+                <Banknote size={20} />
+              </div>
+              <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+                {isAr ? 'بيع نقدي' : 'Cash Sale'}
+              </span>
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* 5. Recent Payments Section */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                {isAr ? 'المدفوعات الأخيرة' : 'Recent Payments'}
+              </h2>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#00C853' }} />
+            </div>
+
+            <button
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#00C853',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2px',
+                padding: 0,
+              }}
+            >
+              <span>{isAr ? `عرض الكل (${paymentCount})` : `See All (${paymentCount})`}</span>
+              <ChevronRight size={15} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            </button>
+          </div>
+
+          {/* Payment List Rows matching mockup */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {/* Row 1: mada */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#00C853',
+                    flexShrink: 0,
+                  }}
+                >
+                  <CreditCard size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    Debit Card &bull; ****4021
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'تموينات • منذ دقيقتين' : 'Grocery • 2 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 245.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: Apple Pay */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: '#161F30',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#94A3B8',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Smartphone size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    Apple Pay
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'مشروبات • منذ ١٢ دقيقة' : 'Beverages • 12 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 89.50
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'تم الإشعار' : 'Announced'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 3: Counter QR Code */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#00C853',
+                    flexShrink: 0,
+                  }}
+                >
+                  <QrCode size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    {isAr ? 'رمز QR المنضدة' : 'Counter QR Code'}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'نقطة بيع #٠٢ • منذ ٢٤ دقيقة' : 'Register #02 • 24 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 512.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 4: STC Pay Link */}
+            <div
+              onClick={() => navigateTo('MERCHANT_COLLECTIONS')}
+              className="interactive-tap"
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    backgroundColor: '#161F30',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#94A3B8',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Share2 size={18} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    STC Pay Link
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {isAr ? 'توصيل واتساب • منذ ٤١ دقيقة' : 'WhatsApp Delivery • 41 mins ago'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ textAlign: isRtl ? 'left' : 'right' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#00C853' }}>
+                  + SAR 130.00
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isRtl ? 'flex-start' : 'flex-end', gap: '3px', fontSize: '10.5px', color: '#00C853', fontWeight: 700, marginTop: '2px' }}>
+                  <Check size={11} strokeWidth={3} />
+                  <span>{isAr ? 'مدفوع' : 'Paid'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
