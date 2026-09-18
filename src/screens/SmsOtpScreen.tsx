@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ArrowRight, RefreshCw, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { AlphPayLogo } from '../components/AlphPayLogo';
+import { PrimaryButton } from '../components/PrimaryButton';
 import { useApp } from '../state/AppContext';
+import { toArabicNumerals } from '../utils/i18n';
 import { authenticateMerchantWithAnyOtp } from '../services/supabaseClient';
 
 export const SmsOtpScreen: React.FC = () => {
@@ -8,6 +11,7 @@ export const SmsOtpScreen: React.FC = () => {
     navigateTo,
     screenParams,
     goBack,
+    t,
     isRtl,
     language,
     updateUser,
@@ -18,8 +22,8 @@ export const SmsOtpScreen: React.FC = () => {
     verifyOtp,
   } = useApp();
 
+  const mobile = screenParams?.mobile || '501234567';
   const isAr = language === 'العربية';
-  const mobile = screenParams.mobile || '501234567';
 
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(28);
@@ -27,9 +31,15 @@ export const SmsOtpScreen: React.FC = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [showSmsBanner, setShowSmsBanner] = useState<boolean>(true);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const isOtpComplete = otp.every((d) => d.trim().length > 0);
+  const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,21 +49,15 @@ export const SmsOtpScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    inputRefs.current[0]?.focus();
+    inputRefs[0]?.current?.focus();
   }, []);
 
-  const handleDigitChange = (index: number, value: string) => {
+  const handleOtpChange = (index: number, value: string) => {
     setErrorMsg('');
-    const digitsOnly = value.replace(/\D/g, '');
-    if (!digitsOnly) {
-      const newOtp = [...otp];
-      newOtp[index] = '';
-      setOtp(newOtp);
-      return;
-    }
+    const cleanVal = value.replace(/\D/g, '');
 
-    if (digitsOnly.length > 1) {
-      const pasteDigits = digitsOnly.slice(0, 6).split('');
+    if (cleanVal.length > 1) {
+      const pasteDigits = cleanVal.slice(0, 6).split('');
       const newOtp = [...otp];
       for (let i = 0; i < 6; i++) {
         if (i < pasteDigits.length) {
@@ -62,21 +66,21 @@ export const SmsOtpScreen: React.FC = () => {
       }
       setOtp(newOtp);
       const nextIndex = Math.min(pasteDigits.length, 5);
-      inputRefs.current[nextIndex]?.focus();
+      inputRefs[nextIndex]?.current?.focus();
       if (pasteDigits.length === 6) {
         triggerVerifyWithCode(newOtp.join(''));
       }
       return;
     }
 
-    const digit = digitsOnly.slice(-1);
+    const singleDigit = cleanVal.slice(-1);
     const newOtp = [...otp];
-    newOtp[index] = digit;
+    newOtp[index] = singleDigit;
     setOtp(newOtp);
 
-    if (digit && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    } else if (digit && index === 5) {
+    if (singleDigit && index < 5) {
+      inputRefs[index + 1]?.current?.focus();
+    } else if (singleDigit && index === 5) {
       if (newOtp.every((d) => d.trim().length > 0)) {
         triggerVerifyWithCode(newOtp.join(''));
       }
@@ -89,7 +93,7 @@ export const SmsOtpScreen: React.FC = () => {
         const newOtp = [...otp];
         newOtp[index - 1] = '';
         setOtp(newOtp);
-        inputRefs.current[index - 1]?.focus();
+        inputRefs[index - 1]?.current?.focus();
       } else if (otp[index]) {
         const newOtp = [...otp];
         newOtp[index] = '';
@@ -97,30 +101,14 @@ export const SmsOtpScreen: React.FC = () => {
       }
     } else if (e.key === 'ArrowLeft' && index > 0) {
       e.preventDefault();
-      inputRefs.current[index - 1]?.focus();
+      inputRefs[index - 1]?.current?.focus();
     } else if (e.key === 'ArrowRight' && index < 5) {
       e.preventDefault();
-      inputRefs.current[index + 1]?.focus();
+      inputRefs[index + 1]?.current?.focus();
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setErrorMsg('');
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    if (!pastedData) return;
-
-    const newOtp = [...otp];
-    for (let i = 0; i < 6; i++) {
-      newOtp[i] = pastedData[i] || '';
-    }
-    setOtp(newOtp);
-    const focusIndex = Math.min(pastedData.length, 5);
-    inputRefs.current[focusIndex]?.focus();
-    if (pastedData.length === 6) {
-      triggerVerifyWithCode(pastedData);
-    }
-  };
+  const isComplete = otp.every((digit) => digit.length > 0);
 
   const triggerVerifyWithCode = async (enteredCode: string) => {
     if (isVerifying) return;
@@ -135,7 +123,7 @@ export const SmsOtpScreen: React.FC = () => {
           : 'Invalid verification code. Please check your SMS and try again.'
       );
       setOtp(['', '', '', '', '', '']);
-      inputRefs.current[0]?.focus();
+      inputRefs[0]?.current?.focus();
       return;
     }
 
@@ -162,19 +150,8 @@ export const SmsOtpScreen: React.FC = () => {
     }
   };
 
-  const handleQuickFill = (codeToFill?: string) => {
-    const targetCode = codeToFill || activeOtp || '589204';
-    const digits = targetCode.slice(0, 6).split('');
-    setOtp(digits);
-    setErrorMsg('');
-    inputRefs.current[5]?.focus();
-    setTimeout(() => {
-      triggerVerifyWithCode(targetCode);
-    }, 120);
-  };
-
   const handleVerify = async () => {
-    if (!isOtpComplete || isVerifying) return;
+    if (!isComplete || isVerifying) return;
     await triggerVerifyWithCode(otp.join(''));
   };
 
@@ -187,136 +164,256 @@ export const SmsOtpScreen: React.FC = () => {
     setTimeout(() => setIsResent(false), 3000);
   };
 
+  const handleQuickFill = (codeToFill?: string) => {
+    const targetCode = codeToFill || activeOtp || '589204';
+    const digits = targetCode.slice(0, 6).split('');
+    setOtp(digits);
+    setErrorMsg('');
+    inputRefs[5]?.current?.focus();
+    setTimeout(() => {
+      triggerVerifyWithCode(targetCode);
+    }, 120);
+  };
+
   return (
-    <div className="w-full text-white flex flex-col select-none" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div
+      className="fade-in"
+      style={{
+        minHeight: '100%',
+        backgroundColor: '#080C14',
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '24px 20px',
+        boxSizing: 'border-box',
+        userSelect: 'none',
+        direction: isRtl ? 'rtl' : 'ltr',
+      }}
+    >
       {/* Top Simulated SMS Notification Banner */}
       {showSmsBanner && (
-        <div className="mb-4 bg-[#182236]/95 border border-[#00FF24]/30 rounded-xl p-3 shadow-lg shadow-black/50 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-xl">💬</span>
-            <div className={isRtl ? 'text-right' : 'text-left'}>
-              <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid rgba(0, 200, 83, 0.35)',
+            borderRadius: '16px',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            width: '100%',
+            maxWidth: '400px',
+            margin: '0 auto 20px auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '20px' }}>💬</span>
+            <div style={{ textAlign: isRtl ? 'right' : 'left' }}>
+              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 {isAr ? 'رسالة نصية • الآن' : 'SMS OTP • Messages'}
               </div>
-              <div className="text-xs text-white font-semibold">
-                {isAr ? 'رمز تحقق بوابة التاجر: ' : 'Merchant Portal Code: '}
-                <strong className="text-[#00FF24] text-sm font-mono tracking-wider">{activeOtp}</strong>
+              <div style={{ fontSize: '12px', color: '#FFFFFF', fontWeight: 600 }}>
+                {isAr ? 'رمز تحقق بوابة التاجر: ' : 'Merchant Code: '}
+                <strong style={{ color: '#00C853', fontSize: '14px', letterSpacing: '1px' }}>{activeOtp || '589204'}</strong>
               </div>
             </div>
           </div>
           <button
             type="button"
             onClick={() => handleQuickFill(activeOtp)}
-            className="bg-[#00FF24] text-[#070D0A] font-extrabold text-xs px-3 py-1.5 rounded-lg hover:bg-[#00FF24]/90 transition-colors whitespace-nowrap cursor-pointer"
+            style={{
+              backgroundColor: '#00C853',
+              color: '#080C14',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '6px 12px',
+              fontSize: '11px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
           >
             {isAr ? 'تعبئة تلقائية' : 'Autofill'}
           </button>
         </div>
       )}
 
-      {/* Back Button */}
-      <div className="mb-4">
-        <button
-          onClick={goBack}
-          className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
-        >
-          <ArrowLeft className={`h-3.5 w-3.5 ${isRtl ? 'scale-x-[-1]' : ''}`} />
-          <span>{isAr ? 'تغيير رقم الجوال' : 'Change Mobile Number'}</span>
-        </button>
-      </div>
-
-      {/* Header */}
-      <div className="mb-6 text-start">
-        <h2 className="text-xl font-extrabold text-white tracking-tight">
-          {isAr ? 'رمز التحقق السريع' : 'Enter Verification Code'}
-        </h2>
-        <p className="text-xs text-slate-400 mt-1">
-          {isAr ? 'تم إرسال رمز التحقق إلى الرقم' : 'Sent via SMS OTP to'}{' '}
-          <span className="text-[#00FF24] font-bold" dir="ltr">
-            +966 {mobile}
-          </span>
-        </p>
-      </div>
-
-      {/* Error Alert */}
-      {errorMsg && (
-        <div className="flex items-center gap-2 text-xs text-rose-400 font-semibold mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
-          <ShieldAlert size={16} className="shrink-0" />
-          <span>{errorMsg}</span>
-        </div>
-      )}
-
-      {/* 6-Digit OTP Inputs */}
-      <div className="grid grid-cols-6 gap-2 mb-4" dir="ltr">
-        {otp.map((digit, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
-            type="text"
-            inputMode="numeric"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleDigitChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
-            onPaste={handlePaste}
-            className={`w-full h-12 rounded-xl text-center text-lg font-black outline-none transition-all ${
-              digit
-                ? 'bg-[#00FF24]/10 border-2 border-[#00FF24] text-white shadow-sm shadow-[#00FF24]/20'
-                : 'bg-[#10182A] border border-slate-800 text-slate-400 focus:border-[#00FF24]'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Demo helper */}
-      <div className="flex items-center justify-between text-xs text-slate-400 mb-6 bg-[#10182A] border border-slate-800/80 rounded-lg px-3 py-2">
-        <button
-          type="button"
-          onClick={() => handleQuickFill('589204')}
-          className="flex items-center gap-1.5 text-[11px] hover:text-white transition-colors cursor-pointer text-left"
-        >
-          <CheckCircle2 className="h-3.5 w-3.5 text-[#00FF24]" />
-          <span>{isAr ? 'الرمز التجريبي الافتراضي: 589204' : 'Default Demo OTP: 589204'}</span>
-        </button>
-        <div>
-          {timer > 0 ? (
-            <span className="text-slate-500 font-mono text-[11px]">{timer}s</span>
-          ) : (
-            <button
-              type="button"
-              onClick={handleResend}
-              className="text-[#00FF24] font-bold text-[11px] flex items-center gap-1 hover:underline cursor-pointer"
-            >
-              <RefreshCw className="h-3 w-3" />
-              <span>{isAr ? 'إعادة الإرسال' : 'Resend'}</span>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {isResent && (
-        <div className="text-center text-xs text-[#00FF24] mb-3 font-semibold animate-pulse">
-          {isAr ? 'تم إرسال رمز جديد بنجاح' : 'New code dispatched successfully!'}
-        </div>
-      )}
-
-      {/* Verify Button */}
-      <button
-        type="button"
-        onClick={handleVerify}
-        disabled={!isOtpComplete || isVerifying}
-        className="w-full h-11 rounded-xl bg-[#00FF24] text-black font-extrabold text-sm flex items-center justify-center gap-2 hover:bg-[#00FF24]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#00FF24]/20 cursor-pointer"
+      {/* Top Center: App Brand Logo */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          width: '100%',
+          marginBottom: '24px',
+        }}
       >
-        <span>
-          {isVerifying
-            ? (isAr ? 'جاري التحقق...' : 'Authenticating...')
-            : (isAr ? 'تأكيد ودخول البوابة' : 'Verify & Enter Dashboard')}
-        </span>
-        <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-      </button>
+        <AlphPayLogo variant="horizontal" size={30} themeMode="dark" />
+      </div>
+
+      {/* Main OTP Verification Form Card */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          margin: '0 auto',
+          backgroundColor: '#111726',
+          border: '1px solid #1E293B',
+          borderRadius: '24px',
+          padding: '28px 20px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0', letterSpacing: '-0.02em' }}>
+            {isAr ? 'رمز التحقق السريع' : 'Enter Verification Code'}
+          </h2>
+          <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 10px 0' }}>
+            {isAr ? 'تم إرسال رمز التحقق عبر SMS إلى' : 'Sent via SMS OTP to'}{' '}
+            <span style={{ color: '#00C853', fontWeight: 700 }} dir="ltr">
+              +966 {mobile}
+            </span>
+          </p>
+          <button
+            onClick={goBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#64748B',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            <ArrowLeft size={13} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            <span>{isAr ? 'تغيير رقم الجوال' : 'Change Mobile Number'}</span>
+          </button>
+        </div>
+
+        {/* Error Alert if incorrect OTP */}
+        {errorMsg && (
+          <div
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              color: '#EF4444',
+              borderRadius: '12px',
+              padding: '10px 14px',
+              fontSize: '12px',
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: '16px',
+            }}
+          >
+            {errorMsg}
+          </div>
+        )}
+
+        {/* 6-Digit Clean OTP Boxes */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '8px',
+            justifyContent: 'center',
+            marginBottom: '22px',
+            direction: 'ltr',
+          }}
+        >
+          {otp.map((digit, i) => (
+            <input
+              key={i}
+              ref={inputRefs[i]}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              autoFocus={i === 0}
+              onChange={(e) => handleOtpChange(i, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              className="tabular-nums"
+              style={{
+                width: '46px',
+                height: '52px',
+                borderRadius: '14px',
+                backgroundColor: '#182236',
+                border: digit ? '2px solid #00C853' : '1px solid #1E293B',
+                fontSize: '22px',
+                fontWeight: 800,
+                color: '#FFFFFF',
+                textAlign: 'center',
+                outline: 'none',
+                transition: 'all 0.15s ease',
+                boxShadow: digit ? '0 0 10px rgba(0, 200, 83, 0.2)' : 'none',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Resend SMS Counter */}
+        <div style={{ textAlign: 'center', fontSize: '12.5px', color: '#94A3B8', marginBottom: '20px' }}>
+          {isAr ? 'لم تستلم الرمز؟ ' : "Didn't receive SMS? "}
+          <button
+            disabled={timer > 0}
+            onClick={handleResend}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: timer > 0 ? '#64748B' : '#00C853',
+              fontWeight: 800,
+              cursor: timer > 0 ? 'not-allowed' : 'pointer',
+              padding: 0,
+            }}
+          >
+            {isAr
+              ? timer > 0
+                ? `إعادة الإرسال بعد (${toArabicNumerals(timer < 10 ? `0${timer}` : timer)} ثانية)`
+                : 'إعادة إرسال الرمز'
+              : `Resend Code ${timer > 0 ? `(00:${timer < 10 ? `0${timer}` : timer}s)` : ''}`}
+          </button>
+        </div>
+
+        {isResent && (
+          <div style={{ textAlign: 'center', fontSize: '12px', color: '#00C853', fontWeight: 700, marginBottom: '14px' }}>
+            {isAr ? 'تم إعادة إرسال رمز التحقق بنجاح' : 'New code sent successfully!'}
+          </div>
+        )}
+
+        <PrimaryButton onClick={handleVerify} disabled={!isComplete || isVerifying}>
+          {isVerifying ? (isAr ? 'جاري التحقق...' : 'Verifying...') : (isAr ? 'تأكيد ودخول البوابة' : 'Verify & Enter Dashboard')} <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+        </PrimaryButton>
+
+        {/* Default Demo Helper */}
+        <div style={{ textAlign: 'center', marginTop: '16px' }}>
+          <button
+            type="button"
+            onClick={() => handleQuickFill('589204')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#64748B',
+              fontSize: '11.5px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              textDecoration: 'none',
+            }}
+          >
+            {isAr ? 'رمز تجريبي سريع: 589204' : 'Default Demo OTP: 589204'}
+          </button>
+        </div>
+      </div>
+
+      <div style={{ height: '20px' }} />
     </div>
   );
 };
+
 export default SmsOtpScreen;
