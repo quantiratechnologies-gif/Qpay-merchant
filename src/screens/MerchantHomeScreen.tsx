@@ -23,6 +23,8 @@ import { useApp } from '../state/AppContext';
 import { formatLocalizedNumber, formatSaudiCurrency } from '../utils/i18n';
 import { AlphPayLogo } from '../components/AlphPayLogo';
 
+import { LanguageSwitchPill } from '../components/LanguageSwitchPill';
+
 export const MerchantHomeScreen: React.FC = () => {
   const {
     merchantInfo,
@@ -133,8 +135,10 @@ export const MerchantHomeScreen: React.FC = () => {
           <AlphPayLogo variant="horizontal" size={24} themeMode="dark" />
         </div>
 
-        {/* Right: Notification & Profile Icon Buttons */}
+        {/* Right: Language Switcher & Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <LanguageSwitchPill variant="compact" />
+          
           {/* Notification Button */}
           <button
             onClick={() => navigateTo('NOTIFICATIONS')}

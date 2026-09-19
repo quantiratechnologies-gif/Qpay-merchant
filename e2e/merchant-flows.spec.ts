@@ -77,7 +77,7 @@ test.describe('Saudi Merchant App Flow QA', () => {
     await expect(page.locator('text=Manage QR')).toBeVisible();
     await expect(page.locator('text=Payment Instruments')).toBeVisible();
     await expect(page.locator('text=Manage Staff')).toBeVisible();
-    await expect(page.locator('text=App Language')).toBeVisible();
+    await expect(page.locator('text=Change Language')).toBeVisible();
     await expect(page.locator('text=Log Out Account')).toBeVisible();
   });
 
@@ -92,14 +92,14 @@ test.describe('Saudi Merchant App Flow QA', () => {
 
   test('9. Redesigned Merchant OTP Verification Screen', async ({ page }) => {
     await page.goto('/?screen=SMS_OTP');
-    await expect(page.locator('text=Verify OTP')).toBeVisible();
-    await expect(page.locator('text=Code sent via SMS to')).toBeVisible();
-    await expect(page.locator('button:has-text("Verify & Proceed")')).toBeVisible();
+    await expect(page.locator('text=Enter Verification Code')).toBeVisible();
+    await expect(page.locator('text=Sent via SMS OTP to')).toBeVisible();
+    await expect(page.locator('button:has-text("Verify & Enter Dashboard")')).toBeVisible();
     await expect(page.locator('button:has-text("Autofill")')).toBeVisible();
 
     // Trigger autofill and verify CTA becomes enabled
     await page.click('button:has-text("Autofill")');
-    const verifyBtn = page.locator('button:has-text("Verify & Proceed")');
+    const verifyBtn = page.locator('button:has-text("Verify & Enter Dashboard")');
     await expect(verifyBtn).toBeEnabled();
   });
 
