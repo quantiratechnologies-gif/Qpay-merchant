@@ -44,7 +44,7 @@ export const MerchantSetupScreen: React.FC = () => {
   const [city, setCity] = useState(merchantInfo.city || 'Riyadh');
   const [postalCode, setPostalCode] = useState(merchantInfo.postalCode || '');
   const [vatNumber, setVatNumber] = useState(merchantInfo.vatNumber || '');
-  const [logoUrl, setLogoUrl] = useState<string>(merchantInfo.logoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&auto=format&fit=crop&q=80');
+  const [logoUrl, setLogoUrl] = useState<string>(merchantInfo.logoUrl || '');
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -60,13 +60,6 @@ export const MerchantSetupScreen: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
-
-  const PRESET_IMAGES = [
-    { label: isAr ? 'مقهى ومشروبات' : 'Specialty Cafe', url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&auto=format&fit=crop&q=80' },
-    { label: isAr ? 'تموينات وسوبرماركت' : 'Supermarket', url: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=300&auto=format&fit=crop&q=80' },
-    { label: isAr ? 'أزياء وبوتيك' : 'Fashion Boutique', url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&auto=format&fit=crop&q=80' },
-    { label: isAr ? 'مخبوزات وحلويات' : 'Artisan Bakery', url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&auto=format&fit=crop&q=80' },
-  ];
 
   const isFormValid = businessName.trim().length > 0 && vatNumber.trim().length >= 10 && postalCode.trim().length >= 4;
 
@@ -253,54 +246,6 @@ export const MerchantSetupScreen: React.FC = () => {
                 <Camera size={13} />
                 <span>{isAr ? 'تغيير الصورة' : 'Upload Image'}</span>
               </button>
-            </div>
-
-            {/* Quick Presets for Real Business Photos */}
-            <div>
-              <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', marginBottom: '6px' }}>
-                {isAr ? 'أو اختر صورة واقعية فورية:' : 'Or choose realistic business photo:'}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
-                {PRESET_IMAGES.map((preset, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setLogoUrl(preset.url)}
-                    className="interactive-tap"
-                    style={{
-                      height: '42px',
-                      borderRadius: '8px',
-                      border: logoUrl === preset.url ? '2px solid #00C853' : '1px solid #1E293B',
-                      backgroundImage: `url(${preset.url})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      cursor: 'pointer',
-                      position: 'relative',
-                      boxShadow: logoUrl === preset.url ? '0 0 10px rgba(0, 200, 83, 0.4)' : 'none',
-                    }}
-                    title={preset.label}
-                  >
-                    {logoUrl === preset.url && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          backgroundColor: 'rgba(0, 200, 83, 0.35)',
-                          borderRadius: '6px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#FFFFFF',
-                          fontWeight: 900,
-                          fontSize: '14px',
-                        }}
-                      >
-                        ✓
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 
