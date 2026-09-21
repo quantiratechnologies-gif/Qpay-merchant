@@ -17,7 +17,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
   const [orderRef, setOrderRef] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [amount, setAmount] = useState('');
-  const [generatedLink, setGeneratedLink] = useState('https://qtpay.sa/pay/lnk_8829104');
+  const [generatedLink, setGeneratedLink] = useState('https://riyalpay.sa/pay/lnk_8829104');
   const [copied, setCopied] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
 
@@ -28,7 +28,7 @@ export const PaymentLinkGeneratorScreen: React.FC = () => {
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
     const linkId = 'lnk_' + Math.floor(1000000 + Math.random() * 9000000);
-    setGeneratedLink(`https://qtpay.sa/pay/${linkId}`);
+    setGeneratedLink(`https://riyalpay.sa/pay/${linkId}`);
   };
 
   const handleCopy = () => {

@@ -11,7 +11,7 @@ export const toArabicNumerals = (val: string | number): string => {
 
 export const TRANSLATIONS: Record<string, { en: string; ar: string }> = {
   // Common & Navigation
-  'app.name': { en: 'QTPay', ar: 'كيو تي باي' },
+  'app.name': { en: 'Riyal Pay', ar: 'ريال باي' },
   'app.tagline': { en: 'QUICK. TRUSTED. PAYMENTS.', ar: 'مدفوعات أعمال فورية وموثوقة' },
   'powered.by': { en: 'Powered by Quantira Technologies', ar: 'مشغل بواسطة تقنيات كوانتيرا' },
   'lang.ar': { en: 'Arabic', ar: 'العربية' },
@@ -74,7 +74,7 @@ export const TRANSLATIONS: Record<string, { en: string; ar: string }> = {
   'home.traffic_fines': { en: 'Traffic Fines', ar: 'المخالفات المرورية' },
 
   // Authentication & Onboarding
-  'auth.welcome': { en: 'Welcome to QTPay', ar: 'مرحباً بك في كيو تي باي' },
+  'auth.welcome': { en: 'Welcome to Riyal Pay', ar: 'مرحباً بك في ريال باي' },
   'auth.account_type': { en: 'Select Account Type', ar: 'اختر نوع الحساب' },
   'auth.customer': { en: 'Personal', ar: 'أفراد' },
   'auth.merchant': { en: 'Business / Merchant', ar: 'أعمال / تاجر' },
@@ -241,7 +241,7 @@ export const TRANSLATIONS: Record<string, { en: string; ar: string }> = {
   'banks.savings_account': { en: 'Savings Account', ar: 'حساب ادخار' },
   'cards.title': { en: 'Cards & Instruments', ar: 'البطاقات وطرق الدفع' },
   'cards.digital_mada': { en: 'Digital Debit Card', ar: 'بطاقة الدفع الرقمية' },
-  'cards.platinum': { en: 'QTPay Platinum', ar: 'كيو تي باي بلاتينيوم' },
+  'cards.platinum': { en: 'Riyal Pay Platinum', ar: 'ريال باي بلاتينيوم' },
   'cards.instant_debit': { en: 'Sarie Instant Debit', ar: 'خصم فوري عبر سريع' },
   'cards.cardholder': { en: 'Cardholder', ar: 'حامل البطاقة' },
   'cards.expires': { en: 'Expires', ar: 'تاريخ الانتهاء' },

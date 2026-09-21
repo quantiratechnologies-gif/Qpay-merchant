@@ -515,8 +515,8 @@ export const BankAccountsScreen: React.FC = () => {
           <div style={{ textAlign: 'center', padding: '10px 0' }}>
             <p style={{ color: '#94A3B8', fontSize: '14px', marginBottom: '20px', lineHeight: '20px' }}>
               {language === 'العربية'
-                ? 'هل أنت متأكد من رغبتك في إلغاء ربط هذا الحساب البنكي من كيو تي باي؟'
-                : 'Are you sure you want to unlink this bank account from QTPay?'}
+                ? 'هل أنت متأكد من رغبتك في إلغاء ربط هذا الحساب البنكي من ريال باي؟'
+                : 'Are you sure you want to unlink this bank account from Riyal Pay?'}
             </p>
             <div style={{ display: 'flex', gap: '10px' }}>
               <button

@@ -51,8 +51,8 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
 
   const handleWhatsAppShare = () => {
     const text = isAr
-      ? `*إيصال فاتورة زاتكا الإلكترونية - كيو تي باي*\nالمتجر: ${merchantInfo.businessName}\nالسجل التجاري: ${merchantInfo.crNumber}\nالرقم الضريبي: ${merchantInfo.vatNumber}\nالمرجع: ${collection.id}\nالمبلغ: ${collection.amount.toFixed(2)} ر.س (شامل الضريبة: ${collection.vatAmount.toFixed(2)} ر.س)\nتمت التسوية المباشرة عبر شبكة سريع المدعومة بتقنيات كوانتيرا.`
-      : `*ZATCA E-INVOICE RECEIPT - QTPAY*\nStore: ${merchantInfo.businessName}\nCR: ${merchantInfo.crNumber}\nVAT ID: ${merchantInfo.vatNumber}\nRef: ${collection.id}\nAmount: SAR ${collection.amount.toFixed(2)} (Incl. 15% VAT: SAR ${collection.vatAmount.toFixed(2)})\nSettled via Sarie Network • Powered by Quantira Technologies.`;
+      ? `*إيصال فاتورة زاتكا الإلكترونية - ريال باي*\nالمتجر: ${merchantInfo.businessName}\nالسجل التجاري: ${merchantInfo.crNumber}\nالرقم الضريبي: ${merchantInfo.vatNumber}\nالمرجع: ${collection.id}\nالمبلغ: ${collection.amount.toFixed(2)} ر.س (شامل الضريبة: ${collection.vatAmount.toFixed(2)} ر.س)\nتمت التسوية المباشرة عبر شبكة سريع المدعومة بتقنيات كوانتيرا.`
+      : `*ZATCA E-INVOICE RECEIPT - RIYAL PAY*\nStore: ${merchantInfo.businessName}\nCR: ${merchantInfo.crNumber}\nVAT ID: ${merchantInfo.vatNumber}\nRef: ${collection.id}\nAmount: SAR ${collection.amount.toFixed(2)} (Incl. 15% VAT: SAR ${collection.vatAmount.toFixed(2)})\nSettled via Sarie Network • Powered by Quantira Technologies.`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 

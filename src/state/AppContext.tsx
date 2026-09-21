@@ -714,8 +714,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           maximumFractionDigits: 2,
         });
         const text = isArabic
-          ? `تم استلام ${formattedAmt} ريال سعودي عبر كيو تي باي`
-          : `Received ${formattedAmt} Saudi Riyals on QTPay`;
+          ? `تم استلام ${formattedAmt} ريال سعودي عبر ريال باي`
+          : `Received ${formattedAmt} Saudi Riyals on Riyal Pay`;
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = isArabic ? 'ar-SA' : 'en-US';
         utterance.rate = 0.95;

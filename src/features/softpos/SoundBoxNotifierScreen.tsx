@@ -89,7 +89,7 @@ export const SoundBoxNotifierScreen: React.FC = () => {
       {/* Top Header */}
       <div>
         <AppHeader
-          title={isAr ? 'مكبر الصوت الذكي للتحصيلات' : 'QTPay Smart SoundBox'}
+          title={isAr ? 'مكبر الصوت الذكي للتحصيلات — ريال باي' : 'Riyal Pay Smart SoundBox'}
           showBack={true}
           showSettings={false}
           rightAction={
