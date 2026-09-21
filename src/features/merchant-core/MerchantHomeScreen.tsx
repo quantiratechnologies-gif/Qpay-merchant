@@ -199,16 +199,25 @@ export const MerchantHomeScreen: React.FC = () => {
             height: '40px',
             borderRadius: '12px',
             backgroundColor: '#161F30',
-            border: '1px solid #2A364F',
+            border: merchantInfo.logoUrl ? '1.5px solid #00C853' : '1px solid #2A364F',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
             cursor: 'pointer',
             flexShrink: 0,
+            overflow: 'hidden',
           }}
         >
-          <Store size={20} />
+          {merchantInfo.logoUrl ? (
+            <img
+              src={merchantInfo.logoUrl}
+              alt="Store"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <Store size={20} />
+          )}
         </button>
 
         {/* Center: Brand Logo */}
@@ -267,8 +276,15 @@ export const MerchantHomeScreen: React.FC = () => {
           <div
             onClick={() => navigateTo('PROFILE')}
             className="interactive-tap"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
           >
+            {merchantInfo.logoUrl && (
+              <img
+                src={merchantInfo.logoUrl}
+                alt="Store Avatar"
+                style={{ width: '22px', height: '22px', borderRadius: '6px', objectFit: 'cover', border: '1px solid rgba(0, 200, 83, 0.5)' }}
+              />
+            )}
             <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
               {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
             </span>

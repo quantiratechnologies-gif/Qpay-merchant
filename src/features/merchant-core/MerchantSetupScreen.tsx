@@ -44,7 +44,29 @@ export const MerchantSetupScreen: React.FC = () => {
   const [city, setCity] = useState(merchantInfo.city || 'Riyadh');
   const [postalCode, setPostalCode] = useState(merchantInfo.postalCode || '');
   const [vatNumber, setVatNumber] = useState(merchantInfo.vatNumber || '');
-  const [hasLogo, setHasLogo] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string>(merchantInfo.logoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&auto=format&fit=crop&q=80');
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setLogoUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const PRESET_IMAGES = [
+    { label: isAr ? 'مقهى ومشروبات' : 'Specialty Cafe', url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&auto=format&fit=crop&q=80' },
+    { label: isAr ? 'تموينات وسوبرماركت' : 'Supermarket', url: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=300&auto=format&fit=crop&q=80' },
+    { label: isAr ? 'أزياء وبوتيك' : 'Fashion Boutique', url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&auto=format&fit=crop&q=80' },
+    { label: isAr ? 'مخبوزات وحلويات' : 'Artisan Bakery', url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&auto=format&fit=crop&q=80' },
+  ];
 
   const isFormValid = businessName.trim().length > 0 && vatNumber.trim().length >= 10 && postalCode.trim().length >= 4;
 
@@ -57,6 +79,7 @@ export const MerchantSetupScreen: React.FC = () => {
       city,
       postalCode: postalCode.trim(),
       vatNumber: vatNumber.trim(),
+      logoUrl,
     });
     navigateTo('MERCHANT_BANK_LINK');
   };
@@ -144,76 +167,141 @@ export const MerchantSetupScreen: React.FC = () => {
             style={{
               backgroundColor: '#111726',
               border: '1px solid #1E293B',
-              borderRadius: '14px',
-              padding: '12px 14px',
+              borderRadius: '16px',
+              padding: '14px',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              flexDirection: 'column',
+              gap: '12px',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {/* Dotted Upload Tile */}
-              <div
-                onClick={() => setHasLogo(!hasLogo)}
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Real Image Preview or Upload Button */}
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="interactive-tap"
+                  style={{
+                    width: '54px',
+                    height: '54px',
+                    borderRadius: '14px',
+                    border: '1.5px dashed rgba(0, 200, 83, 0.6)',
+                    backgroundColor: 'rgba(0, 200, 83, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    flexShrink: 0,
+                  }}
+                >
+                  {logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt="Store Logo"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#00C853' }}>
+                      <Camera size={20} strokeWidth={2} />
+                      <span style={{ fontSize: '7.5px', fontWeight: 800, marginTop: '2px' }}>
+                        {isAr ? 'رفع' : 'UPLOAD'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
+                    {isAr ? 'صورة وهوية المنشأة' : 'Business Photo & Logo'}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    {logoUrl
+                      ? (isAr ? '✓ تم تحميل صورة المتجر بنجاح' : '✓ Real image active & verified')
+                      : (isAr ? 'اضغط لرفع صورة من جهازك' : 'Tap to upload real photo from device')}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
                 className="interactive-tap"
                 style={{
-                  width: '44px',
-                  height: '44px',
+                  padding: '6px 12px',
                   borderRadius: '10px',
-                  border: '1.5px dashed rgba(0, 200, 83, 0.6)',
-                  backgroundColor: 'rgba(0, 200, 83, 0.08)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '2px',
-                  cursor: 'pointer',
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
                   color: '#00C853',
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
                   flexShrink: 0,
                 }}
               >
-                <Camera size={18} strokeWidth={2} />
-                <span style={{ fontSize: '7.5px', fontWeight: 800, letterSpacing: '0.04em' }}>
-                  {isAr ? 'رفع' : 'UPLOAD'}
-                </span>
-              </div>
-
-              <div>
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF' }}>
-                  {isAr ? 'شعار وهوية المتجر' : 'Storefront & Brand Logo'}
-                </div>
-                <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                  {hasLogo
-                    ? isAr
-                      ? '✓ تم تحميل الشعار بنجاح'
-                      : '✓ Logo uploaded & active'
-                    : isAr
-                    ? 'PNG أو JPG بحد أقصى ٥ ميجابايت'
-                    : 'PNG, JPG up to 5MB'}
-                </div>
-              </div>
+                <Camera size={13} />
+                <span>{isAr ? 'تغيير الصورة' : 'Upload Image'}</span>
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setHasLogo(!hasLogo)}
-              className="interactive-tap"
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                backgroundColor: '#161F30',
-                border: '1px solid #1E293B',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#94A3B8',
-                cursor: 'pointer',
-                flexShrink: 0,
-              }}
-            >
-              <Edit2 size={13} />
-            </button>
+            {/* Quick Presets for Real Business Photos */}
+            <div>
+              <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', marginBottom: '6px' }}>
+                {isAr ? 'أو اختر صورة واقعية فورية:' : 'Or choose realistic business photo:'}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+                {PRESET_IMAGES.map((preset, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setLogoUrl(preset.url)}
+                    className="interactive-tap"
+                    style={{
+                      height: '42px',
+                      borderRadius: '8px',
+                      border: logoUrl === preset.url ? '2px solid #00C853' : '1px solid #1E293B',
+                      backgroundImage: `url(${preset.url})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      boxShadow: logoUrl === preset.url ? '0 0 10px rgba(0, 200, 83, 0.4)' : 'none',
+                    }}
+                    title={preset.label}
+                  >
+                    {logoUrl === preset.url && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          backgroundColor: 'rgba(0, 200, 83, 0.35)',
+                          borderRadius: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#FFFFFF',
+                          fontWeight: 900,
+                          fontSize: '14px',
+                        }}
+                      >
+                        ✓
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* 2. Registered Business Name */}

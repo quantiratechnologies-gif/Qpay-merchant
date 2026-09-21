@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Store,
   ShieldCheck,
@@ -12,12 +12,16 @@ import {
   Building2,
   LayoutGrid,
   Check,
+  Camera,
+  MapPin,
+  FileText,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 
 export const ProfileScreen: React.FC = () => {
   const {
     merchantInfo,
+    updateMerchantInfo,
     language,
     navigateTo,
     setIsLanguageModalOpen,
@@ -25,6 +29,21 @@ export const ProfileScreen: React.FC = () => {
     setIsKycModalOpen,
     isRtl,
   } = useApp();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          updateMerchantInfo({ logoUrl: reader.result });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const isAr = language === 'العربية';
 
@@ -110,6 +129,154 @@ export const ProfileScreen: React.FC = () => {
 
       {/* Main Container */}
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleProfileImageUpload}
+        />
+
+        {/* 1. Store Identity & Real Business Image Card */}
+        <div
+          style={{
+            backgroundColor: '#111726',
+            border: '1px solid #1E293B',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          {/* Cover & Avatar Header */}
+          <div
+            style={{
+              height: '84px',
+              backgroundColor: '#161F30',
+              backgroundImage: merchantInfo.logoUrl
+                ? `linear-gradient(rgba(8, 12, 20, 0.5), rgba(8, 12, 20, 0.85)), url(${merchantInfo.logoUrl})`
+                : 'linear-gradient(135deg, #0A1E14 0%, #111726 100%)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              position: 'relative',
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', transform: 'translateY(16px)' }}>
+              {/* Real Storefront Logo Photo Tile */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="interactive-tap"
+                style={{
+                  width: '58px',
+                  height: '58px',
+                  borderRadius: '16px',
+                  backgroundColor: '#182236',
+                  border: '2px solid #00C853',
+                  boxShadow: '0 4px 14px rgba(0, 200, 83, 0.3)',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {merchantInfo.logoUrl ? (
+                  <img
+                    src={merchantInfo.logoUrl}
+                    alt="Store Logo"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <Store size={26} color="#00C853" />
+                )}
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    height: '18px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Camera size={10} color="#00C853" />
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="interactive-tap"
+              style={{
+                backgroundColor: 'rgba(0, 200, 83, 0.15)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
+                color: '#00C853',
+                borderRadius: '10px',
+                padding: '5px 10px',
+                fontSize: '11px',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              <Camera size={12} />
+              <span>{isAr ? 'تغيير صورة المنشأة' : 'Upload Store Photo'}</span>
+            </button>
+          </div>
+
+          {/* Store Info Details */}
+          <div style={{ padding: '24px 16px 14px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
+              </h2>
+              <span
+                style={{
+                  fontSize: '9.5px',
+                  fontWeight: 800,
+                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                  border: '1px solid rgba(0, 200, 83, 0.3)',
+                  color: '#00C853',
+                  padding: '2px 8px',
+                  borderRadius: '6px',
+                }}
+              >
+                {merchantInfo.city || (isAr ? 'الرياض' : 'Riyadh')}
+              </span>
+            </div>
+
+            <div style={{ fontSize: '12px', color: '#94A3B8', marginBottom: '10px' }}>
+              {merchantInfo.category || (isAr ? 'بقالة وتموينات واحتياجات يومية' : 'Grocery & Daily Essentials')}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', paddingTop: '8px', borderTop: '1px solid #1E293B' }}>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>
+                {isAr ? 'السجل التجاري:' : 'CR Number:'}{' '}
+                <strong style={{ color: '#CBD5E1', fontFamily: 'monospace' }}>
+                  {merchantInfo.crNumber || '1010884920'}
+                </strong>
+              </div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>
+                {isAr ? 'الرقم الضريبي:' : 'VAT ID:'}{' '}
+                <strong style={{ color: '#CBD5E1', fontFamily: 'monospace' }}>
+                  {merchantInfo.vatNumber ? merchantInfo.vatNumber.slice(-8) : '30092819'}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 2. Settlement Account Card */}
         <div
           style={{

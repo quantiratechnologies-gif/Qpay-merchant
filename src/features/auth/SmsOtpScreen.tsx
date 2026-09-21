@@ -167,6 +167,17 @@ export const SmsOtpScreen: React.FC = () => {
     inputRefs.current[5]?.focus();
   };
 
+  // Auto-retrieve OTP simulation after 1.2s
+  useEffect(() => {
+    const autoTimer = setTimeout(() => {
+      if (otp.every((d) => d === '')) {
+        const code = activeOtp || '589204';
+        handleQuickFill(code);
+      }
+    }, 1400);
+    return () => clearTimeout(autoTimer);
+  }, []);
+
   return (
     <div
       className="fade-in"
@@ -186,9 +197,11 @@ export const SmsOtpScreen: React.FC = () => {
       {/* Top Simulated SMS Notification Banner */}
       {showSmsBanner && (
         <div
+          onClick={() => handleQuickFill(activeOtp)}
+          className="interactive-tap fade-in"
           style={{
             backgroundColor: '#111726',
-            border: '1px solid rgba(0, 200, 83, 0.35)',
+            border: '1.5px solid rgba(0, 200, 83, 0.45)',
             borderRadius: '16px',
             padding: '12px 16px',
             marginBottom: '20px',
@@ -200,36 +213,42 @@ export const SmsOtpScreen: React.FC = () => {
             justifyContent: 'space-between',
             gap: '12px',
             boxSizing: 'border-box',
+            cursor: 'pointer',
+            boxShadow: '0 4px 20px rgba(0, 200, 83, 0.15)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '20px' }}>💬</span>
+            <span style={{ fontSize: '22px' }}>📩</span>
             <div style={{ textAlign: isRtl ? 'right' : 'left' }}>
-              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                {isAr ? 'رسالة نصية • الآن' : 'SMS OTP • Messages'}
+              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#00C853', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                {isAr ? 'رسالة نصية واردة • ريال باي' : 'Incoming SMS • Riyal Pay'}
               </div>
-              <div style={{ fontSize: '12px', color: '#FFFFFF', fontWeight: 600 }}>
-                {isAr ? 'رمز تحقق بوابة التاجر: ' : 'Merchant Code: '}
-                <strong style={{ color: '#00C853', fontSize: '14px', letterSpacing: '1px' }}>{activeOtp || '589204'}</strong>
+              <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 700, marginTop: '2px' }}>
+                {isAr ? 'رمز تحقق الدخول: ' : 'Verification Code: '}
+                <strong style={{ color: '#00C853', fontSize: '15px', letterSpacing: '1.5px' }}>{activeOtp || '589204'}</strong>
               </div>
             </div>
           </div>
           <button
             type="button"
-            onClick={() => handleQuickFill(activeOtp)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleQuickFill(activeOtp);
+            }}
             style={{
               backgroundColor: '#00C853',
               color: '#080C14',
               border: 'none',
-              borderRadius: '8px',
-              padding: '6px 12px',
-              fontSize: '11px',
+              borderRadius: '10px',
+              padding: '8px 14px',
+              fontSize: '11.5px',
               fontWeight: 800,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
+              boxShadow: '0 2px 8px rgba(0, 200, 83, 0.3)',
             }}
           >
-            {isAr ? 'تعبئة تلقائية' : 'Autofill'}
+            {isAr ? 'استرجاع الرمز' : 'Retrieve OTP'}
           </button>
         </div>
       )}
