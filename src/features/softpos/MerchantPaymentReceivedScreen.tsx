@@ -5,6 +5,7 @@ import {
   Plus,
   Volume2,
   Check,
+  Download,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { formatCurrency } from '../../utils/formatters';
@@ -12,6 +13,7 @@ import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../..
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { ZatcaLogo } from '../../components/ZatcaLogo';
 import { AppHeader } from '../../components/AppHeader';
+import { downloadReceiptTxt } from '../../utils/fileDownloader';
 
 export const MerchantPaymentReceivedScreen: React.FC = () => {
   const {
@@ -25,6 +27,7 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
 
   const isAr = language === 'العربية';
   const [copied, setCopied] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   const collection = lastMerchantCollection || {
     id: 'POS-8839201',
@@ -38,6 +41,24 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
     date: 'Today, ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     timestamp: new Date(),
     status: 'settled' as const,
+  };
+
+  const handleDownloadInvoice = () => {
+    downloadReceiptTxt({
+      orderRef: collection.orderRef || collection.id,
+      storeName: merchantInfo.businessName || 'Riyal Pay Merchant Store',
+      crNumber: merchantInfo.crNumber || '1010884920',
+      vatNumber: merchantInfo.vatNumber || '300928190000003',
+      customerMasked: collection.customerMasked,
+      paymentMethod: collection.paymentMethod,
+      cardLast4: collection.cardLast4,
+      grossAmount: collection.amount,
+      vatAmount: collection.vatAmount,
+      netAmount: collection.netAmount,
+      date: collection.date,
+    });
+    setDownloadSuccess(true);
+    setTimeout(() => setDownloadSuccess(false), 3000);
   };
 
   const handleShareReceipt = () => {
@@ -235,6 +256,35 @@ export const MerchantPaymentReceivedScreen: React.FC = () => {
               <span>{isAr ? 'إرسال بالواتساب' : 'WhatsApp'}</span>
             </button>
           </div>
+
+          {/* Download Official Tax Invoice / Receipt Button */}
+          <button
+            onClick={handleDownloadInvoice}
+            className="interactive-tap"
+            style={{
+              width: '100%',
+              marginTop: '10px',
+              backgroundColor: downloadSuccess ? 'rgba(0, 200, 83, 0.15)' : '#1E1E32',
+              border: downloadSuccess ? '1px solid #00C853' : '1px solid #2C2C44',
+              color: downloadSuccess ? '#00C853' : '#FFFFFF',
+              borderRadius: '10px',
+              padding: '10px 14px',
+              fontSize: '12px',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+            }}
+          >
+            {downloadSuccess ? <Check size={16} color="#00C853" /> : <Download size={16} color="#00C853" />}
+            <span>
+              {downloadSuccess
+                ? (isAr ? 'تم تحميل الفاتورة الضريبية الرسمية ✓' : 'ZATCA Tax Invoice Downloaded ✓')
+                : (isAr ? 'تحميل الفاتورة الضريبية المعتمدة (TXT / PDF)' : 'Download ZATCA Tax Invoice (TXT / PDF)')}
+            </span>
+          </button>
         </div>
       </div>
 

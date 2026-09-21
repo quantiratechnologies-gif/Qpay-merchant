@@ -6,20 +6,31 @@ import { Modal } from '../../components/Modal';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useApp } from '../../state/AppContext';
 import { translateText } from '../../utils/i18n';
+import { downloadAccountDataExport } from '../../utils/fileDownloader';
 
 export const PrivacyScreen: React.FC = () => {
-  const { language } = useApp();
+  const { language, merchantInfo, user, unsettledMerchantBalance, merchantCollections, merchantSettlements } = useApp();
   const [activeModal, setActiveModal] = useState<'preferences' | 'export' | 'terms' | null>(null);
   const [shareData, setShareData] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(true);
   const [exportSuccess, setExportSuccess] = useState(false);
 
   const handleExportData = () => {
+    downloadAccountDataExport({
+      merchantName: merchantInfo.businessName || user.name || 'Riyal Pay Merchant',
+      phone: user.mobile || merchantInfo.storePhone || '+966 50 123 4567',
+      crNumber: merchantInfo.crNumber || '1010884920',
+      vatNumber: merchantInfo.vatNumber || '300928190000003',
+      registrationDate: merchantInfo.registrationDate || '2026-01-15',
+      totalBalance: unsettledMerchantBalance || 14850.5,
+      collectionsCount: merchantCollections.length,
+      settlementsCount: merchantSettlements.length,
+    });
     setExportSuccess(true);
     setTimeout(() => {
       setExportSuccess(false);
       setActiveModal(null);
-    }, 1500);
+    }, 2000);
   };
 
   return (

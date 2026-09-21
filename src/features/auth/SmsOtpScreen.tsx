@@ -119,7 +119,6 @@ export const SmsOtpScreen: React.FC = () => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('qpay_merchant_authenticated', 'true');
       localStorage.setItem('qpay_merchant_authenticated', 'true');
-      localStorage.removeItem('qpay_merchant_pin');
     }
 
     try {

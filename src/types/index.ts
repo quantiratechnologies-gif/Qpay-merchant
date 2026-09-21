@@ -77,6 +77,7 @@ export interface MerchantInfo {
   storePhone: string;
   logoUrl?: string;
   businessImageUrl?: string;
+  registrationDate?: string;
 }
 
 export type PaymentAcceptanceMethod =

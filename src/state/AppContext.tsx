@@ -21,7 +21,13 @@ import { transactionService } from '../services/transactionService';
 import { notificationService } from '../services/notificationService';
 
 import { translateText, type SupportedLanguage } from '../utils/i18n';
-import { syncCollectionToSupabase, subscribeToMerchantCollections } from '../services/supabaseClient';
+import {
+  syncCollectionToSupabase,
+  subscribeToMerchantCollections,
+  generateMultiDateCollections,
+  saveMerchantProfileToSupabase,
+  syncSettlementToSupabase,
+} from '../services/supabaseClient';
 
 interface AppContextType {
   // Localization & Translation
@@ -161,75 +167,7 @@ const INITIAL_MERCHANT_INFO: MerchantInfo = {
   storePhone: '',
 };
 
-const INITIAL_MERCHANT_COLLECTIONS: MerchantCollection[] = [
-  {
-    id: 'POS-8839201',
-    orderRef: 'ORD-9841',
-    amount: 145.0,
-    vatAmount: 18.91,
-    netAmount: 126.09,
-    paymentMethod: 'softpos_mada',
-    cardLast4: '4821',
-    customerMasked: '+966 50 ••• 1234',
-    date: 'Today, 11:42 AM',
-    timestamp: new Date(),
-    status: 'settled',
-    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
-  },
-  {
-    id: 'POS-8839202',
-    orderRef: 'ORD-9842',
-    amount: 67.5,
-    vatAmount: 8.8,
-    netAmount: 58.7,
-    paymentMethod: 'softpos_applepay',
-    cardLast4: '1092',
-    customerMasked: '+966 55 ••• 8765',
-    date: 'Today, 10:15 AM',
-    timestamp: new Date(Date.now() - 3600000),
-    status: 'settled',
-    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
-  },
-  {
-    id: 'POS-8839203',
-    orderRef: 'INV-4019',
-    amount: 450.0,
-    vatAmount: 58.7,
-    netAmount: 391.3,
-    paymentMethod: 'zatca_qr',
-    customerMasked: 'Tariq Al-Otaibi',
-    date: 'Today, 09:30 AM',
-    timestamp: new Date(Date.now() - 7200000),
-    status: 'settled',
-    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
-  },
-  {
-    id: 'POS-8839204',
-    orderRef: 'LNK-2041',
-    amount: 1200.0,
-    vatAmount: 156.52,
-    netAmount: 1043.48,
-    paymentMethod: 'payment_link',
-    customerMasked: 'Sara Al-Mansoor',
-    date: 'Yesterday, 04:15 PM',
-    timestamp: new Date(Date.now() - 86400000),
-    status: 'settled',
-    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
-  },
-  {
-    id: 'CSH-1049201',
-    orderRef: 'REG-01',
-    amount: 80.0,
-    vatAmount: 10.43,
-    netAmount: 69.57,
-    paymentMethod: 'cash',
-    customerMasked: 'Cash Sale • Register 1',
-    date: 'Yesterday, 08:30 PM',
-    timestamp: new Date(Date.now() - 100000000),
-    status: 'settled',
-    zatcaQrCode: 'AQ1TdGFybWFydCBNYXJrZXQCBzMxMDk0ODIBDDIwMjYtMDktMTU=',
-  },
-];
+const INITIAL_MERCHANT_COLLECTIONS: MerchantCollection[] = generateMultiDateCollections();
 
 const INITIAL_MERCHANT_SETTLEMENTS: MerchantSettlement[] = [
   {
@@ -742,7 +680,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateMerchantInfo = (info: Partial<MerchantInfo>) => {
-    setMerchantInfo((prev) => ({ ...prev, ...info }));
+    setMerchantInfo((prev) => {
+      const next = { ...prev, ...info };
+      if (typeof window !== 'undefined') {
+        const activeMobile = sessionStorage.getItem('qpay_active_mobile') || next.storePhone?.replace(/\D/g, '') || user.mobile?.replace(/\D/g, '');
+        if (activeMobile) {
+          try {
+            localStorage.setItem(
+              'qpay_merchant_profile_' + activeMobile,
+              JSON.stringify({
+                user,
+                merchantInfo: next,
+                merchantCollections,
+                merchantSettlements,
+                bankAccounts,
+                unsettledMerchantBalance,
+              })
+            );
+            saveMerchantProfileToSupabase({
+              mobile: activeMobile,
+              user,
+              merchantInfo: next,
+              balance: unsettledMerchantBalance,
+            });
+          } catch (e) {}
+        }
+      }
+      return next;
+    });
   };
 
   const processMerchantCollection = async (params: {
@@ -856,7 +821,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     // Deduct settled amount from unsettled collection balance
-    setUnsettledMerchantBalance((prev) => Math.max(0, Number((prev - settleAmount).toFixed(2))));
+    const updatedUnsettled = Math.max(0, Number((unsettledMerchantBalance - settleAmount).toFixed(2)));
+    setUnsettledMerchantBalance(updatedUnsettled);
 
     // Credit transferred funds directly to primary bank account balance (starting from 50,000 SAR)
     setBankAccounts((prev) =>
@@ -869,6 +835,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     setMerchantSettlements((prev) => [newSettlement, ...prev]);
+    syncSettlementToSupabase(newSettlement);
+
+    // Auto-save snapshot
+    if (typeof window !== 'undefined') {
+      const activeMobile = sessionStorage.getItem('qpay_active_mobile') || merchantInfo.storePhone?.replace(/\D/g, '');
+      if (activeMobile) {
+        try {
+          localStorage.setItem(
+            'qpay_merchant_profile_' + activeMobile,
+            JSON.stringify({
+              user,
+              merchantInfo,
+              merchantCollections,
+              merchantSettlements: [newSettlement, ...merchantSettlements],
+              bankAccounts,
+              unsettledMerchantBalance: updatedUnsettled,
+            })
+          );
+        } catch (e) {}
+      }
+    }
 
     const newNotif: AppNotification = {
       id: `notif-${Date.now()}`,
@@ -948,20 +935,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(stored);
         if (parsed.merchantInfo && parsed.merchantInfo.businessName) {
-          setMerchantInfo(parsed.merchantInfo);
+          const restoredMerchantInfo: MerchantInfo = {
+            ...INITIAL_MERCHANT_INFO,
+            ...parsed.merchantInfo,
+            isKycVerified: true,
+            merchantPin: parsed.merchantInfo.merchantPin || '2026',
+            registrationDate: parsed.merchantInfo.registrationDate || '2026-01-15',
+          };
+          setMerchantInfo(restoredMerchantInfo);
           if (parsed.user) setUser(parsed.user);
-          if (parsed.merchantCollections) setMerchantCollections(parsed.merchantCollections);
+          if (parsed.merchantCollections && parsed.merchantCollections.length > 0) {
+            setMerchantCollections(parsed.merchantCollections);
+          } else {
+            setMerchantCollections(generateMultiDateCollections());
+          }
           if (parsed.merchantSettlements) setMerchantSettlements(parsed.merchantSettlements);
           if (parsed.bankAccounts) setBankAccounts(parsed.bankAccounts);
+          if (parsed.unsettledMerchantBalance !== undefined) setUnsettledMerchantBalance(parsed.unsettledMerchantBalance);
+          
           setIsAuthenticated(true);
           sessionStorage.setItem('qpay_merchant_authenticated', 'true');
           sessionStorage.setItem('qpay_active_mobile', cleanDigits);
-          return true; // Existing merchant with setup -> go to Home
+          localStorage.setItem('qpay_active_mobile', cleanDigits);
+          return true; // Existing merchant with setup -> go directly to Home
         }
       } catch (e) {}
     }
 
-    // New number -> fresh clean merchant state!
+    // New number -> fresh clean merchant state with multi-date analytics ready
     const newUser: User = {
       name,
       avatarInitials:
@@ -977,8 +978,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       tier: 'basic',
     };
     setUser(newUser);
-    setMerchantInfo({ ...INITIAL_MERCHANT_INFO, storePhone: `+966 ${cleanDigits}` });
-    setMerchantCollections(INITIAL_MERCHANT_COLLECTIONS);
+    setMerchantInfo({
+      ...INITIAL_MERCHANT_INFO,
+      storePhone: `+966 ${cleanDigits}`,
+      registrationDate: new Date().toISOString().slice(0, 10),
+      isKycVerified: false,
+    });
+    setMerchantCollections(generateMultiDateCollections());
     setMerchantSettlements(INITIAL_MERCHANT_SETTLEMENTS);
     setBankAccounts([
       {
@@ -994,6 +1000,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsAuthenticated(true);
     sessionStorage.setItem('qpay_merchant_authenticated', 'true');
     sessionStorage.setItem('qpay_active_mobile', cleanDigits);
+    localStorage.setItem('qpay_active_mobile', cleanDigits);
     return false; // Fresh onboarding needed
   };
 

@@ -273,6 +273,12 @@ export const ProfileScreen: React.FC = () => {
                   {merchantInfo.vatNumber ? merchantInfo.vatNumber.slice(-8) : '30092819'}
                 </strong>
               </div>
+              <div style={{ fontSize: '11px', color: '#64748B', gridColumn: 'span 2' }}>
+                {isAr ? 'تاريخ التسجيل المعتمد:' : 'Registered Date:'}{' '}
+                <strong style={{ color: '#00C853', fontFamily: 'monospace' }}>
+                  {merchantInfo.registrationDate || '2026-01-15'}
+                </strong>
+              </div>
             </div>
           </div>
         </div>
