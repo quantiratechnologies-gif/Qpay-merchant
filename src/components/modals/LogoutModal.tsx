@@ -70,8 +70,8 @@ export const LogoutModal: React.FC = () => {
           </h3>
           <p style={{ color: '#94A3B8', fontSize: '14px', marginBottom: '24px' }}>
             {language === 'العربية'
-              ? 'هل أنت متأكد من تسجيل الخروج من كيو تي باي؟ سيتم إنهاء جلستك بأمان.'
-              : 'Are you sure you want to log out of QTPay? Your session will be safely cleared.'}
+              ? 'هل أنت متأكد من تسجيل الخروج من ريال باي؟ سيتم إنهاء جلستك بأمان.'
+              : 'Are you sure you want to log out of Riyal Pay? Your session will be safely cleared.'}
           </p>
 
           <div style={{ display: 'flex', gap: '12px' }}>

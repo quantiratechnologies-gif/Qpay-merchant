@@ -714,12 +714,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           maximumFractionDigits: 2,
         });
         const text = isArabic
-          ? `تم استلام ${formattedAmt} ريال سعودي عبر ريال باي`
+          ? `تم استلام ${formattedAmt} ريال سعودي عبر تطبيق ريال باي`
           : `Received ${formattedAmt} Saudi Riyals on Riyal Pay`;
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = isArabic ? 'ar-SA' : 'en-US';
-        utterance.rate = 0.95;
+        utterance.rate = 0.92;
         utterance.volume = volFraction;
+
+        // Select native Arabic / English voice if available
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length > 0) {
+          const targetPrefix = isArabic ? 'ar' : 'en';
+          const matchedVoice = voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(targetPrefix));
+          if (matchedVoice) {
+            utterance.voice = matchedVoice;
+          }
+        }
+
         window.speechSynthesis.speak(utterance);
       }
     } catch {
