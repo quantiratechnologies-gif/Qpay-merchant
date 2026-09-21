@@ -240,7 +240,7 @@ export const KycModal: React.FC = () => {
               </div>
             </div>
 
-            {/* Commercial License Document Attachment Upload (Bug 23) */}
+            {/* Commercial License & ZATCA Certificate PDF Document Upload */}
             <div>
               <label
                 style={{
@@ -250,16 +250,28 @@ export const KycModal: React.FC = () => {
                   marginBottom: '6px',
                 }}
               >
-                {language === 'العربية' ? 'وثيقة السجل التجاري / رخصة البلدية' : 'Commercial License Document Attachment'}
+                {language === 'العربية' ? 'وثيقة السجل التجاري / الشهادة الضريبية (ملف PDF فقط)' : 'Commercial Registration / ZATCA Certificate (PDF Only)'}
               </label>
               <input
                 type="file"
                 ref={fileInputRef}
                 style={{ display: 'none' }}
-                accept=".pdf,.png,.jpg,.jpeg"
+                accept="application/pdf,.pdf"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
+                    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                    if (!isPdf) {
+                      setErrorMsg(
+                        language === 'العربية'
+                          ? 'نوع الملف غير صالح. يُقبل فقط المستندات بصيغة PDF الرسمية.'
+                          : 'Invalid file type. Only official PDF documents are accepted.'
+                      );
+                      setDocUploaded(false);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                      return;
+                    }
+                    setErrorMsg('');
                     setDocName(file.name);
                     setDocUploaded(true);
                   }
@@ -283,10 +295,10 @@ export const KycModal: React.FC = () => {
                   <Paperclip size={18} color="#00C853" style={{ flexShrink: 0 }} />
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {docName}
+                      {docName || (language === 'العربية' ? 'السجل_التجاري_المعتمد.pdf' : 'Commercial_Registration_Certificate.pdf')}
                     </div>
                     <div style={{ fontSize: '11px', color: '#64748B' }}>
-                      {docUploaded ? (language === 'العربية' ? 'مرفق ومتحقق منه (PDF • 1.4 MB)' : 'Attached & Verified (PDF • 1.4 MB)') : (language === 'العربية' ? 'انقر لرفع المستند' : 'Tap to browse document')}
+                      {docUploaded ? (language === 'العربية' ? 'مرفق ومتحقق منه (PDF • 1.4 MB)' : 'Attached & Verified (PDF • 1.4 MB)') : (language === 'العربية' ? 'انقر لرفع ملف PDF من جهازك' : 'Tap to browse PDF document')}
                     </div>
                   </div>
                 </div>

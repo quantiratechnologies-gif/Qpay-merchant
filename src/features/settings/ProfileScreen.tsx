@@ -639,50 +639,7 @@ export const ProfileScreen: React.FC = () => {
             <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </div>
 
-          {/* Row 2: Manage Staff */}
-          <div
-            onClick={() => navigateTo('MERCHANT_HOME')}
-            className="interactive-tap"
-            style={{
-              padding: '14px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              cursor: 'pointer',
-              borderBottom: '1px solid #1E293B',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '12px',
-                  backgroundColor: '#161F30',
-                  border: '1px solid #2A364F',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#CBD5E1',
-                  flexShrink: 0,
-                }}
-              >
-                <Users size={18} />
-              </div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
-                {isAr ? 'إدارة طاقم العمل' : 'Manage Staff'}
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 600 }}>
-                {isAr ? '٣ نشطين' : '3 Active'}
-              </span>
-              <ChevronRight size={16} color="#64748B" style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </div>
-          </div>
-
-          {/* Row 3: Change Language */}
+          {/* Row 2: Change Language */}
           <div
             onClick={() => setIsLanguageModalOpen(true)}
             className="interactive-tap"

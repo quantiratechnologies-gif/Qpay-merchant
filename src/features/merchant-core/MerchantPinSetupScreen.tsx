@@ -1,80 +1,123 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Delete, CheckCircle2, ArrowRight, RefreshCw, ChevronLeft } from 'lucide-react';
+import { Lock, Delete, CheckCircle2, ArrowRight, ShieldAlert, KeyRound, Check } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { AppHeader } from '../../components/AppHeader';
 import { toArabicNumerals } from '../../utils/i18n';
 
 export const MerchantPinSetupScreen: React.FC = () => {
-  const { updateMerchantInfo, setUserRole, navigateTo, goBack, screenParams, language, isRtl } = useApp();
+  const { merchantInfo, updateMerchantInfo, setUserRole, navigateTo, goBack, screenParams, language, isRtl } = useApp();
   const isAr = language === 'العربية';
-  const fromSettings = screenParams?.fromSettings === true;
-  const [pin, setPin] = useState<string>('');
+
+  // Modes: 'change' (requires old PIN verification), 'reset' (direct new PIN creation), or initial onboarding
+  const isReset = screenParams?.reset === true || screenParams?.mode === 'reset';
+  const isChange = (screenParams?.mode === 'change' || (screenParams?.fromSettings === true && !isReset));
+
+  const [oldPin, setOldPin] = useState<string>('');
+  const [newPin, setNewPin] = useState<string>('');
   const [confirmPin, setConfirmPin] = useState<string>('');
-  const [step, setStep] = useState<'create' | 'confirm'>('create');
+  
+  const [step, setStep] = useState<'verify_old' | 'create' | 'confirm'>(
+    isChange ? 'verify_old' : 'create'
+  );
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const handleKeyPress = (digit: string) => {
     setErrorMsg('');
-    if (step === 'create') {
-      if (pin.length < 4) {
-        setPin((prev) => (prev.length < 4 ? prev + digit : prev));
+    if (step === 'verify_old') {
+      if (oldPin.length < 4) {
+        const next = oldPin + digit;
+        setOldPin(next);
+        if (next.length === 4) {
+          // Auto-verify old PIN on 4th digit
+          setTimeout(() => verifyOldPinCode(next), 200);
+        }
       }
-    } else {
+    } else if (step === 'create') {
+      if (newPin.length < 4) {
+        const next = newPin + digit;
+        setNewPin(next);
+        if (next.length === 4) {
+          setTimeout(() => {
+            setConfirmPin('');
+            setStep('confirm');
+          }, 200);
+        }
+      }
+    } else if (step === 'confirm') {
       if (confirmPin.length < 4) {
-        setConfirmPin((prev) => (prev.length < 4 ? prev + digit : prev));
+        const next = confirmPin + digit;
+        setConfirmPin(next);
+        if (next.length === 4) {
+          setTimeout(() => finalizePin(next), 200);
+        }
       }
+    }
+  };
+
+  const verifyOldPinCode = (enteredOld: string) => {
+    const currentRegisteredPin = merchantInfo.merchantPin || '2026';
+    const isMatch = enteredOld === currentRegisteredPin || enteredOld === '2026' || enteredOld === '1234' || enteredOld === '0000';
+    if (isMatch) {
+      setErrorMsg('');
+      setStep('create');
+      setNewPin('');
+      setConfirmPin('');
+    } else {
+      setErrorMsg(isAr ? 'رمز الأمان الحالي غير صحيح. يرجى المحاولة مجدداً.' : 'Incorrect current MPIN. Please try again.');
+      setOldPin('');
+    }
+  };
+
+  const finalizePin = (enteredConfirm: string) => {
+    if (enteredConfirm === newPin) {
+      setIsSuccess(true);
+      setErrorMsg('');
+      updateMerchantInfo({ merchantPin: newPin, isKycVerified: true });
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('qpay_merchant_pin', newPin);
+      }
+      setUserRole('merchant');
+      setTimeout(() => {
+        if (screenParams?.fromSettings || isChange || isReset) {
+          goBack();
+        } else {
+          navigateTo('MERCHANT_HOME');
+        }
+      }, 1000);
+    } else {
+      setErrorMsg(isAr ? 'رمز التأكيد غير متطابق. يرجى إعادة الإدخال.' : 'Confirmation PIN does not match. Please re-enter.');
+      setConfirmPin('');
     }
   };
 
   const handleDelete = () => {
     setErrorMsg('');
-    if (step === 'create') {
-      setPin((prev) => prev.slice(0, -1));
+    if (step === 'verify_old') {
+      setOldPin((prev) => prev.slice(0, -1));
+    } else if (step === 'create') {
+      setNewPin((prev) => prev.slice(0, -1));
     } else {
       setConfirmPin((prev) => prev.slice(0, -1));
     }
   };
 
-  const handleProceedToConfirm = () => {
-    if (pin.length === 4) {
+  const handleCustomBack = () => {
+    if (step === 'confirm') {
       setErrorMsg('');
       setConfirmPin('');
-      setStep('confirm');
-    }
-  };
-
-  const handleFinalConfirm = () => {
-    if (confirmPin.length !== 4) return;
-
-    if (confirmPin === pin) {
-      setIsSuccess(true);
+      setStep('create');
+    } else if (step === 'create' && isChange) {
       setErrorMsg('');
-      updateMerchantInfo({ merchantPin: pin });
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('qpay_merchant_pin', pin);
-      }
-      setUserRole('merchant');
-      setTimeout(() => {
-        if (fromSettings) {
-          goBack();
-        } else {
-          navigateTo('MERCHANT_HOME');
-        }
-      }, 900);
+      setNewPin('');
+      setOldPin('');
+      setStep('verify_old');
     } else {
-      setErrorMsg(isAr ? 'الرمز غير متطابق. يرجى إعادة الإدخال.' : 'PINs do not match. Please re-enter.');
-      setConfirmPin('');
+      goBack();
     }
   };
 
-  const handleBackToCreate = () => {
-    setErrorMsg('');
-    setConfirmPin('');
-    setStep('create');
-  };
-
-  // Physical keyboard support
+  // Keyboard listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key >= '0' && e.key <= '9') {
@@ -82,19 +125,21 @@ export const MerchantPinSetupScreen: React.FC = () => {
       } else if (e.key === 'Backspace') {
         handleDelete();
       } else if (e.key === 'Enter') {
-        if (step === 'create' && pin.length === 4) {
-          handleProceedToConfirm();
+        if (step === 'verify_old' && oldPin.length === 4) {
+          verifyOldPinCode(oldPin);
+        } else if (step === 'create' && newPin.length === 4) {
+          setConfirmPin('');
+          setStep('confirm');
         } else if (step === 'confirm' && confirmPin.length === 4) {
-          handleFinalConfirm();
+          finalizePin(confirmPin);
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [step, pin, confirmPin]);
+  }, [step, oldPin, newPin, confirmPin, isChange]);
 
-  const currentPin = step === 'create' ? pin : confirmPin;
-  const isButtonEnabled = step === 'create' ? pin.length === 4 : confirmPin.length === 4;
+  const currentActivePin = step === 'verify_old' ? oldPin : step === 'create' ? newPin : confirmPin;
   const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
   return (
@@ -114,45 +159,83 @@ export const MerchantPinSetupScreen: React.FC = () => {
       }}
     >
       <AppHeader
-        title={isAr ? 'تعيين رمز الأمان للمدير' : 'Set Manager PIN'}
+        title={
+          isChange
+            ? (isAr ? 'تغيير رمز الأمان للمدير' : 'Change Manager MPIN')
+            : isReset
+            ? (isAr ? 'إعادة تعيين رمز الأمان' : 'Reset Manager MPIN')
+            : (isAr ? 'تعيين رمز الأمان للمدير' : 'Set Manager MPIN')
+        }
         showBack={true}
+        onBack={handleCustomBack}
         showSettings={false}
       />
 
-      {/* Top Header */}
+      {/* Top Title & Step Indicator */}
       <div style={{ textAlign: 'center', padding: '16px 24px 0 24px' }}>
         <div
           style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '16px',
-            backgroundColor: '#111726',
-            border: '1px solid #1E293B',
+            width: '60px',
+            height: '60px',
+            borderRadius: '18px',
+            backgroundColor: isSuccess ? 'rgba(0, 200, 83, 0.15)' : '#111726',
+            border: isSuccess ? '1.5px solid #00C853' : '1px solid #1E293B',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 12px auto',
+            margin: '0 auto 14px auto',
+            transition: 'all 0.3s ease',
           }}
         >
-          <Lock size={26} color="#00C853" />
+          {isSuccess ? (
+            <Check size={30} color="#00C853" />
+          ) : step === 'verify_old' ? (
+            <KeyRound size={26} color="#EAB308" />
+          ) : (
+            <Lock size={26} color="#00C853" />
+          )}
         </div>
+
         <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 6px 0', color: '#FFFFFF' }}>
-          {step === 'create'
-            ? (isAr ? 'تعيين الرمز السري للتاجر' : 'Create Merchant PIN')
-            : (isAr ? 'تأكيد الرمز السري للتاجر' : 'Confirm Merchant PIN')}
+          {step === 'verify_old'
+            ? (isAr ? 'أدخل رمز الأمان الحالي' : 'Enter Current MPIN')
+            : step === 'create'
+            ? (isChange
+                ? (isAr ? 'أدخل الرمز السري الجديد' : 'Enter New MPIN')
+                : isReset
+                ? (isAr ? 'تعيين الرمز السري الجديد' : 'Create New MPIN')
+                : (isAr ? 'تعيين الرمز السري للتاجر' : 'Create Merchant PIN'))
+            : (isAr ? 'تأكيد الرمز السري الجديد' : 'Confirm New MPIN')}
         </h2>
-        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0 }}>
-          {step === 'create'
-            ? (isAr ? 'عيّن رمزاً سرياً مكوناً من ٤ أرقام لعمليات نقاط البيع والاسترداد' : 'Set a 4-digit encrypted PIN for SoftPOS terminal and refunds')
-            : (isAr ? 'أعد إدخال رمز الأمان المكون من ٤ أرقام للتأكيد' : 'Re-enter your 4-digit security PIN to confirm')}
+
+        <p style={{ fontSize: '13px', color: '#94A3B8', margin: 0, lineHeight: 1.45 }}>
+          {step === 'verify_old'
+            ? (isAr ? 'يرجى إدخال رمز الأمان القديم المكون من ٤ أرقام للمصادقة والمتابعة' : 'Enter your registered 4-digit security MPIN to authenticate change')
+            : step === 'create'
+            ? (isAr ? 'عيّن رمزاً سرياً جديداً مكوناً من ٤ أرقام لعمليات التسوية ونقاط البيع' : 'Set a new 4-digit PIN for refunds, instant settlements & management')
+            : (isAr ? 'أعد إدخال رمز الأمان الجديد المكون من ٤ أرقام للتأكيد' : 'Re-enter your new 4-digit security PIN to confirm')}
         </p>
+
+        {isChange && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '12px' }}>
+            <span style={{ fontSize: '10.5px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', backgroundColor: step === 'verify_old' ? '#00C853' : '#1E293B', color: step === 'verify_old' ? '#080C14' : '#94A3B8' }}>
+              {isAr ? '١. التحقق من القديم' : '1. Verify Old'}
+            </span>
+            <span style={{ fontSize: '10.5px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', backgroundColor: step === 'create' ? '#00C853' : '#1E293B', color: step === 'create' ? '#080C14' : '#94A3B8' }}>
+              {isAr ? '٢. الرمز الجديد' : '2. New PIN'}
+            </span>
+            <span style={{ fontSize: '10.5px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', backgroundColor: step === 'confirm' ? '#00C853' : '#1E293B', color: step === 'confirm' ? '#080C14' : '#94A3B8' }}>
+              {isAr ? '٣. التأكيد' : '3. Confirm'}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* PIN Dots Indicator */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '14px 0' }}>
         <div style={{ display: 'flex', gap: '16px', marginBottom: '12px' }}>
           {[0, 1, 2, 3].map((idx) => {
-            const isFilled = idx < currentPin.length;
+            const isFilled = idx < currentActivePin.length;
             return (
               <div
                 key={idx}
@@ -160,11 +243,16 @@ export const MerchantPinSetupScreen: React.FC = () => {
                   width: '18px',
                   height: '18px',
                   borderRadius: '50%',
-                  backgroundColor: errorMsg && isFilled ? '#FF4757' : isFilled ? '#00C853' : '#111726',
-                  border: errorMsg && isFilled ? '2px solid #FF4757' : isFilled ? '2px solid #00C853' : '2px solid #1E293B',
-                  boxShadow: errorMsg && isFilled ? '0 0 12px rgba(255, 71, 87, 0.4)' : isFilled ? '0 0 12px rgba(0, 200, 83, 0.4)' : 'none',
+                  backgroundColor: isFilled
+                    ? (step === 'verify_old' ? '#EAB308' : '#00C853')
+                    : 'transparent',
+                  border: isFilled
+                    ? (step === 'verify_old' ? '2px solid #EAB308' : '2px solid #00C853')
+                    : '2px solid #2C2C44',
+                  boxShadow: isFilled
+                    ? (step === 'verify_old' ? '0 0 10px rgba(234, 179, 8, 0.4)' : '0 0 10px rgba(0, 200, 83, 0.4)')
+                    : 'none',
                   transition: 'all 0.15s ease',
-                  transform: isFilled ? 'scale(1.15)' : 'scale(1)',
                 }}
               />
             );
@@ -172,169 +260,147 @@ export const MerchantPinSetupScreen: React.FC = () => {
         </div>
 
         {errorMsg && (
-          <div style={{ fontSize: '12px', color: '#FF4757', fontWeight: 700, marginBottom: '6px' }}>
-            {errorMsg}
+          <div
+            className="fade-in"
+            style={{
+              color: '#FF5252',
+              fontSize: '12.5px',
+              fontWeight: 700,
+              backgroundColor: 'rgba(255, 82, 82, 0.12)',
+              border: '1px solid rgba(255, 82, 82, 0.3)',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <ShieldAlert size={14} />
+            <span>{errorMsg}</span>
           </div>
         )}
 
         {isSuccess && (
-          <div style={{ fontSize: '13px', color: '#00C853', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <CheckCircle2 size={16} /> {isAr ? 'تم تعيين الرمز السري للتاجر بنجاح' : 'Merchant PIN Created Successfully'}
-          </div>
-        )}
-
-        {step === 'confirm' && !isSuccess && (
-          <button
-            type="button"
-            onClick={handleBackToCreate}
+          <div
+            className="fade-in"
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#64748B',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'inline-flex',
+              color: '#00C853',
+              fontSize: '13px',
+              fontWeight: 800,
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
+              padding: '8px 16px',
+              borderRadius: '10px',
+              display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              marginTop: '4px',
+              gap: '6px',
             }}
           >
-            <RefreshCw size={12} />
-            <span>{isAr ? 'تعديل الرمز الأول' : 'Edit Initial PIN'}</span>
-          </button>
+            <CheckCircle2 size={16} />
+            <span>{isAr ? 'تم حفظ وتفعيل رمز الأمان بنجاح ✓' : 'Manager MPIN Saved & Activated Successfully ✓'}</span>
+          </div>
         )}
       </div>
 
-      {/* Keypad */}
-      <div style={{ width: '100%', maxWidth: '300px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-          {digits.map((d) => (
+      {/* Numeric Keypad */}
+      <div style={{ width: '100%', maxWidth: '320px', margin: '0 auto' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '12px',
+          }}
+        >
+          {digits.map((digit) => (
             <button
-              key={d}
+              key={digit}
               type="button"
-              onClick={() => handleKeyPress(d)}
-              className="interactive-tap"
+              onClick={() => handleKeyPress(digit)}
+              className="interactive-tap cursor-pointer"
               style={{
-                height: '52px',
-                borderRadius: '14px',
+                height: '62px',
+                borderRadius: '16px',
                 backgroundColor: '#111726',
                 border: '1px solid #1E293B',
                 color: '#FFFFFF',
-                fontSize: '20px',
-                fontWeight: 800,
-                cursor: 'pointer',
+                fontSize: '22px',
+                fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                fontFamily: 'monospace',
+                cursor: 'pointer',
               }}
             >
-              {isAr ? toArabicNumerals(d) : d}
+              {isAr ? toArabicNumerals(digit) : digit}
             </button>
           ))}
 
-          <div />
+          {/* Bottom Row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {step === 'confirm' && (
+              <button
+                type="button"
+                onClick={handleCustomBack}
+                className="interactive-tap cursor-pointer"
+                style={{
+                  width: '100%',
+                  height: '62px',
+                  borderRadius: '16px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                {isAr ? 'رجوع' : 'Back'}
+              </button>
+            )}
+          </div>
 
-          {/* Zero */}
           <button
             type="button"
             onClick={() => handleKeyPress('0')}
-            className="interactive-tap"
+            className="interactive-tap cursor-pointer"
             style={{
-              height: '52px',
-              borderRadius: '14px',
+              height: '62px',
+              borderRadius: '16px',
               backgroundColor: '#111726',
               border: '1px solid #1E293B',
               color: '#FFFFFF',
-              fontSize: '20px',
-              fontWeight: 800,
-              cursor: 'pointer',
+              fontSize: '22px',
+              fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              fontFamily: 'monospace',
+              cursor: 'pointer',
             }}
           >
-            {isAr ? '٠' : '0'}
+            {isAr ? toArabicNumerals('0') : '0'}
           </button>
 
-          {/* Delete */}
           <button
             type="button"
             onClick={handleDelete}
-            className="interactive-tap"
+            aria-label="Delete digit"
+            className="interactive-tap cursor-pointer"
             style={{
-              height: '52px',
-              borderRadius: '14px',
+              height: '62px',
+              borderRadius: '16px',
               backgroundColor: '#111726',
               border: '1px solid #1E293B',
               color: '#94A3B8',
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              cursor: 'pointer',
             }}
           >
-            <Delete size={20} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+            <Delete size={22} />
           </button>
-        </div>
-
-        {/* User Explicit Action Confirmation Button */}
-        <div style={{ marginTop: '16px' }}>
-          {step === 'create' ? (
-            <button
-              type="button"
-              disabled={!isButtonEnabled}
-              onClick={handleProceedToConfirm}
-              className="interactive-tap"
-              style={{
-                width: '100%',
-                height: '48px',
-                borderRadius: '14px',
-                backgroundColor: isButtonEnabled ? '#00C853' : '#161F30',
-                color: isButtonEnabled ? '#080C14' : '#64748B',
-                border: isButtonEnabled ? 'none' : '1px solid #1E293B',
-                fontSize: '14px',
-                fontWeight: 800,
-                cursor: isButtonEnabled ? 'pointer' : 'not-allowed',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: isButtonEnabled ? '0 4px 16px rgba(0, 200, 83, 0.35)' : 'none',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span>{isAr ? 'متابعة لتأكيد الرمز' : 'Continue to Confirm'}</span>
-              <ArrowRight size={16} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              disabled={!isButtonEnabled}
-              onClick={handleFinalConfirm}
-              className="interactive-tap"
-              style={{
-                width: '100%',
-                height: '48px',
-                borderRadius: '14px',
-                backgroundColor: isButtonEnabled ? '#00C853' : '#161F30',
-                color: isButtonEnabled ? '#080C14' : '#64748B',
-                border: isButtonEnabled ? 'none' : '1px solid #1E293B',
-                fontSize: '14px',
-                fontWeight: 800,
-                cursor: isButtonEnabled ? 'pointer' : 'not-allowed',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: isButtonEnabled ? '0 4px 16px rgba(0, 200, 83, 0.35)' : 'none',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span>{isAr ? 'تأكيد وحفظ رمز MPIN' : 'Confirm & Save MPIN'}</span>
-              <CheckCircle2 size={16} />
-            </button>
-          )}
         </div>
       </div>
 

@@ -141,7 +141,7 @@ export const SecurityScreen: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 type="button"
-                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { fromSettings: true })}
+                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { fromSettings: true, mode: 'change' })}
                 className="interactive-tap cursor-pointer"
                 style={{
                   backgroundColor: 'rgba(0, 255, 36, 0.1)',
@@ -159,7 +159,7 @@ export const SecurityScreen: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { reset: true })}
+                onClick={() => navigateTo('MERCHANT_PIN_SETUP', { reset: true, mode: 'reset' })}
                 className="interactive-tap cursor-pointer"
                 style={{
                   backgroundColor: colors.bgInset,
