@@ -19,9 +19,9 @@ import {
 import { useApp } from '../../state/AppContext';
 import { formatCurrency } from '../../utils/formatters';
 import type { MerchantCollection } from '../../types';
-import { PrimaryButton } from '../../components/PrimaryButton';
 import { AppHeader } from '../../components/AppHeader';
 import { translateText, formatSaudiCurrency, formatLocalizedNumber } from '../../utils/i18n';
+import { downloadZatcaTaxInvoice, downloadCsv } from '../../utils/fileDownloader';
 
 export const MerchantCollectionsScreen: React.FC = () => {
   const {
@@ -127,14 +127,68 @@ export const MerchantCollectionsScreen: React.FC = () => {
   };
 
   const handleDownloadTaxInvoice = (settlementRef: string) => {
+    const s = merchantSettlements.find((item) => item.settlementRef === settlementRef) || {
+      settlementRef,
+      utr: 'SARIE' + Math.floor(10000000000 + Math.random() * 90000000000),
+      amount: 1862.50,
+      vatAmount: 242.93,
+      date: 'Today, 06:00 AM',
+      bankName: merchantInfo.settlementBank || 'Al Rajhi Bank',
+      ibanMasked: merchantInfo.settlementIban || 'SA03 8000 •••• 5005',
+    };
+    downloadZatcaTaxInvoice({
+      settlementRef: s.settlementRef,
+      utr: s.utr || 'SARIE88290184201',
+      storeName: merchantInfo.businessName || 'Riyal Pay Merchant Store',
+      crNumber: merchantInfo.crNumber || '1010884920',
+      vatNumber: merchantInfo.vatNumber || '300928190000003',
+      settleBank: s.bankName || 'Al Rajhi Bank',
+      iban: s.ibanMasked || 'SA03 8000 •••• 5005',
+      grossAmount: s.amount,
+      vatAmount: s.vatAmount,
+      netAmount: Number((s.amount / 1.15).toFixed(2)),
+      date: s.date || 'Today',
+    });
     setDownloadSuccessMsg(
       isAr
-        ? `جاري تحميل الفاتورة الضريبية الرسمية لـ ${settlementRef} بتنسيق ZATCA PDF...`
-        : `Downloading ZATCA VAT Tax Invoice for ${settlementRef}...`
+        ? `✓ تم تحميل الفاتورة الضريبية لـ ${settlementRef} بنجاح`
+        : `✓ ZATCA VAT Tax Invoice for ${settlementRef} downloaded successfully!`
     );
     setTimeout(() => {
       setDownloadSuccessMsg(null);
-    }, 3000);
+    }, 3500);
+  };
+
+  const handleExportCollectionsCsv = () => {
+    const headers = [
+      'Transaction ID',
+      'Order Ref',
+      'Customer',
+      'Gross Amount (SAR)',
+      'VAT 15% (SAR)',
+      'Net Amount (SAR)',
+      'Payment Rail',
+      'Status',
+      'Date & Time',
+    ];
+    const rows = merchantCollections.map((c) => [
+      c.id,
+      c.orderRef,
+      c.customerMasked || 'Walk-in Customer',
+      c.amount.toFixed(2),
+      c.vatAmount.toFixed(2),
+      c.netAmount.toFixed(2),
+      c.paymentMethod.replace('softpos_', '').toUpperCase(),
+      c.status.toUpperCase(),
+      c.date,
+    ]);
+    downloadCsv(`RiyalPay-Collections-Ledger-${new Date().toISOString().slice(0, 10)}`, headers, rows);
+    setDownloadSuccessMsg(
+      isAr
+        ? '✓ تم تصدير وتحميل تقرير التحصيلات (CSV) بنجاح'
+        : '✓ Collections report (CSV) exported & downloaded successfully!'
+    );
+    setTimeout(() => setDownloadSuccessMsg(null), 3500);
   };
 
   const renderPaymentIcon = (method: string) => {
@@ -300,21 +354,30 @@ export const MerchantCollectionsScreen: React.FC = () => {
           onBack={() => navigateTo('MERCHANT_INSIGHTS')}
           showSettings={false}
           rightAction={
-            <div
+            <button
+              type="button"
+              onClick={handleExportCollectionsCsv}
+              className="interactive-tap"
+              title={isAr ? 'تصدير تقرير العمليات CSV' : 'Export Collections CSV'}
               style={{
-                width: '38px',
                 height: '38px',
+                padding: '0 12px',
                 borderRadius: '12px',
                 backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                border: '1px solid rgba(0, 200, 83, 0.25)',
+                border: '1px solid rgba(0, 200, 83, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                gap: '6px',
                 color: '#00C853',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: 800,
               }}
             >
-              <Receipt size={18} />
-            </div>
+              <Download size={15} />
+              <span>{isAr ? 'تصدير CSV' : 'Export'}</span>
+            </button>
           }
         />
 

@@ -15,10 +15,12 @@ import {
   Clock,
   ChevronRight,
   Info,
+  Download,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { AppHeader } from '../../components/AppHeader';
 import { formatSaudiCurrency, formatLocalizedNumber } from '../../utils/i18n';
+import { downloadCsv } from '../../utils/fileDownloader';
 
 type InsightPeriod = 'today' | 'week' | 'month' | 'custom';
 
@@ -37,6 +39,46 @@ export const MerchantInsightsScreen: React.FC = () => {
   const isAr = language === 'العربية';
   const [selectedPeriod, setSelectedPeriod] = useState<InsightPeriod>('today');
   const [activeRailFilter, setActiveRailFilter] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const handleExportTaxAuditReport = () => {
+    const headers = [
+      'Report Type',
+      'Period',
+      'Business Name',
+      'CR Number',
+      'VAT ID',
+      'Gross Sales (SAR)',
+      'Taxable Net Sales (SAR)',
+      '15% VAT Collected (SAR)',
+      'Transactions Count',
+      'Generated Date',
+    ];
+    const rows = [
+      [
+        'ZATCA Phase 2 Audit & Analytics Report',
+        selectedPeriod.toUpperCase(),
+        merchantInfo.businessName || 'Riyal Pay Merchant Store',
+        merchantInfo.crNumber || '1010884920',
+        merchantInfo.vatNumber || '300928190000003',
+        periodMetrics.totalVolume.toFixed(2),
+        periodMetrics.netVolume.toFixed(2),
+        periodMetrics.vat15.toFixed(2),
+        periodMetrics.totalTxns,
+        new Date().toISOString(),
+      ],
+      [],
+      ['Payment Method / Rail', 'Volume (SAR)', 'Percentage Share'],
+      ...periodMetrics.rails.map((r) => [r.label, r.amount.toFixed(2), `${r.percent}%`]),
+    ];
+    downloadCsv(`RiyalPay-Tax-Audit-${selectedPeriod}-${new Date().toISOString().slice(0, 10)}`, headers, rows);
+    setToastMsg(
+      isAr
+        ? '✓ تم تصدير وتحميل التقرير الضريبي والمالي (CSV) بنجاح'
+        : '✓ Tax & Financial Audit Report (CSV) exported successfully!'
+    );
+    setTimeout(() => setToastMsg(null), 3500);
+  };
 
   // Primary linked bank account balance (starts at 50,000.00 SAR baseline)
   const primaryBank = bankAccounts.find((b) => b.isPrimary) || bankAccounts[0] || {
@@ -304,6 +346,28 @@ export const MerchantInsightsScreen: React.FC = () => {
       />
 
       <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Global Toast Notification */}
+        {toastMsg && (
+          <div
+            className="fade-in"
+            style={{
+              backgroundColor: 'rgba(0, 200, 83, 0.15)',
+              border: '1px solid #00C853',
+              borderRadius: '12px',
+              padding: '10px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: '#FFFFFF',
+              fontSize: '12.5px',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={16} color="#00C853" style={{ flexShrink: 0 }} />
+            <span>{toastMsg}</span>
+          </div>
+        )}
+
         {/* Period Filter Tabs: Today, Week, Month, Custom 30D */}
         <div
           style={{
@@ -882,6 +946,30 @@ export const MerchantInsightsScreen: React.FC = () => {
               </div>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleExportTaxAuditReport}
+            className="interactive-tap"
+            style={{
+              marginTop: '4px',
+              backgroundColor: 'rgba(0, 200, 83, 0.12)',
+              border: '1px solid rgba(0, 200, 83, 0.3)',
+              borderRadius: '12px',
+              padding: '10px 14px',
+              color: '#00C853',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+            }}
+          >
+            <Download size={15} />
+            <span>{isAr ? 'تحميل التقرير الضريبي والمالي (CSV)' : 'Download Tax & Financial Report (CSV)'}</span>
+          </button>
         </div>
 
         {/* 6. Recent Real Collections Preview */}

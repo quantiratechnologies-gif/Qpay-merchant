@@ -15,6 +15,7 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { ZatcaLogo } from '../../components/ZatcaLogo';
 import { QRCodeView } from '../../components/QRCodeView';
 import { AppHeader } from '../../components/AppHeader';
+import { downloadStandeeQrSvg } from '../../utils/fileDownloader';
 
 export const MerchantQrGeneratorScreen: React.FC = () => {
   const {
@@ -59,10 +60,17 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
   };
 
   const handleDownloadPoster = () => {
+    downloadStandeeQrSvg({
+      businessName: merchantInfo.businessName || 'Riyal Pay Merchant Store',
+      crNumber: merchantInfo.crNumber || '1010884920',
+      vatNumber: merchantInfo.vatNumber || '300928190000003',
+      qrPayload: zatcaPayload,
+      terminalId: merchantInfo.terminalId || 'RP-TERM-901',
+    });
     showToast(
       isAr
-        ? 'جاري تنزيل ملصق الباركود عالي الدقة (PDF) للطباعة والتعليق في المتجر...'
-        : 'Downloading High-Res Store Stand QR Poster (PDF) for print...'
+        ? '✓ تم تحميل ملصق الباركود عالي الدقة (SVG) بنجاح للطباعة'
+        : '✓ High-Res Store Stand QR Poster (SVG) downloaded successfully!'
     );
   };
 

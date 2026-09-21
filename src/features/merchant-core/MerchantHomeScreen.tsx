@@ -33,6 +33,7 @@ export const MerchantHomeScreen: React.FC = () => {
     merchantInfo,
     merchantCollections,
     merchantSettlements,
+    unsettledMerchantBalance,
     bankAccounts,
     triggerSettleNow,
     navigateTo,
@@ -55,13 +56,9 @@ export const MerchantHomeScreen: React.FC = () => {
   const [cashSaleNote, setCashSaleNote] = useState<string>('');
 
   const isAr = language === 'العربية';
-  const totalToday = merchantCollections.reduce(
-    (acc, c) => acc + (c.status === 'settled' ? c.amount : 0),
-    0
-  );
-  const displayTotal = totalToday > 0 ? totalToday : 14850.5;
+  const displayTotal = unsettledMerchantBalance;
   const paymentCount = 142 + (merchantCollections.length - 5);
-  const avgTicket = (displayTotal / Math.max(1, paymentCount)).toFixed(2);
+  const avgTicket = (Math.max(1, displayTotal) / Math.max(1, paymentCount)).toFixed(2);
   const primaryBank = bankAccounts.find((b) => b.isPrimary) || bankAccounts[0] || { balance: 50000.0 };
 
   const effectiveSettleAmount = settleMode === 'full' ? displayTotal : Math.min(customSettleAmount, displayTotal > 0 ? displayTotal : customSettleAmount);

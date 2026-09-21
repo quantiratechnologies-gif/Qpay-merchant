@@ -94,6 +94,8 @@ interface AppContextType {
   updateMerchantInfo: (info: Partial<MerchantInfo>) => void;
   merchantCollections: MerchantCollection[];
   merchantSettlements: MerchantSettlement[];
+  unsettledMerchantBalance: number;
+  setUnsettledMerchantBalance: React.Dispatch<React.SetStateAction<number>>;
   triggerSettleNow: (customAmount?: number) => Promise<MerchantSettlement>;
   lastMerchantCollection: MerchantCollection | null;
   processMerchantCollection: (params: {
@@ -346,6 +348,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
   const [merchantCollections, setMerchantCollections] = useState<MerchantCollection[]>(INITIAL_MERCHANT_COLLECTIONS);
   const [merchantSettlements, setMerchantSettlements] = useState<MerchantSettlement[]>(INITIAL_MERCHANT_SETTLEMENTS);
+  const [unsettledMerchantBalance, setUnsettledMerchantBalance] = useState<number>(14850.5);
   const [lastMerchantCollection, setLastMerchantCollection] = useState<MerchantCollection | null>(null);
   const [cashiers, setCashiers] = useState<CashierInfo[]>(INITIAL_CASHIERS);
   const [softPosAmount, setSoftPosAmount] = useState<number>(67.0);
@@ -770,6 +773,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setMerchantCollections((prev) => [newCollection, ...prev]);
+    setUnsettledMerchantBalance((prev) => Number((prev + grossAmount).toFixed(2)));
     setLastMerchantCollection(newCollection);
     syncCollectionToSupabase(newCollection);
 
@@ -824,14 +828,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const triggerSettleNow = async (customAmount?: number): Promise<MerchantSettlement> => {
-    const totalCollections = merchantCollections
-      .filter((c) => c.status === 'settled')
-      .reduce((sum, c) => sum + c.amount, 0);
     const settleAmount =
       customAmount !== undefined && customAmount > 0
         ? customAmount
-        : totalCollections > 0
-        ? totalCollections
+        : unsettledMerchantBalance > 0
+        ? unsettledMerchantBalance
         : 1862.5;
     const netAmount = Number((settleAmount / 1.15).toFixed(2));
     const vatAmount = Number((settleAmount - netAmount).toFixed(2));
@@ -853,6 +854,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ibanMasked: merchantInfo.settlementIban || 'SA03 8000 •••• 5005',
       method: 'instant_settlenow',
     };
+
+    // Deduct settled amount from unsettled collection balance
+    setUnsettledMerchantBalance((prev) => Math.max(0, Number((prev - settleAmount).toFixed(2))));
 
     // Credit transferred funds directly to primary bank account balance (starting from 50,000 SAR)
     setBankAccounts((prev) =>
@@ -1091,6 +1095,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateMerchantInfo,
         merchantCollections,
         merchantSettlements,
+        unsettledMerchantBalance,
+        setUnsettledMerchantBalance,
         triggerSettleNow,
         lastMerchantCollection,
         processMerchantCollection,
