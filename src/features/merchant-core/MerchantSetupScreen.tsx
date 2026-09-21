@@ -10,6 +10,10 @@ import {
   Hash,
   MapPin,
   Mail,
+  UploadCloud,
+  CheckCircle2,
+  Trash2,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 
@@ -44,7 +48,7 @@ export const MerchantSetupScreen: React.FC = () => {
   const [city, setCity] = useState(merchantInfo.city || 'Riyadh');
   const [postalCode, setPostalCode] = useState(merchantInfo.postalCode || '');
   const [vatNumber, setVatNumber] = useState(merchantInfo.vatNumber || '');
-  const [logoUrl, setLogoUrl] = useState<string>(merchantInfo.logoUrl || '');
+  const [logoUrl, setLogoUrl] = useState<string>(merchantInfo.logoUrl || merchantInfo.businessImageUrl || '');
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -73,6 +77,7 @@ export const MerchantSetupScreen: React.FC = () => {
       postalCode: postalCode.trim(),
       vatNumber: vatNumber.trim(),
       logoUrl,
+      businessImageUrl: logoUrl,
     });
     navigateTo('MERCHANT_BANK_LINK');
   };
@@ -155,18 +160,37 @@ export const MerchantSetupScreen: React.FC = () => {
 
         {/* Form Container */}
         <form noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {/* 1. Storefront & Brand Logo Inset Card */}
+          {/* 1. Storefront & Brand Logo High-Visibility Uploader Card */}
           <div
             style={{
               backgroundColor: '#111726',
               border: '1px solid #1E293B',
-              borderRadius: '16px',
-              padding: '14px',
+              borderRadius: '18px',
+              padding: '16px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
             }}
           >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: '#CBD5E1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <ImageIcon size={15} color="#00C853" />
+                <span>{isAr ? 'صورة وهوية المنشأة / واجهة المتجر' : 'Storefront Photo & Brand Logo'}</span>
+              </label>
+              <span style={{ fontSize: '10.5px', color: '#00C853', fontWeight: 700 }}>
+                {isAr ? 'اختياري' : 'Recommended'}
+              </span>
+            </div>
+
             <input
               type="file"
               ref={fileInputRef}
@@ -175,78 +199,147 @@ export const MerchantSetupScreen: React.FC = () => {
               onChange={handleFileChange}
             />
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                {/* Real Image Preview or Upload Button */}
+            {logoUrl ? (
+              <div
+                style={{
+                  backgroundColor: '#161F30',
+                  border: '1.5px solid rgba(0, 200, 83, 0.4)',
+                  borderRadius: '14px',
+                  padding: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <img
+                    src={logoUrl}
+                    alt="Store Preview"
+                    style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '12px',
+                      objectFit: 'cover',
+                      border: '1px solid #2A364F',
+                    }}
+                  />
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <span>{isAr ? 'تم تحميل الصورة' : 'Store Photo Active'}</span>
+                      <CheckCircle2 size={14} color="#00C853" />
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                      {isAr ? 'ستظهر على الفواتير وشاشة الدفع' : 'Visible on invoices & checkout POS'}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="interactive-tap cursor-pointer"
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      backgroundColor: 'rgba(0, 200, 83, 0.15)',
+                      border: '1px solid rgba(0, 200, 83, 0.3)',
+                      color: '#00C853',
+                      fontSize: '11.5px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <Camera size={13} />
+                    <span>{isAr ? 'تغيير' : 'Change'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setLogoUrl('')}
+                    className="interactive-tap cursor-pointer"
+                    style={{
+                      padding: '8px',
+                      borderRadius: '10px',
+                      backgroundColor: '#1E293B',
+                      border: 'none',
+                      color: '#94A3B8',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="interactive-tap cursor-pointer"
+                style={{
+                  backgroundColor: '#161F30',
+                  border: '1.5px dashed rgba(0, 200, 83, 0.5)',
+                  borderRadius: '14px',
+                  padding: '20px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease',
+                }}
+              >
                 <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="interactive-tap"
                   style={{
-                    width: '54px',
-                    height: '54px',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '14px',
-                    border: '1.5px dashed rgba(0, 200, 83, 0.6)',
-                    backgroundColor: 'rgba(0, 200, 83, 0.08)',
+                    backgroundColor: 'rgba(0, 200, 83, 0.12)',
+                    border: '1px solid rgba(0, 200, 83, 0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    flexShrink: 0,
+                    color: '#00C853',
                   }}
                 >
-                  {logoUrl ? (
-                    <img
-                      src={logoUrl}
-                      alt="Store Logo"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#00C853' }}>
-                      <Camera size={20} strokeWidth={2} />
-                      <span style={{ fontSize: '7.5px', fontWeight: 800, marginTop: '2px' }}>
-                        {isAr ? 'رفع' : 'UPLOAD'}
-                      </span>
-                    </div>
-                  )}
+                  <UploadCloud size={22} />
                 </div>
-
                 <div>
                   <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF' }}>
-                    {isAr ? 'صورة وهوية المنشأة' : 'Business Photo & Logo'}
+                    {isAr ? 'اضغط لرفع صورة المتجر / الشعار' : 'Click to Upload Store Photo / Logo'}
                   </div>
                   <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-                    {logoUrl
-                      ? (isAr ? '✓ تم تحميل صورة المتجر بنجاح' : '✓ Real image active & verified')
-                      : (isAr ? 'اضغط لرفع صورة من جهازك' : 'Tap to upload real photo from device')}
+                    {isAr ? 'يدعم صور PNG, JPG, WebP من جهازك' : 'Supports PNG, JPG, WebP from your device'}
                   </div>
                 </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="interactive-tap"
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: '10px',
-                  backgroundColor: 'rgba(0, 200, 83, 0.12)',
-                  border: '1px solid rgba(0, 200, 83, 0.3)',
-                  color: '#00C853',
-                  fontSize: '11.5px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  flexShrink: 0,
-                }}
-              >
-                <Camera size={13} />
-                <span>{isAr ? 'تغيير الصورة' : 'Upload Image'}</span>
-              </button>
-            </div>
+                <div
+                  style={{
+                    marginTop: '4px',
+                    padding: '6px 14px',
+                    borderRadius: '8px',
+                    backgroundColor: '#00C853',
+                    color: '#080C14',
+                    fontSize: '11.5px',
+                    fontWeight: 800,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  <Camera size={13} />
+                  <span>{isAr ? 'استعراض الصور' : 'Browse Files'}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* 2. Registered Business Name */}
