@@ -1,0 +1,32 @@
+/* Quantira Technologies / QtPay Merchant Design Tokens */
+:root {
+  /* Colors */
+  --bg-page: #080C14;
+  --bg-card: #111726;
+  --bg-inset: #161F30;
+  --border: #1E293B;
+  --border-focus: #334155;
+  --accent-green: #00C853;
+  --accent-green-bright: #00C853;
+  --accent-blue: #38BDF8;
+  --accent-purple: #A855F7;
+  --accent-amber: #F59E0B;
+  --text-primary: #FFFFFF;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  /* Radiuses */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
