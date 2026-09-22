@@ -29,6 +29,7 @@ export async function saveSession(user: StoredUser, accessToken: string): Promis
   try {
     sessionStorage.setItem(USER_KEY, userJson);
     sessionStorage.setItem(TOKEN_KEY, accessToken);
+    sessionStorage.setItem('qpay_merchant_authenticated', 'true');
   } catch {
     // sessionStorage quota or security error
   }

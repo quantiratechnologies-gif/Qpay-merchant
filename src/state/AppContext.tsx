@@ -262,7 +262,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (paramScreen && paramScreen !== 'MOBILE_NUMBER' && paramScreen !== 'SMS_OTP') {
         return true;
       }
-      return sessionStorage.getItem('qpay_merchant_authenticated') === 'true';
+      return sessionStorage.getItem('qpay_merchant_authenticated') === 'true' || !!sessionStorage.getItem('qpay_access_token');
     }
     return false;
   });
@@ -560,6 +560,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         } catch (e) {}
       }
     }
+    const storedUser = sessionStorage.getItem('qpay_user');
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          if (parsed.merchantCode) {
+            return { ...INITIAL_MERCHANT_INFO, merchantCode: parsed.merchantCode, businessName: parsed.businessName || INITIAL_MERCHANT_INFO.businessName };
+          }
+        } catch (e) {}
+      }
     return INITIAL_MERCHANT_INFO;
   });
   const [merchantCollections, setMerchantCollections] = useState<MerchantCollection[]>(INITIAL_MERCHANT_COLLECTIONS);
@@ -668,6 +677,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     getSession().then((stored) => {
       if (stored) {
+        if (stored.user && stored.user.merchantCode) {
+          setMerchantInfo((prev) => ({
+            ...prev,
+            merchantCode: stored.user.merchantCode || prev.merchantCode,
+            businessName: stored.user.businessName || prev.businessName,
+          }));
+        }
         initSession(stored.accessToken, stored.user.id)
           .then(() => {
             setCurrentScreen('MERCHANT_HOME');
