@@ -253,7 +253,7 @@ export const SmsOtpScreen: React.FC = () => {
               letterSpacing: '-0.02em',
             }}
           >
-            {isAr ? 'رمز التحقق (OTP)' : 'Verification Code'}
+            {isAr ? 'رمز التحقق (٦ أرقام)' : 'Enter 6-Digit OTP'}
           </h1>
           <p style={{ fontSize: '13.5px', color: '#94A3B8', margin: 0, lineHeight: 1.5 }}>
             {isAr
