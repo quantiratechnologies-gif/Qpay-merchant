@@ -282,6 +282,11 @@ export const MerchantHomeScreen: React.FC = () => {
             <span style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
               {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
             </span>
+            {merchantInfo.merchantCode && (
+              <span id="merchant-code-badge" style={{ fontSize: '11px', fontWeight: 800, color: '#00C853', backgroundColor: 'rgba(0, 200, 83, 0.12)', border: '1px solid rgba(0, 200, 83, 0.25)', padding: '2px 7px', borderRadius: '6px', letterSpacing: '0.04em' }}>{merchantInfo.merchantCode}</span>
+            )}
+            <span>
+            </span>
             <ChevronDown size={15} color="#94A3B8" />
           </div>
 

@@ -55,6 +55,11 @@ export const PermissionsScreen: React.FC = () => {
     },
   ];
 
+  const handleSkipPermissions = () => {
+    try { localStorage.setItem('hasGrantedPermissions', 'true'); localStorage.setItem('hasCompletedOnboarding', 'true'); } catch {}
+    navigateTo('MERCHANT_HOME');
+  };
+
   const handleGrantPermissions = () => {
     try {
       localStorage.setItem('hasGrantedPermissions', 'true');
@@ -251,7 +256,7 @@ export const PermissionsScreen: React.FC = () => {
           {t('auth.allow_continue', 'Allow & Configure Store')}{' '}
           <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
         </PrimaryButton>
-        <SecondaryButton onClick={handleGrantPermissions}>
+        <SecondaryButton onClick={handleSkipPermissions}>
           {language === 'العربية' ? 'تخطي الآن' : 'Skip for Now'}
         </SecondaryButton>
       </div>
