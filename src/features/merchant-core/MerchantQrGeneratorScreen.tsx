@@ -61,7 +61,7 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
 
   const handleDownloadPoster = () => {
     downloadStandeeQrSvg({
-      businessName: merchantInfo.businessName || 'Riyal Pay Merchant Store',
+      businessName: merchantInfo.businessName || '',
       crNumber: merchantInfo.crNumber || '1010884920',
       vatNumber: merchantInfo.vatNumber || '300928190000003',
       qrPayload: zatcaPayload,

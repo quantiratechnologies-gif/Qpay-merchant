@@ -310,7 +310,6 @@ export const TRANSLATIONS: Record<string, { en: string; ar: string }> = {
   'Fahad Al-Harbi': { en: 'Fahad Al-Harbi', ar: 'فهد الحربي' },
   'Abdullah Al-Shehri': { en: 'Abdullah Al-Shehri', ar: 'عبدالله الشهري' },
   'Reem Al-Dossari': { en: 'Reem Al-Dossari', ar: 'ريم الدوسري' },
-  'Starmart Market': { en: 'Starmart Market', ar: 'تموينات ستار مارت' },
   'TODAY': { en: 'TODAY', ar: 'اليوم' },
   'Today': { en: 'Today', ar: 'اليوم' },
   'YESTERDAY': { en: 'YESTERDAY', ar: 'أمس' },

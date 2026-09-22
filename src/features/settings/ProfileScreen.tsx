@@ -236,7 +236,7 @@ export const ProfileScreen: React.FC = () => {
           <div style={{ padding: '24px 16px 14px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
               <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-                {merchantInfo.businessName || (isAr ? 'تموينات ستار مارت' : 'Starmart Supermarket')}
+                {merchantInfo.businessName || ''}
               </h2>
               <span
                 style={{

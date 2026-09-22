@@ -57,7 +57,7 @@ export const PermissionsScreen: React.FC = () => {
 
   const handleSkipPermissions = () => {
     try { localStorage.setItem('hasGrantedPermissions', 'true'); localStorage.setItem('hasCompletedOnboarding', 'true'); } catch {}
-    navigateTo('MERCHANT_HOME');
+    navigateTo('MERCHANT_SETUP');
   };
 
   const handleGrantPermissions = () => {

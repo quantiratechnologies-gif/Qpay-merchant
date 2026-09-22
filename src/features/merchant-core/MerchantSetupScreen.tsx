@@ -66,8 +66,6 @@ export const MerchantSetupScreen: React.FC = () => {
 
   const isFormValid = businessName.trim().length > 0 && vatNumber.trim().length >= 10 && postalCode.trim().length >= 4;
 
-  const handleSkipSetup = () => { navigateTo('MERCHANT_HOME'); };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
