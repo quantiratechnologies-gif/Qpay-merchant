@@ -9,12 +9,28 @@ export const MobileNumberScreen: React.FC = () => {
   const isAr = language === 'العربية';
   const [fullName, setFullName] = useState<string>('');
   const [businessName, setBusinessName] = useState<string>('');
+  const [countryCode, setCountryCode] = useState<string>('+966');
   const [mobileNumber, setMobileNumber] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const rawDigits = mobileNumber.replace(/\D/g, '');
-  const isFormValid = rawDigits.length >= 9 && fullName.trim().length > 0 && !isLoading;
+  const cleanDigits = (() => {
+    let digits = mobileNumber.replace(/\D/g, '');
+    if (countryCode === '+966') {
+      if (digits.startsWith('0')) digits = digits.slice(1);
+      return digits.slice(0, 9);
+    } else if (countryCode === '+91') {
+      if (digits.startsWith('0')) digits = digits.slice(1);
+      return digits.slice(0, 10);
+    }
+    return digits;
+  })();
+
+  const isPhoneValid = countryCode === '+966'
+    ? /^5\d{8}$/.test(cleanDigits)
+    : /^[6-9]\d{9}$/.test(cleanDigits);
+
+  const isFormValid = isPhoneValid && fullName.trim().length > 0 && !isLoading;
 
   const handleContinue = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -23,14 +39,14 @@ export const MobileNumberScreen: React.FC = () => {
     setIsLoading(true);
     setError(null);
 
-    const phone = '+966' + rawDigits;
+    const phone = `${countryCode}${cleanDigits}`;
 
     try {
       await authService.sendOtp(phone, 'merchant');
       setUserRole('merchant');
-      updateUser({ name: fullName.trim(), mobile: '+966 ' + rawDigits });
+      updateUser({ name: fullName.trim(), mobile: `${countryCode} ${cleanDigits}` });
       navigateTo('SMS_OTP', {
-        mobile: rawDigits,
+        mobile: cleanDigits,
         phone,
         name: fullName.trim(),
         fullName: fullName.trim(),
@@ -249,25 +265,45 @@ export const MobileNumberScreen: React.FC = () => {
               {/* Country Code Pill */}
               <div
                 style={{
+                  position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
                   backgroundColor: '#111726',
                   border: '1px solid #1E293B',
                   borderRadius: '14px',
-                  padding: '0 14px',
+                  padding: '0 10px',
                   height: '52px',
-                  fontWeight: 700,
-                  fontSize: '13.5px',
-                  color: '#FFFFFF',
                   flexShrink: 0,
-                  direction: 'ltr',
                   boxSizing: 'border-box',
                 }}
               >
-                <span>🇸🇦</span>
-                <span>+966</span>
-                <ChevronDown size={14} color="#94A3B8" />
+                <select
+                  id="merchant-country-select"
+                  aria-label="Country Code"
+                  value={countryCode}
+                  onChange={(e) => {
+                    setCountryCode(e.target.value);
+                    setMobileNumber('');
+                    setError(null);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    fontSize: '13.5px',
+                    cursor: 'pointer',
+                    outline: 'none',
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                    paddingInlineEnd: '16px',
+                    direction: 'ltr',
+                  }}
+                >
+                  <option value="+966" style={{ background: '#111726', color: '#FFF' }}>🇸🇦 +966</option>
+                  <option value="+91" style={{ background: '#111726', color: '#FFF' }}>🇮🇳 +91</option>
+                </select>
+                <ChevronDown size={14} color="#00C853" style={{ position: 'absolute', right: '8px', pointerEvents: 'none' }} />
               </div>
 
               {/* Number Input */}
@@ -291,19 +327,34 @@ export const MobileNumberScreen: React.FC = () => {
                   type="tel"
                   inputMode="numeric"
                   autoComplete="tel"
-                  value={mobileNumber}
+                  value={
+                    countryCode === '+966'
+                      ? (cleanDigits.length <= 2
+                          ? cleanDigits
+                          : cleanDigits.length <= 5
+                          ? `${cleanDigits.slice(0, 2)} ${cleanDigits.slice(2)}`
+                          : `${cleanDigits.slice(0, 2)} ${cleanDigits.slice(2, 5)} ${cleanDigits.slice(5)}`)
+                      : (cleanDigits.length <= 5
+                          ? cleanDigits
+                          : `${cleanDigits.slice(0, 5)} ${cleanDigits.slice(5)}`)
+                  }
                   onChange={(e) => {
-                    const rawDigits = e.target.value.replace(/\D/g, '').slice(0, 9);
-                    let formatted = rawDigits;
-                    if (rawDigits.length > 2 && rawDigits.length <= 5) {
-                      formatted = `${rawDigits.slice(0, 2)} ${rawDigits.slice(2)}`;
-                    } else if (rawDigits.length > 5) {
-                      formatted = `${rawDigits.slice(0, 2)} ${rawDigits.slice(2, 5)} ${rawDigits.slice(5)}`;
+                    let val = e.target.value.replace(/\D/g, '');
+                    if (countryCode === '+966') {
+                      if (val.startsWith('00966')) val = val.slice(5);
+                      else if (val.startsWith('966')) val = val.slice(3);
+                      if (val.startsWith('0')) val = val.slice(1);
+                      val = val.slice(0, 9);
+                    } else if (countryCode === '+91') {
+                      if (val.startsWith('0091')) val = val.slice(4);
+                      else if (val.startsWith('91') && val.length > 10) val = val.slice(2);
+                      if (val.startsWith('0')) val = val.slice(1);
+                      val = val.slice(0, 10);
                     }
-                    setMobileNumber(formatted);
+                    setMobileNumber(val);
                   }}
-                  placeholder="50 123 4567"
-                  maxLength={11}
+                  placeholder={countryCode === '+91' ? '98765 43210' : '50 123 4567'}
+                  maxLength={countryCode === '+91' ? 11 : 12}
                   required
                   style={{
                     background: 'none',
