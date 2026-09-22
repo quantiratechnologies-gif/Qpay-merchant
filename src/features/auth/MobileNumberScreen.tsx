@@ -59,7 +59,7 @@ export const MobileNumberScreen: React.FC = () => {
       } else if (err?.status === 400) {
         setError(isAr ? 'رقم الهاتف غير صالح.' : 'Invalid phone number.');
       } else {
-        setError(err?.message || (isAr ? 'تعذر إرسال الرمز. تحقق من اتصالك.' : 'Could not send OTP. Check your connection.'));
+        setError(err?.message || (isAr ? 'تعذر إرسال الرمز. تحقق من اتصالك.' : 'Could not send OTP, please try again'));
       }
     } finally {
       setIsLoading(false);
