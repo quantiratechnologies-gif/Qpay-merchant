@@ -97,7 +97,9 @@ export const MobileNumberScreen: React.FC = () => {
       const msg = err?.message || '';
       if (msg.includes('rate') || err?.status === 429) {
         setError(isAr ? 'محاولات كثيرة. يرجى الانتظار قليلاً.' : 'Too many requests. Please wait a moment.');
-      } else if (err?.status === 400) {
+            } else if (err?.code === 'SMS_UNAVAILABLE' || msg.includes('Saudi SMS')) {
+        setError(isAr ? 'الرسائل النصية للسعودية غير متوفرة حالياً' : 'Saudi SMS not available yet');
+      } else if (err?.code === 'INVALID_PHONE') {
         setError(isAr ? 'رقم الهاتف غير صالح.' : 'Invalid phone number.');
       } else {
         setError(err?.message || (isAr ? 'تعذر إرسال الرمز. تحقق من اتصالك.' : 'Could not send OTP, please try again'));
