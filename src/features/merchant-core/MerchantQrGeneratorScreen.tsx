@@ -36,12 +36,9 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
   const numAmount = qrMode === 'invoice' ? (parseFloat(invoiceAmount) || 0) : 0;
   const vatAmount = numAmount > 0 ? Number((numAmount - numAmount / 1.15).toFixed(2)) : 0;
 
-    // QPay payment QR format per shared contract
-  const merchantCode = merchantInfo.merchantCode || (useApp() as any).user?.id || '';
-  const qrPayload =
-    (useApp() as any).merchantInfo?.merchantCode
-      ? `qpay://pay?m=${(useApp() as any).merchantInfo.merchantCode}`
-      : "qpay://pay?m=merchant";
+  // QPay payment QR format per shared contract
+  const merchantCode = merchantInfo.merchantCode || '';
+  const qrPayload = merchantCode ? `qpay://pay?m=${merchantCode}` : 'qpay://pay?m=merchant';
   const zatcaPayload = qrPayload;
   
 

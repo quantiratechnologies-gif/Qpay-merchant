@@ -251,20 +251,8 @@ const INITIAL_CASHIERS: CashierInfo[] = [
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.removeItem('qpay_merchant_authenticated');
-      } catch (e) {
-        // ignore
-      }
-      const urlParams = new URLSearchParams(window.location.search);
-      const paramScreen = urlParams.get('screen') as ScreenId | null;
-      if (paramScreen && paramScreen !== 'MOBILE_NUMBER' && paramScreen !== 'SMS_OTP') {
-        return true;
-      }
-      return sessionStorage.getItem('qpay_merchant_authenticated') === 'true' || !!sessionStorage.getItem('qpay_access_token');
-    }
-    return false;
+    // Auth is derived strictly from the presence of a valid access token.
+    return !!getAccessToken();
   });
 
   const [currentScreen, setCurrentScreen] = useState<ScreenId>(() => {
@@ -273,7 +261,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const paramScreen = urlParams.get('screen') as ScreenId | null;
       if (paramScreen) return paramScreen;
 
-      const isAuthed = sessionStorage.getItem('qpay_merchant_authenticated') === 'true';
+      const isAuthed = !!getAccessToken();
       if (isAuthed) return 'MERCHANT_HOME';
     }
     return 'MOBILE_NUMBER';

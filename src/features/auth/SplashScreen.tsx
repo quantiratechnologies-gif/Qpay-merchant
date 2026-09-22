@@ -2,14 +2,20 @@ import React, { useEffect } from 'react';
 import { AlphPayLogo } from '../../components/AlphPayLogo';
 import { QuantiraLogo } from '../../components/QuantiraLogo';
 import { useApp } from '../../state/AppContext';
+import { getAccessToken } from '../../services/sessionStore';
 
 export const SplashScreen: React.FC = () => {
   const { navigateTo } = useApp();
 
   useEffect(() => {
+    const token = getAccessToken();
     const timer = setTimeout(() => {
-      navigateTo('ONBOARDING');
-    }, 2000);
+      if (token) {
+        navigateTo('MERCHANT_HOME');
+      } else {
+        navigateTo('ONBOARDING');
+      }
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [navigateTo]);
