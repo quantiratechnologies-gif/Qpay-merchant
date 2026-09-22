@@ -5,7 +5,6 @@ import {
   QrCode,
   SlidersHorizontal,
   CreditCard,
-  Users,
   Languages,
   LogOut,
   ChevronRight,
@@ -13,8 +12,6 @@ import {
   LayoutGrid,
   Check,
   Camera,
-  MapPin,
-  FileText,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 

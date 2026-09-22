@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { AlphPayLogo } from '../../components/AlphPayLogo';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useApp } from '../../state/AppContext';
 import { toArabicNumerals } from '../../utils/i18n';
-import { authenticateMerchantWithAnyOtp } from '../../services/supabaseClient';
+import { authService } from '../../services/authService';
+import { saveSession } from '../../services/sessionStore';
+import { supabase } from '../../services/supabaseClient';
 
 export const SmsOtpScreen: React.FC = () => {
   const {
@@ -15,15 +17,13 @@ export const SmsOtpScreen: React.FC = () => {
     language,
     updateUser,
     updateMerchantInfo,
-    setIsAuthenticated,
-    loginWithPhone,
-    activeOtp,
-    setActiveOtp,
-    verifyOtp,
+    initSession,
   } = useApp();
 
   const mobile = screenParams?.mobile || '';
-  const userName = screenParams?.name || '';
+  const phone = screenParams?.phone || (`+966${mobile.replace(/\D/g, '')}`);
+  const fullName = screenParams?.name || screenParams?.fullName || '';
+  const businessName = screenParams?.businessName || '';
   const isAr = language === 'العربية';
 
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
@@ -31,7 +31,6 @@ export const SmsOtpScreen: React.FC = () => {
   const [isResent, setIsResent] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
-  const [showSmsBanner, setShowSmsBanner] = useState<boolean>(true);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -61,6 +60,9 @@ export const SmsOtpScreen: React.FC = () => {
       setOtp(newOtp);
       const nextIndex = Math.min(pasteDigits.length, 5);
       inputRefs.current[nextIndex]?.focus();
+      if (pasteDigits.length === 6) {
+        triggerVerifyWithCode(pasteDigits.join(''));
+      }
       return;
     }
 
@@ -71,6 +73,11 @@ export const SmsOtpScreen: React.FC = () => {
 
     if (singleDigit && index < 5) {
       inputRefs.current[index + 1]?.focus();
+    } else if (singleDigit && index === 5) {
+      const fullCode = newOtp.join('');
+      if (fullCode.length === 6) {
+        triggerVerifyWithCode(fullCode);
+      }
     }
   };
 
@@ -98,49 +105,72 @@ export const SmsOtpScreen: React.FC = () => {
   const isComplete = otp.every((digit) => digit.length > 0);
 
   const triggerVerifyWithCode = async (enteredCode: string) => {
-    if (isVerifying) return;
+    if (isVerifying || enteredCode.length < 6) return;
     setErrorMsg('');
-
-    const isValid = verifyOtp(enteredCode);
-
-    if (!isValid) {
-      setErrorMsg(
-        isAr
-          ? 'رمز التحقق غير صحيح، يرجى التأكد من الرسائل النصية والمحاولة مرة أخرى'
-          : 'Invalid verification code. Please check your SMS and try again.'
-      );
-      setOtp(['', '', '', '', '', '']);
-      inputRefs.current[0]?.focus();
-      return;
-    }
-
     setIsVerifying(true);
 
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('qpay_merchant_authenticated', 'true');
-      localStorage.setItem('qpay_merchant_authenticated', 'true');
-    }
-
     try {
-      const { user: authedUser } = await authenticateMerchantWithAnyOtp(
-        mobile,
+      const result = await authService.verifyOtp(
+        phone,
         enteredCode,
-        '',
-        userName
+        'merchant',
+        fullName || undefined,
+        businessName || undefined,
       );
-      if (authedUser) updateUser(authedUser);
-    } catch (e) {
-      console.warn('Merchant auth notice:', e);
+
+      const { user: apiUser, session } = result;
+
+      await saveSession(
+        {
+          id: apiUser.id,
+          role: apiUser.role,
+          name: apiUser.name,
+          mobile: apiUser.mobile,
+          merchantCode: apiUser.merchantCode,
+          businessName: apiUser.businessName,
+        },
+        session.access_token,
+      );
+
+      supabase.realtime.setAuth(session.access_token);
+
+      updateUser({
+        id: apiUser.id,
+        name: apiUser.name,
+        mobile: apiUser.mobile,
+      });
+
+      if (apiUser.merchantCode || apiUser.businessName) {
+        updateMerchantInfo({
+          merchantCode: apiUser.merchantCode,
+          businessName: apiUser.businessName || fullName,
+        });
+      }
+
+      await initSession(session.access_token, apiUser.id);
+      navigateTo('PERMISSIONS');
+    } catch (err: any) {
+      const status = err?.status;
+      const code = err?.code || '';
+      const msg = err?.message || '';
+
+      if (status === 409 || code === 'ROLE_MISMATCH' || msg.includes('ROLE_MISMATCH') || msg.includes('customer')) {
+        setErrorMsg('This number is registered as a customer');
+      } else if (status === 400 || msg.includes('invalid') || msg.includes('expired')) {
+        setErrorMsg(
+          isAr
+            ? 'رمز التحقق غير صحيح أو انتهت صلاحيته. يرجى إعادة الإرسال.'
+            : 'Invalid or expired verification code. Please request a new one.'
+        );
+      } else {
+        setErrorMsg(
+          msg || (isAr ? 'حدث خطأ أثناء التحقق. يرجى المحاولة لاحقاً.' : 'Verification failed. Please try again.')
+        );
+      }
+      setOtp(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
     } finally {
       setIsVerifying(false);
-    }
-
-    // Check if returning merchant with saved store data or new merchant number
-    const isReturning = loginWithPhone(mobile, userName);
-    if (isReturning) {
-      navigateTo('MERCHANT_HOME');
-    } else {
-      navigateTo('MERCHANT_SETUP');
     }
   };
 
@@ -149,33 +179,19 @@ export const SmsOtpScreen: React.FC = () => {
     await triggerVerifyWithCode(otp.join(''));
   };
 
-  const handleResend = () => {
-    const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-    setActiveOtp(newCode);
-    setTimer(30);
+  const handleResend = async () => {
+    if (timer > 0) return;
     setIsResent(true);
-    setShowSmsBanner(true);
-    setTimeout(() => setIsResent(false), 4000);
-  };
-
-  const handleQuickFill = (codeToFill?: string) => {
-    const targetCode = codeToFill || activeOtp || '589204';
-    const digits = targetCode.slice(0, 6).split('');
-    setOtp(digits);
     setErrorMsg('');
-    inputRefs.current[5]?.focus();
+    try {
+      await authService.resendOtp(phone);
+      setTimer(30);
+      setTimeout(() => setIsResent(false), 4000);
+    } catch (err: any) {
+      setErrorMsg(isAr ? 'فشل إعادة إرسال الرمز.' : 'Failed to resend code.');
+      setIsResent(false);
+    }
   };
-
-  // Auto-retrieve OTP simulation after 1.2s
-  useEffect(() => {
-    const autoTimer = setTimeout(() => {
-      if (otp.every((d) => d === '')) {
-        const code = activeOtp || '589204';
-        handleQuickFill(code);
-      }
-    }, 1400);
-    return () => clearTimeout(autoTimer);
-  }, []);
 
   return (
     <div
@@ -193,245 +209,163 @@ export const SmsOtpScreen: React.FC = () => {
         direction: isRtl ? 'rtl' : 'ltr',
       }}
     >
-      {/* Top Simulated SMS Notification Banner */}
-      {showSmsBanner && (
+      {/* Top Header */}
+      <div style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}>
         <div
-          onClick={() => handleQuickFill(activeOtp)}
-          className="interactive-tap fade-in"
           style={{
-            backgroundColor: '#111726',
-            border: '1.5px solid rgba(0, 200, 83, 0.45)',
-            borderRadius: '16px',
-            padding: '12px 16px',
-            marginBottom: '20px',
-            width: '100%',
-            maxWidth: '400px',
-            margin: '0 auto 20px auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px',
-            boxSizing: 'border-box',
-            cursor: 'pointer',
-            boxShadow: '0 4px 20px rgba(0, 200, 83, 0.15)',
+            height: '40px',
+            marginBottom: '28px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '22px' }}>📩</span>
-            <div style={{ textAlign: isRtl ? 'right' : 'left' }}>
-              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#00C853', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                {isAr ? 'رسالة نصية واردة • ريال باي' : 'Incoming SMS • Riyal Pay'}
-              </div>
-              <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 700, marginTop: '2px' }}>
-                {isAr ? 'رمز تحقق الدخول: ' : 'Verification Code: '}
-                <strong style={{ color: '#00C853', fontSize: '15px', letterSpacing: '1.5px' }}>{activeOtp || '589204'}</strong>
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleQuickFill(activeOtp);
-            }}
-            style={{
-              backgroundColor: '#00C853',
-              color: '#080C14',
-              border: 'none',
-              borderRadius: '10px',
-              padding: '8px 14px',
-              fontSize: '11.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 2px 8px rgba(0, 200, 83, 0.3)',
-            }}
-          >
-            {isAr ? 'استرجاع الرمز' : 'Retrieve OTP'}
-          </button>
-        </div>
-      )}
-
-      {/* Top Center: App Brand Logo */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-          width: '100%',
-          marginBottom: '24px',
-        }}
-      >
-        <AlphPayLogo variant="horizontal" size={30} themeMode="dark" />
-      </div>
-
-      {/* Main OTP Verification Form Card */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          margin: '0 auto',
-          backgroundColor: '#111726',
-          border: '1px solid #1E293B',
-          borderRadius: '24px',
-          padding: '28px 20px',
-          boxSizing: 'border-box',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0', letterSpacing: '-0.02em' }}>
-            {isAr ? 'رمز التحقق السريع' : 'Enter Verification Code'}
-          </h2>
-          <p style={{ fontSize: '13px', color: '#94A3B8', margin: '0 0 10px 0' }}>
-            {isAr ? 'تم إرسال رمز التحقق عبر SMS إلى' : 'Sent via SMS OTP to'}{' '}
-            <span style={{ color: '#00C853', fontWeight: 700 }} dir="ltr">
-              +966 {mobile}
-            </span>
-          </p>
           <button
             onClick={goBack}
+            className="interactive-tap"
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#64748B',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              display: 'inline-flex',
+              backgroundColor: '#111726',
+              border: '1px solid #1E293B',
+              borderRadius: '12px',
+              width: '38px',
+              height: '38px',
+              display: 'flex',
               alignItems: 'center',
-              gap: '4px',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              cursor: 'pointer',
             }}
           >
-            <ArrowLeft size={13} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
-            <span>{isAr ? 'تغيير رقم الجوال' : 'Change Mobile Number'}</span>
+            {isRtl ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
           </button>
+          <AlphPayLogo variant="horizontal" size={26} themeMode="dark" />
+          <div style={{ width: '38px' }} />
         </div>
 
-        {/* Error Alert if incorrect OTP */}
+        {/* Title */}
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <h1
+            style={{
+              fontSize: '24px',
+              fontWeight: 800,
+              color: '#FFFFFF',
+              margin: '0 0 8px 0',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {isAr ? 'رمز التحقق (OTP)' : 'Verification Code'}
+          </h1>
+          <p style={{ fontSize: '13.5px', color: '#94A3B8', margin: 0, lineHeight: 1.5 }}>
+            {isAr
+              ? `أدخل الرمز المكوّن من 6 أرقام المرسل إلى ${toArabicNumerals(phone)}`
+              : `Enter the 6-digit code sent to ${phone}`}
+          </p>
+        </div>
+
+        {/* Error Banner */}
         {errorMsg && (
           <div
             style={{
               backgroundColor: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#EF4444',
+              border: '1px solid rgba(239, 68, 68, 0.35)',
               borderRadius: '12px',
               padding: '10px 14px',
-              fontSize: '12px',
-              fontWeight: 700,
-              textAlign: 'center',
-              marginBottom: '16px',
+              marginBottom: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: '#EF4444',
+              fontSize: '13px',
+              fontWeight: 600,
             }}
           >
-            {errorMsg}
+            <AlertCircle size={16} style={{ flexShrink: 0 }} />
+            <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* 6-Digit Clean OTP Boxes */}
+        {/* OTP Input Row */}
         <div
           style={{
             display: 'flex',
-            gap: '8px',
             justifyContent: 'center',
-            marginBottom: '22px',
+            gap: '8px',
+            marginBottom: '28px',
             direction: 'ltr',
           }}
         >
-          {otp.map((digit, i) => (
+          {otp.map((digit, idx) => (
             <input
-              key={i}
-              ref={(el) => { inputRefs.current[i] = el; }}
+              key={idx}
+              ref={(el) => { inputRefs.current[idx] = el; }}
               type="tel"
               inputMode="numeric"
-              pattern="[0-9]*"
-              autoComplete="one-time-code"
+              autoComplete={idx === 0 ? 'one-time-code' : 'off'}
               maxLength={1}
               value={digit}
-              autoFocus={i === 0}
-              onChange={(e) => handleOtpChange(i, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(i, e)}
-              className="tabular-nums"
+              onChange={(e) => handleOtpChange(idx, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(idx, e)}
               style={{
                 width: '46px',
-                height: '52px',
-                borderRadius: '14px',
-                backgroundColor: '#182236',
+                height: '54px',
+                backgroundColor: '#111726',
                 border: digit ? '2px solid #00C853' : '1px solid #1E293B',
+                borderRadius: '14px',
+                textAlign: 'center',
                 fontSize: '22px',
                 fontWeight: 800,
                 color: '#FFFFFF',
-                textAlign: 'center',
                 outline: 'none',
+                fontVariantNumeric: 'tabular-nums',
+                boxShadow: digit ? '0 0 12px rgba(0, 200, 83, 0.2)' : 'none',
                 transition: 'all 0.15s ease',
-                boxShadow: digit ? '0 0 10px rgba(0, 200, 83, 0.2)' : 'none',
               }}
             />
           ))}
         </div>
 
-        {/* Resend SMS Counter */}
-        <div style={{ textAlign: 'center', fontSize: '12.5px', color: '#94A3B8', marginBottom: '20px' }}>
-          {isAr ? 'لم تستلم الرمز؟ ' : "Didn't receive SMS? "}
-          <button
-            disabled={timer > 0}
-            onClick={handleResend}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: timer > 0 ? '#64748B' : '#00C853',
-              fontWeight: 800,
-              cursor: timer > 0 ? 'not-allowed' : 'pointer',
-              padding: 0,
-            }}
-          >
-            {isAr
-              ? timer > 0
-                ? `إعادة الإرسال بعد (${toArabicNumerals(timer < 10 ? `0${timer}` : timer)} ثانية)`
-                : 'إعادة إرسال الرمز'
-              : `Resend Code ${timer > 0 ? `(00:${timer < 10 ? `0${timer}` : timer}s)` : ''}`}
-          </button>
+        {/* Timer / Resend */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          {timer > 0 ? (
+            <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+              {isAr
+                ? `إعادة الإرسال خلال ${toArabicNumerals(timer)} ثانية`
+                : `Resend code in ${timer}s`}
+            </p>
+          ) : (
+            <button
+              onClick={handleResend}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#00C853',
+                fontSize: '13.5px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: '4px 8px',
+              }}
+            >
+              {isResent ? (isAr ? 'تم الإرسال!' : 'Code Sent!') : (isAr ? 'إعادة إرسال الرمز' : 'Resend Code')}
+            </button>
+          )}
         </div>
 
-        {isResent && (
-          <div style={{ textAlign: 'center', fontSize: '12px', color: '#00C853', fontWeight: 700, marginBottom: '14px' }}>
-            {isAr ? 'تم إعادة إرسال رمز التحقق بنجاح' : 'New code sent successfully!'}
-          </div>
-        )}
-
-        <PrimaryButton onClick={handleVerify} disabled={!isComplete || isVerifying}>
-          {isVerifying ? (isAr ? 'جاري التحقق...' : 'Verifying...') : (isAr ? 'تأكيد ودخول البوابة' : 'Verify & Continue')} <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+        {/* Verify Button */}
+        <PrimaryButton
+          onClick={handleVerify}
+          disabled={!isComplete || isVerifying}
+          style={{ width: '100%', height: '52px' }}
+        >
+          {isVerifying ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+              <span>{isAr ? 'جاري التحقق...' : 'Verifying...'}</span>
+            </div>
+          ) : (
+            <span>{isAr ? 'تأكيد الرمز' : 'Verify & Continue'}</span>
+          )}
         </PrimaryButton>
-
-        {/* Test OTP Helper Badge */}
-        <div style={{ textAlign: 'center', marginTop: '16px' }}>
-          <button
-            type="button"
-            onClick={() => handleQuickFill(activeOtp || '582904')}
-            style={{
-              background: 'rgba(0, 200, 83, 0.08)',
-              border: '1px dashed rgba(0, 200, 83, 0.3)',
-              borderRadius: '10px',
-              padding: '6px 14px',
-              color: '#94A3B8',
-              fontSize: '11.5px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}
-          >
-            <span>{isAr ? 'رمز التحقق التجريبي:' : 'Test OTP Passcode:'}</span>
-            <strong style={{ color: '#00C853', letterSpacing: '1px' }}>{activeOtp || '582904'}</strong>
-            <span style={{ fontSize: '10px', color: '#64748B' }}>({isAr ? 'انقر للتعبئة' : 'Tap to autofill'})</span>
-          </button>
-        </div>
       </div>
-
-      <div style={{ height: '20px' }} />
     </div>
   );
 };
-
-export default SmsOtpScreen;

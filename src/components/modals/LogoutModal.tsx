@@ -5,7 +5,7 @@ import { useApp } from '../../state/AppContext';
 
 export const LogoutModal: React.FC = () => {
   const { isLogoutModalOpen, setIsLogoutModalOpen, performLogout, t, language } = useApp();
-  const [isLoggedOutSuccess, setIsLoggedOutSuccess] = useState(false);
+  const [isLoggedOutSuccess] = useState(false);
 
   const handleConfirmLogout = () => {
     setIsLogoutModalOpen(false);
@@ -43,7 +43,7 @@ export const LogoutModal: React.FC = () => {
             {language === 'العربية' ? 'تم تسجيل الخروج بنجاح' : 'Logged Out Successfully'}
           </h3>
           <p style={{ color: '#94A3B8', fontSize: '13px', marginTop: '6px' }}>
-            {language === 'العربية' ? 'جاري العودة لشاشة تسجيل الدخول...' : 'Returning to mobile registration screen...'}
+            {language === 'العربية' ? 'جاري العودة لشاشة تسجيل الدخول...' : 'Session cleared. Returning to login...'}
           </p>
         </div>
       ) : (

@@ -1,4 +1,6 @@
 export interface User {
+  tier?: string;
+  id?: string;
   name: string;
   avatarInitials: string;
   avatarUrl?: string;
@@ -62,6 +64,7 @@ export interface DeviceSession {
 export type UserRole = 'customer' | 'merchant';
 
 export interface MerchantInfo {
+  merchantCode?: string;
   businessName: string;
   category: string;
   city: string;
@@ -96,11 +99,12 @@ export interface MerchantCollection {
   vatAmount: number; // 15% ZATCA VAT
   netAmount: number; // SAR without VAT
   paymentMethod: PaymentAcceptanceMethod;
+  cardScheme?: string;
   cardLast4?: string;
   customerMasked?: string;
   date: string;
   timestamp: Date;
-  status: 'settled' | 'refunded';
+  status: 'settled' | 'refunded' | 'pending';
   zatcaQrCode?: string;
 }
 

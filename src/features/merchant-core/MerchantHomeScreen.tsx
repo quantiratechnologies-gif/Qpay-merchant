@@ -21,7 +21,6 @@ import {
   ShieldCheck,
   X,
   Receipt,
-  ArrowRight,
   Delete,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
@@ -32,9 +31,9 @@ export const MerchantHomeScreen: React.FC = () => {
   const {
     merchantInfo,
     merchantCollections,
-    merchantSettlements,
+    processMerchantCollection,
     unsettledMerchantBalance,
-    bankAccounts,
+    walletBalance,
     triggerSettleNow,
     navigateTo,
     speakSoundBox,
@@ -48,7 +47,7 @@ export const MerchantHomeScreen: React.FC = () => {
   const [settleMode, setSettleMode] = useState<'full' | 'custom'>('full');
   const [customSettleAmount, setCustomSettleAmount] = useState<number>(500);
   const [settledReceipt, setSettledReceipt] = useState<any | null>(null);
-  const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
+  const [settleSuccessMsg] = useState<string | null>(null);
   const [showBalance, setShowBalance] = useState(false);
   const [cashSaleSuccess, setCashSaleSuccess] = useState<string | null>(null);
   const [isCashModalOpen, setIsCashModalOpen] = useState(false);
@@ -56,15 +55,13 @@ export const MerchantHomeScreen: React.FC = () => {
   const [cashSaleNote, setCashSaleNote] = useState<string>('');
 
   const isAr = language === 'العربية';
-  const displayTotal = unsettledMerchantBalance;
-  const paymentCount = 142 + (merchantCollections.length - 5);
+  const displayTotal = walletBalance > 0 ? walletBalance : unsettledMerchantBalance;
+  const paymentCount = merchantCollections.length;
   const avgTicket = (Math.max(1, displayTotal) / Math.max(1, paymentCount)).toFixed(2);
-  const primaryBank = bankAccounts.find((b) => b.isPrimary) || bankAccounts[0] || { balance: 50000.0 };
-
+  
   const effectiveSettleAmount = settleMode === 'full' ? displayTotal : Math.min(customSettleAmount, displayTotal > 0 ? displayTotal : customSettleAmount);
   const vatDeduction = Number((effectiveSettleAmount - effectiveSettleAmount / 1.15).toFixed(2));
-  const netPayout = Number((effectiveSettleAmount / 1.15).toFixed(2));
-  const cashNumValue = (parseInt(rawCashStr || '0', 10) / 100) || 0;
+    const cashNumValue = (parseInt(rawCashStr || '0', 10) / 100) || 0;
 
   const handleToggleBalance = () => {
     if (!showBalance) {

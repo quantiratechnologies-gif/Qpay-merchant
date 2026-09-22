@@ -15,8 +15,8 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
   const { language, t } = useApp();
   const isReceived = transaction.type === 'received';
 
-  const defaultSub = isReceived ? 'Received via Sarie' : 'Paid via Sarie';
-  const displayTitle = t(transaction.title, transaction.title);
+  const defaultSub = isReceived ? 'Received via QPay' : 'Paid via QPay';
+  const displayTitle = isReceived ? transaction.title : t(transaction.title, transaction.title);
   const displaySub = t(transaction.subTitle || defaultSub, transaction.subTitle || defaultSub);
   const displayDate = t(transaction.date, transaction.date);
 

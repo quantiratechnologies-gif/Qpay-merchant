@@ -36,11 +36,14 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
   const numAmount = qrMode === 'invoice' ? (parseFloat(invoiceAmount) || 0) : 0;
   const vatAmount = numAmount > 0 ? Number((numAmount - numAmount / 1.15).toFixed(2)) : 0;
 
-  // Build ZATCA Phase 2 compliant TLV payload representation
-  const zatcaPayload =
-    qrMode === 'invoice'
-      ? `zatca://taxinvoice?seller=${encodeURIComponent(merchantInfo.businessName)}&vat=${merchantInfo.vatNumber}&total=${numAmount.toFixed(2)}&vat_total=${vatAmount.toFixed(2)}&terminal=${merchantInfo.terminalId}&rail=sarie&ts=${encodeURIComponent(new Date().toISOString())}`
-      : `zatca://posqr?seller=${encodeURIComponent(merchantInfo.businessName)}&cr=${merchantInfo.crNumber}&vat=${merchantInfo.vatNumber}&terminal=${merchantInfo.terminalId}&rail=sarie_mada`;
+    // QPay payment QR format per shared contract
+  const merchantCode = merchantInfo.merchantCode || (useApp() as any).user?.id || '';
+  const qrPayload =
+    (useApp() as any).merchantInfo?.merchantCode
+      ? `qpay://pay?m=${(useApp() as any).merchantInfo.merchantCode}`
+      : "qpay://pay?m=merchant";
+  const zatcaPayload = qrPayload;
+  
 
   const showToast = (_msg: string) => {};
 
@@ -225,6 +228,28 @@ export const MerchantQrGeneratorScreen: React.FC = () => {
             {/* QR Code */}
             <div style={{ padding: '8px', backgroundColor: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
               <QRCodeView value={zatcaPayload} size={165} />
+            {/* Merchant Code Display */}
+            <div style={{ marginTop: '16px', textAlign: 'center' }}>
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+                {isAr ? 'رمز التاجر' : 'Merchant Code'}
+              </div>
+              <div
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: '22px',
+                  fontWeight: 900,
+                  color: '#00C853',
+                  letterSpacing: '0.1em',
+                  backgroundColor: 'rgba(0, 200, 83, 0.08)',
+                  border: '1px solid rgba(0, 200, 83, 0.25)',
+                  borderRadius: '12px',
+                  padding: '8px 20px',
+                  display: 'inline-block',
+                }}
+              >
+                {merchantCode || 'QPAY-MERCHANT'}
+              </div>
+            </div>
             </div>
 
             {/* Store & Terminal Metadata */}

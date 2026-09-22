@@ -1,22 +1,52 @@
 import React, { useState } from 'react';
-import { ArrowRight, ChevronDown, User, Phone } from 'lucide-react';
+import { ArrowRight, ChevronDown, User, Phone, Store, AlertCircle } from 'lucide-react';
+import { authService } from '../../services/authService';
 import { AlphPayLogo } from '../../components/AlphPayLogo';
 import { useApp } from '../../state/AppContext';
 
 export const MobileNumberScreen: React.FC = () => {
-  const { navigateTo, user, updateUser, setUserRole, isRtl, language } = useApp();
+  const { navigateTo, updateUser, setUserRole, isRtl, language } = useApp();
   const isAr = language === 'العربية';
   const [fullName, setFullName] = useState<string>('');
+  const [businessName, setBusinessName] = useState<string>('');
   const [mobileNumber, setMobileNumber] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const isFormValid = mobileNumber.replace(/\s/g, '').length >= 9 && fullName.trim().length > 0;
+  const rawDigits = mobileNumber.replace(/\D/g, '');
+  const isFormValid = rawDigits.length >= 9 && fullName.trim().length > 0 && !isLoading;
 
-  const handleContinue = (e?: React.FormEvent) => {
+  const handleContinue = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (isFormValid) {
+    if (!isFormValid) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    const phone = '+966' + rawDigits;
+
+    try {
+      await authService.sendOtp(phone, 'merchant');
       setUserRole('merchant');
-      updateUser({ name: fullName, mobile: `+966 ${mobileNumber.replace(/\s/g, '')}` });
-      navigateTo('SMS_OTP', { mobile: mobileNumber.replace(/\s/g, ''), name: fullName });
+      updateUser({ name: fullName.trim(), mobile: '+966 ' + rawDigits });
+      navigateTo('SMS_OTP', {
+        mobile: rawDigits,
+        phone,
+        name: fullName.trim(),
+        fullName: fullName.trim(),
+        businessName: businessName.trim(),
+      });
+    } catch (err: any) {
+      const msg = err?.message || '';
+      if (msg.includes('rate') || err?.status === 429) {
+        setError(isAr ? 'محاولات كثيرة. يرجى الانتظار قليلاً.' : 'Too many requests. Please wait a moment.');
+      } else if (err?.status === 400) {
+        setError(isAr ? 'رقم الهاتف غير صالح.' : 'Invalid phone number.');
+      } else {
+        setError(err?.message || (isAr ? 'تعذر إرسال الرمز. تحقق من اتصالك.' : 'Could not send OTP. Check your connection.'));
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,6 +110,76 @@ export const MobileNumberScreen: React.FC = () => {
 
         {/* Form Container */}
         <form noValidate onSubmit={handleContinue} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Error Banner */}
+          {error && (
+            <div
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#EF4444',
+                fontSize: '13px',
+                fontWeight: 600,
+              }}
+            >
+              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Business Name Field */}
+          <div>
+            <label
+              htmlFor="business-name-input"
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                color: '#CBD5E1',
+                marginBottom: '8px',
+                display: 'block',
+                textAlign: isRtl ? 'right' : 'left',
+              }}
+            >
+              {isAr ? 'اسم المنشأة أو المتجر' : 'Business / Store Name'}{' '}
+              <span style={{ color: '#64748B', fontWeight: 500 }}>({isAr ? 'اختياري' : 'Optional'})</span>
+            </label>
+            <div
+              style={{
+                backgroundColor: '#111726',
+                border: '1px solid #1E293B',
+                borderRadius: '14px',
+                padding: '14px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                height: '52px',
+                boxSizing: 'border-box',
+              }}
+            >
+              <Store size={18} color="#00C853" style={{ flexShrink: 0 }} />
+              <input
+                id="business-name-input"
+                type="text"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                placeholder={isAr ? 'مثال: قهوة المختص' : 'e.g. Specialty Roasters'}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '14.5px',
+                  fontWeight: 600,
+                  color: '#FFFFFF',
+                  width: '100%',
+                  textAlign: isRtl ? 'right' : 'left',
+                }}
+              />
+            </div>
+          </div>
           {/* Owner Name Field */}
           <div>
             <label
@@ -246,7 +346,7 @@ export const MobileNumberScreen: React.FC = () => {
               transition: 'all 0.2s ease',
             }}
           >
-            <span>{isAr ? 'الحصول على رمز التحقق' : 'Get OTP & Verify'}</span>
+            <span>{isLoading ? (isAr ? 'جاري الإرسال...' : 'Sending OTP...') : (isAr ? 'الحصول على رمز التحقق' : 'Get OTP & Verify')}</span>
             <ArrowRight size={18} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
           </button>
         </form>

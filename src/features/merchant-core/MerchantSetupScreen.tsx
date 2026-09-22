@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Camera,
-  Edit2,
   ChevronDown,
   Building2,
   Tag,

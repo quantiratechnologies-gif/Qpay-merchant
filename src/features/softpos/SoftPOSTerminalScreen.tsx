@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Delete, CheckCircle2, Wifi, ArrowLeft } from 'lucide-react';
+import { Delete, CheckCircle2, Wifi } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { toArabicNumerals } from '../../utils/i18n';
 import { AppHeader } from '../../components/AppHeader';
@@ -108,7 +108,6 @@ export const SoftPOSTerminalScreen: React.FC = () => {
     softPosCardScheme,
     setSoftPosCardScheme,
     navigateTo,
-    goBack,
     language,
     isRtl,
   } = useApp();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, CheckCircle2, AlertCircle, RotateCcw, Clock, Smartphone, Zap } from 'lucide-react';
+import { Wifi, CheckCircle2, RotateCcw, Clock, Zap } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { formatCurrency } from '../../utils/formatters';
 import { formatLocalizedNumber } from '../../utils/i18n';

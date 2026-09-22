@@ -1,3 +1,4 @@
+import { PrimaryButton } from '../../components/PrimaryButton';
 import React, { useState } from 'react';
 import {
   CreditCard,
@@ -12,7 +13,6 @@ import {
   ArrowUpRight,
   Download,
   Building2,
-  Receipt,
   RotateCcw,
   Smartphone,
 } from 'lucide-react';

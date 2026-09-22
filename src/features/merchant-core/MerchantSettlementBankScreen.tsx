@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Landmark, Check, ArrowRight, ShieldCheck, ShieldAlert, Smartphone, CheckCircle2, Lock, Sparkles } from 'lucide-react';
+import { Landmark, Check, ArrowRight, ShieldCheck, ShieldAlert, Smartphone, CheckCircle2, Lock } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { AppHeader } from '../../components/AppHeader';

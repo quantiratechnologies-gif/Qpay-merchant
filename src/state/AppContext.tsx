@@ -16,20 +16,38 @@ import type {
   MerchantSettlement,
 } from '../types';
 import { authService } from '../services/authService';
+import type { ApiTransaction } from '../services/authService';
+import { supabase } from '../services/supabaseClient';
+import { getSession, clearSession, getAccessToken } from '../services/sessionStore';
+import { toast } from 'sonner';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 import { bankService } from '../services/bankService';
-import { transactionService } from '../services/transactionService';
 import { notificationService } from '../services/notificationService';
 
 import { translateText, type SupportedLanguage } from '../utils/i18n';
 import {
   syncCollectionToSupabase,
-  subscribeToMerchantCollections,
   generateMultiDateCollections,
   saveMerchantProfileToSupabase,
   syncSettlementToSupabase,
 } from '../services/supabaseClient';
 
 interface AppContextType {
+  // Real Auth & Session
+  accessToken: string | null;
+  profileId: string | null;
+  walletBalance: number;
+  walletCurrency: string;
+  isSessionLoading: boolean;
+  setAccessToken: (token: string | null) => void;
+  setProfileId: (id: string | null) => void;
+  setWalletBalance: (balance: number) => void;
+  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  setMerchantCollections: React.Dispatch<React.SetStateAction<MerchantCollection[]>>;
+  initSession: (token: string, profileId?: string) => Promise<void>;
+  refetchOnResume: () => Promise<void>;
+
   // Localization & Translation
   language: string;
   isRtl: boolean;
@@ -272,6 +290,266 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [screenParams, setScreenParams] = useState<Record<string, any>>({});
   const [activeTab, setActiveTabState] = useState<BottomTab>('home');
   const [userRole, setUserRole] = useState<UserRole>('merchant');
+
+  // Real backend & session state
+  const [accessToken, setAccessToken] = useState<string | null>(() => getAccessToken());
+  const [profileId, setProfileId] = useState<string | null>(null);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [walletCurrency, setWalletCurrency] = useState<string>('SAR');
+  const [isSessionLoading, setIsSessionLoading] = useState<boolean>(true);
+
+  // Realtime channel refs
+  const walletsChannelRef = React.useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const transactionsChannelRef = React.useRef<ReturnType<typeof supabase.channel> | null>(null);
+
+  const playNotificationSound = React.useCallback(() => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+        gain.gain.setValueAtTime(0.3, now + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.12);
+        osc.stop(now + idx * 0.12 + 0.25);
+      });
+    } catch {}
+  }, []);
+
+  const vibrateDevice = React.useCallback(() => {
+    try {
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
+      }
+    } catch {}
+  }, []);
+
+  const teardownRealtimeSubscriptions = React.useCallback(() => {
+    if (walletsChannelRef.current) {
+      supabase.removeChannel(walletsChannelRef.current);
+      walletsChannelRef.current = null;
+    }
+    if (transactionsChannelRef.current) {
+      supabase.removeChannel(transactionsChannelRef.current);
+      transactionsChannelRef.current = null;
+    }
+  }, []);
+
+  const mapApiToCollection = (apiTx: ApiTransaction): MerchantCollection => {
+    let method: PaymentAcceptanceMethod = 'softpos_mada';
+    if (apiTx.payment_method === 'apple_pay') method = 'softpos_applepay';
+    else if (apiTx.payment_method === 'visa') method = 'softpos_visa';
+    else if (apiTx.payment_method === 'mastercard') method = 'softpos_mastercard';
+    else if (apiTx.payment_method === 'zatca_qr' || apiTx.payment_method === 'qr') method = 'zatca_qr';
+    else if (apiTx.payment_method === 'payment_link') method = 'payment_link';
+
+    const net = Number((apiTx.amount / 1.15).toFixed(2));
+    const vat = Number((apiTx.amount - net).toFixed(2));
+    const d = apiTx.created_at ? new Date(apiTx.created_at) : new Date();
+    return {
+      id: apiTx.id,
+      amount: apiTx.amount,
+      vatAmount: vat,
+      netAmount: net,
+      date: d.toDateString() === new Date().toDateString() ? 'TODAY' : d.toLocaleDateString(),
+      timestamp: d,
+      status: apiTx.status === 'success' || apiTx.status === 'completed' ? 'settled' : 'pending',
+      paymentMethod: method,
+      cardScheme: method === 'softpos_mada' ? 'mada' : undefined,
+      orderRef: apiTx.order_ref,
+      customerMasked: apiTx.payer_name ? `From ${apiTx.payer_name}` : undefined,
+    };
+  };
+
+  const mapApiTransaction = (apiTx: ApiTransaction, myUserId: string): Transaction => {
+    const isPayer = apiTx.payer_profile_id === myUserId;
+    const dateObj = apiTx.created_at ? new Date(apiTx.created_at) : new Date();
+    const isToday = dateObj.toDateString() === new Date().toDateString();
+
+    return {
+      id: apiTx.id,
+      title: isPayer ? `Paid to ${apiTx.payee_name || 'Merchant'}` : `Received from ${apiTx.payer_name || 'Customer'}`,
+      subTitle: `Order: ${apiTx.order_ref || 'QPay'}`,
+      amount: apiTx.amount,
+      type: isPayer ? 'sent' : 'received',
+      date: isToday ? 'TODAY' : dateObj.toLocaleDateString(),
+      timestamp: dateObj,
+      utr: apiTx.order_ref || apiTx.id,
+      avatarInitials: (isPayer ? apiTx.payee_name : apiTx.payer_name)?.substring(0, 2).toUpperCase() || 'QP',
+    };
+  };
+
+  const setupRealtimeSubscriptions = React.useCallback((userId: string) => {
+    teardownRealtimeSubscriptions();
+
+    walletsChannelRef.current = supabase
+      .channel('wallets-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'wallets',
+          filter: `profile_id=eq.${userId}`,
+        },
+        (payload: any) => {
+          const newBalance = payload.new?.balance;
+          if (typeof newBalance === 'number') {
+            setWalletBalance(newBalance);
+            setUnsettledMerchantBalance(newBalance);
+          }
+        },
+      )
+      .subscribe();
+
+    transactionsChannelRef.current = supabase
+      .channel('transactions-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'transactions',
+          filter: `payee_profile_id=eq.${userId}`,
+        },
+        (payload: any) => {
+          const newRow = payload.new as ApiTransaction;
+          if (!newRow) return;
+
+          const mapped = mapApiTransaction(newRow, userId);
+          setTransactions((prev) => [mapped, ...prev]);
+          setLastTransaction(mapped);
+
+          const collection = mapApiToCollection(newRow);
+          setMerchantCollections((prev) => [collection, ...prev]);
+          setLastMerchantCollection(collection);
+
+          toast.success(`SAR ${newRow.amount.toFixed(2)} received from ${newRow.payer_name || 'Customer'}`, {
+            duration: 5000,
+          });
+
+          playNotificationSound();
+          vibrateDevice();
+          speakSoundBox(newRow.amount);
+
+          const newNotif: AppNotification = {
+            id: `notif-${Date.now()}`,
+            title: 'Payment Received',
+            description: `SAR ${newRow.amount.toFixed(2)} received from ${newRow.payer_name || 'Customer'}`,
+            timestamp: 'Just now',
+            read: false,
+            type: 'success',
+          };
+          setNotifications((prev) => [newNotif, ...prev]);
+          setWalletBalance((prev) => prev + newRow.amount);
+          setUnsettledMerchantBalance((prev) => prev + newRow.amount);
+        },
+      )
+      .subscribe();
+  }, [teardownRealtimeSubscriptions, playNotificationSound, vibrateDevice]);
+
+  const initSession = React.useCallback(async (token: string, explicitProfileId?: string) => {
+    setAccessToken(token);
+    supabase.realtime.setAuth(token);
+
+    try {
+      const profile = await authService.fetchProfile();
+      const resolvedId = profile.id || explicitProfileId || '';
+      setProfileId(resolvedId);
+
+      if (profile.name) {
+        setUser((prev) => ({
+          ...prev,
+          id: resolvedId,
+          name: profile.name,
+          mobile: profile.mobile,
+          email: profile.email || prev.email,
+        }));
+      }
+
+      if (profile.businessName || profile.merchantCode) {
+        setMerchantInfo((prev) => ({
+          ...prev,
+          merchantCode: profile.merchantCode || prev.merchantCode,
+          businessName: profile.businessName || prev.businessName,
+          storePhone: profile.mobile || prev.storePhone,
+        }));
+      }
+
+      if (typeof profile.walletBalance === 'number') {
+        setWalletBalance(profile.walletBalance);
+        setUnsettledMerchantBalance(profile.walletBalance);
+      }
+      if (profile.walletCurrency) {
+        setWalletCurrency(profile.walletCurrency);
+      }
+
+      if (resolvedId) {
+        setupRealtimeSubscriptions(resolvedId);
+      }
+
+      try {
+        const txList = await authService.fetchTransactions(50);
+        if (Array.isArray(txList)) {
+          const mappedTxs = txList.map((tx) => mapApiTransaction(tx, resolvedId));
+          setTransactions(mappedTxs);
+          const mappedCols = txList
+            .filter((tx) => tx.payee_profile_id === resolvedId)
+            .map(mapApiToCollection);
+          setMerchantCollections(mappedCols);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch transactions:', err);
+      }
+
+      setIsAuthenticated(true);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('qpay_merchant_authenticated', 'true');
+      }
+    } catch (err) {
+      console.error('Failed to init session:', err);
+      throw err;
+    }
+  }, [setupRealtimeSubscriptions]);
+
+  const refetchOnResume = React.useCallback(async () => {
+    const currentToken = getAccessToken() || accessToken;
+    if (!currentToken) return;
+
+    supabase.realtime.setAuth(currentToken);
+    const activeProfileId = profileId || "";
+    if (activeProfileId) {
+      setupRealtimeSubscriptions(activeProfileId);
+    }
+
+    try {
+      const profile = await authService.fetchProfile();
+      if (typeof profile.walletBalance === 'number') {
+        setWalletBalance(profile.walletBalance);
+        setUnsettledMerchantBalance(profile.walletBalance);
+      }
+      const txList = await authService.fetchTransactions(50);
+      if (Array.isArray(txList) && activeProfileId) {
+        const mappedTxs = txList.map((tx) => mapApiTransaction(tx, activeProfileId));
+        setTransactions(mappedTxs);
+        const mappedCols = txList
+          .filter((tx) => tx.payee_profile_id === activeProfileId)
+          .map(mapApiToCollection);
+        setMerchantCollections(mappedCols);
+      }
+    } catch (err) {
+      console.warn('Refetch on resume failed:', err);
+    }
+  }, [accessToken, profileId, setupRealtimeSubscriptions]);
+
   const [merchantInfo, setMerchantInfo] = useState<MerchantInfo>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('qpay_merchant_info') || localStorage.getItem('qpay_merchant_session');
@@ -379,35 +657,64 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   useEffect(() => {
-    // Check URL query parameters for test automation (e.g. ?screen=ELECTRICITY)
     const urlParams = new URLSearchParams(window.location.search);
     const initialScreen = urlParams.get('screen') as ScreenId | null;
     if (initialScreen) {
       setCurrentScreen(initialScreen);
       setScreenStack([{ screen: initialScreen }]);
+      setIsSessionLoading(false);
+      return;
     }
 
-    // Load initial data
-    authService.getCurrentUser().then(setUser);
-    bankService.getBankAccounts().then(setBankAccounts);
-    transactionService.getInitialTransactions().then(setTransactions);
-    notificationService.getInitialNotifications().then(setNotifications);
-
-    // Real-time Supabase collections listener for Web Dashboard
-    const unsubscribe = subscribeToMerchantCollections((newCol) => {
-      setMerchantCollections((prev) => {
-        if (prev.some((c) => c.id === newCol.id || (newCol.orderRef && c.orderRef === newCol.orderRef))) {
-          return prev;
-        }
-        return [newCol, ...prev];
-      });
-      speakSoundBox(newCol.amount);
+    getSession().then((stored) => {
+      if (stored) {
+        initSession(stored.accessToken, stored.user.id)
+          .then(() => {
+            setCurrentScreen('MERCHANT_HOME');
+            setScreenStack([{ screen: 'MERCHANT_HOME' }]);
+            setIsSessionLoading(false);
+          })
+          .catch(() => {
+            setIsSessionLoading(false);
+          });
+      } else {
+        setIsSessionLoading(false);
+        bankService.getBankAccounts().then(setBankAccounts);
+        notificationService.getInitialNotifications().then(setNotifications);
+      }
+    }).catch(() => {
+      setIsSessionLoading(false);
     });
+  }, []);
+
+  // Listen for visibility change (web) and Capacitor resume (native) to refetch
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && (getAccessToken() || accessToken)) {
+        refetchOnResume();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let resumeHandle: { remove: () => Promise<void> } | null = null;
+    if (Capacitor.isNativePlatform()) {
+      CapApp.addListener('resume', () => {
+        if (getAccessToken() || accessToken) {
+          refetchOnResume();
+        }
+      }).then((handle) => {
+        resumeHandle = handle;
+      });
+    }
 
     return () => {
-      unsubscribe();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (resumeHandle) {
+        resumeHandle.remove();
+      }
+      teardownRealtimeSubscriptions();
     };
-  }, []);
+  }, [accessToken, refetchOnResume, teardownRealtimeSubscriptions]);
 
   // Expose global test helpers for Playwright / automation verification
   useEffect(() => {
@@ -1005,6 +1312,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const performLogout = () => {
+    teardownRealtimeSubscriptions();
+    clearSession();
+    setAccessToken(null);
+    setProfileId(null);
+    setWalletBalance(0);
     // Save current merchant profile to phone key before logging out
     if (typeof window !== 'undefined') {
       const activeMobile = sessionStorage.getItem('qpay_active_mobile') || user.mobile?.replace(/\D/g, '');
@@ -1053,6 +1365,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        accessToken,
+        profileId,
+        walletBalance,
+        walletCurrency,
+        isSessionLoading,
+        setAccessToken,
+        setProfileId,
+        setWalletBalance,
+        setTransactions,
+        setMerchantCollections,
+        initSession,
+        refetchOnResume,
+
         language,
         isRtl,
         t,

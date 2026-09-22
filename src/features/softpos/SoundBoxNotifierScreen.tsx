@@ -13,7 +13,6 @@ import {
   Plus,
   Minus,
   Sparkles,
-  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { AppHeader } from '../../components/AppHeader';

@@ -5,6 +5,10 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://sb-qpay-saudi
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_fiRLd5ddXPUH_onp8AH86w_JQoVgAmH';
 
 let supabaseInstance: SupabaseClient | null = null;
+export const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true },
+  realtime: { params: { eventsPerSecond: 10 } },
+});
 
 export function getSupabase(): SupabaseClient | null {
   if (supabaseInstance) return supabaseInstance;
@@ -333,8 +337,7 @@ export async function authenticateMerchantWithAnyOtp(
         merchant_pin: defaultMerchantInfo.merchantPin,
         registration_date: defaultMerchantInfo.registrationDate,
       })
-      .then(() => {})
-      .catch(() => {});
+      .then(() => {}, () => {});
   } catch (e) {
     console.warn('[Supabase] Merchant auth fallback to local session:', e);
   }

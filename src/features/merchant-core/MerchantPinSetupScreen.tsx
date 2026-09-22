@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Delete, CheckCircle2, ArrowRight, ShieldAlert, KeyRound, Check } from 'lucide-react';
+import { Lock, Delete, CheckCircle2, ShieldAlert, KeyRound, Check } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
 import { AppHeader } from '../../components/AppHeader';
 import { toArabicNumerals } from '../../utils/i18n';

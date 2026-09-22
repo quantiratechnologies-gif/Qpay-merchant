@@ -10,11 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Zap,
-  Calendar,
-  Layers,
-  Clock,
   ChevronRight,
-  Info,
   Download,
 } from 'lucide-react';
 import { useApp } from '../../state/AppContext';
@@ -64,12 +60,12 @@ export const MerchantInsightsScreen: React.FC = () => {
         periodMetrics.totalVolume.toFixed(2),
         periodMetrics.netVolume.toFixed(2),
         periodMetrics.vat15.toFixed(2),
-        periodMetrics.totalTxns,
+        periodMetrics.totalTransactions,
         new Date().toISOString(),
       ],
       [],
       ['Payment Method / Rail', 'Volume (SAR)', 'Percentage Share'],
-      ...periodMetrics.rails.map((r) => [r.label, r.amount.toFixed(2), `${r.percent}%`]),
+      ...periodMetrics.rails.map((r) => [r.name, r.amount.toFixed(2), `${r.percent}%`]),
     ];
     downloadCsv(`RiyalPay-Tax-Audit-${selectedPeriod}-${new Date().toISOString().slice(0, 10)}`, headers, rows);
     setToastMsg(
@@ -90,7 +86,7 @@ export const MerchantInsightsScreen: React.FC = () => {
   // 1. Calculate live dynamic metrics based on selectedPeriod
   const periodMetrics = useMemo(() => {
     // Filter live merchant collections
-    const now = new Date();
+    
     const liveSettled = merchantCollections.filter((c) => c.status === 'settled');
 
     // Baseline multipliers to realistically represent different periods while incorporating all real live activity
@@ -149,7 +145,7 @@ export const MerchantInsightsScreen: React.FC = () => {
     let cashVol = 0;
 
     liveSettled.forEach((c) => {
-      if (c.paymentMethod === 'softpos_mada' || c.paymentMethod === 'debit') madaVol += c.amount;
+      if (c.paymentMethod === 'softpos_mada') madaVol += c.amount;
       else if (c.paymentMethod === 'softpos_applepay' || c.paymentMethod.includes('apple')) appleVol += c.amount;
       else if (c.paymentMethod === 'softpos_visa' || c.paymentMethod === 'softpos_mastercard') visaMasterVol += c.amount;
       else if (c.paymentMethod === 'zatca_qr' || c.paymentMethod === 'payment_link') qrLinkVol += c.amount;
